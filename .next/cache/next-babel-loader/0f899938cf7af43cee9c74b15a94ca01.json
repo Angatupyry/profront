@@ -1,0 +1,1 @@
+{"ast":null,"code":"export { default } from \"./ModalApplication\";","map":{"version":3,"sources":["C:/Users/adri_/Desktop/Front Profesionales/profront/src/components/ModalApplication/index.js"],"names":["default"],"mappings":"AAAA,SAASA,OAAT,QAAwB,oBAAxB","sourcesContent":["export { default } from \"./ModalApplication\";\r\n"]},"metadata":{},"sourceType":"module"}
