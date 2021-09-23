@@ -54,3 +54,8 @@ span,a{
 .table-y-middle{
   vertical-align: middle!important;
 }
+
+.space-between {
+  display: flex;
+  justify-content: space-between;
+}
