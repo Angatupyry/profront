@@ -1,7 +1,9 @@
 import React, { useContext, useState } from "react";
+import Router from "next/router";
 import styled from "styled-components";
 import { Modal } from "react-bootstrap";
 import GlobalContext from "../../context/GlobalContext";
+import AuthService from "../../services/auth.service";
 
 const ModalStyled = styled(Modal)`
   /* &.modal {
@@ -12,6 +14,12 @@ const ModalStyled = styled(Modal)`
 const ModalSignIn = (props) => {
   const [showPass, setShowPass] = useState(true);
   const gContext = useContext(GlobalContext);
+  const [state, setState] = React.useState({
+    loading: true,
+    error: null,
+    email: "",
+    password: "",
+  });
 
   const handleClose = () => {
     gContext.toggleSignInModal();
@@ -19,6 +27,28 @@ const ModalSignIn = (props) => {
 
   const togglePassword = () => {
     setShowPass(!showPass);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setState({ loading: true, error: null });
+
+    try {
+      await AuthService.login(state.email, state.password);
+      setState({ loading: false });
+      handleClose();
+      Router.push("/dashboard-main");
+    } catch (error) {
+      setState({ loading: false, error: error });
+    }
+  };
+
+  const handleChange = (e) => {
+    const newState = { ...state };
+    console.log("id:" + e.target.id + " valor: " + e.target.value);
+    newState[e.target.id] = e.target.value;
+    setState(newState);
+    console.log(newState);
   };
 
   return (
@@ -43,13 +73,14 @@ const ModalSignIn = (props) => {
               <div className="pt-10 pb-6 pl-11 pr-12 bg-black-2 h-100 d-flex flex-column dark-mode-texts">
                 <div className="pb-9">
                   <h3 className="font-size-8 text-white line-height-reset pb-4 line-height-1p4">
-                    Welcome Back
+                    Bienvenido/a
                   </h3>
                   <p className="mb-0 font-size-4 text-white">
-                    Log in to continue your account and explore new jobs.
+                    Inicie sesión para acceder a su cuenta y contratar
+                    profesionales.
                   </p>
                 </div>
-                <div className="border-top border-default-color-2 mt-auto">
+                {/* <div className="border-top border-default-color-2 mt-auto">
                   <div className="d-flex mx-n9 pt-6 flex-xs-row flex-column">
                     <div className="pt-5 px-9">
                       <h3 className="font-size-7 text-white">295</h3>
@@ -64,12 +95,12 @@ const ModalSignIn = (props) => {
                       </p>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="col-lg-7 col-md-6">
               <div className="bg-white-2 h-100 px-11 pt-11 pb-7">
-                <div className="row">
+                {/* <div className="row">
                   <div className="col-4 col-xs-12">
                     <a
                       href="/#"
@@ -103,11 +134,11 @@ const ModalSignIn = (props) => {
                       </span>
                     </a>
                   </div>
-                </div>
-                <div className="or-devider">
+                </div> */}
+                {/* <div className="or-devider">
                   <span className="font-size-3 line-height-reset ">Or</span>
-                </div>
-                <form action="/">
+                </div> */}
+                <form action="/" onSubmit={handleSubmit}>
                   <div className="form-group">
                     <label
                       htmlFor="email"
@@ -118,8 +149,10 @@ const ModalSignIn = (props) => {
                     <input
                       type="email"
                       className="form-control"
-                      placeholder="example@gmail.com"
+                      placeholder="ejemplo@gmail.com"
                       id="email"
+                      value={state.email}
+                      onChange={handleChange}
                     />
                   </div>
                   <div className="form-group">
@@ -127,14 +160,16 @@ const ModalSignIn = (props) => {
                       htmlFor="password"
                       className="font-size-4 text-black-2 font-weight-semibold line-height-reset"
                     >
-                      Password
+                      Contraseña
                     </label>
                     <div className="position-relative">
                       <input
                         type={showPass ? "password" : "text"}
                         className="form-control"
                         id="password"
-                        placeholder="Enter password"
+                        placeholder="Ingrese su contraseña"
+                        value={state.password}
+                        onChange={handleChange}
                       />
                       <a
                         href="/#"
@@ -148,7 +183,7 @@ const ModalSignIn = (props) => {
                       </a>
                     </div>
                   </div>
-                  <div className="form-group d-flex flex-wrap justify-content-between">
+                  {/* <div className="form-group d-flex flex-wrap justify-content-between">
                     <label
                       htmlFor="terms-check"
                       className="gr-check-input d-flex  mr-3"
@@ -169,16 +204,19 @@ const ModalSignIn = (props) => {
                     >
                       Forget Password
                     </a>
-                  </div>
+                  </div> */}
                   <div className="form-group mb-8">
-                    <button className="btn btn-primary btn-medium w-100 rounded-5 text-uppercase">
-                      Log in{" "}
+                    <button
+                      className="btn btn-primary btn-medium w-100 rounded-5 text-uppercase"
+                      type="submit"
+                    >
+                      Iniciar sesión{" "}
                     </button>
                   </div>
                   <p className="font-size-4 text-center heading-default-color">
-                    Don’t have an account?{" "}
+                    ¿No posee una cuenta?{" "}
                     <a href="/#" className="text-primary">
-                      Create a free account
+                      Cree una cuenta gratuita
                     </a>
                   </p>
                 </form>

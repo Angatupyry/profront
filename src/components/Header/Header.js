@@ -96,12 +96,12 @@ const Header = () => {
           fluid={gContext.header.isFluid}
           className={gContext.header.isFluid ? "pr-lg-9 pl-lg-9" : ""}
         >
-          <nav className="navbar site-navbar offcanvas-active navbar-expand-lg px-0 py-0">
+          <nav className="navbar site-navbar offcanvas-active navbar-expand-lg px-0 py-0 space-between">
             {/* <!-- Brand Logo--> */}
             <div className="brand-logo">
               <Logo white={gContext.header.theme === "dark"} />
             </div>
-            <div className="collapse navbar-collapse">
+            {/* <div className="collapse navbar-collapse">
               <div className="navbar-nav-wrapper">
                 <ul className="navbar-nav main-menu d-none d-lg-flex">
                   {menuItems.map(
@@ -241,7 +241,7 @@ const Header = () => {
                   </a>
                 </Link>
               </div>
-            )}
+            )} */}
 
             {gContext.header.button === "profile" && (
               <div className="header-btn-devider ml-auto ml-lg-5 pl-2 d-none d-xs-flex align-items-center">
@@ -324,7 +324,7 @@ const Header = () => {
                     gContext.toggleSignInModal();
                   }}
                 >
-                  Log In
+                  Iniciar sesión
                 </a>
                 <a
                   className={`btn btn-${gContext.header.variant} text-uppercase font-size-3`}
@@ -334,7 +334,7 @@ const Header = () => {
                     gContext.toggleSignUpModal();
                   }}
                 >
-                  Sign Up
+                  Registrarse
                 </a>
               </div>
             )}
