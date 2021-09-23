@@ -21,11 +21,10 @@ const Footer = () => {
                 {/* <!-- cta-content start --> */}
                 <div className="pb-xl-0 pb-9 text-xl-left text-center">
                   <h2 className="text-white font-size-8 mb-4">
-                    Most comprehensive job portal
+                    El portal de contratación de profesionales más completo
                   </h2>
                   <p className="text-hit-gray font-size-5 mb-0">
-                    We must explain to you how all this mistaken idea of
-                    denouncing
+                    Conocé personas ansiosas por trabajar y darte lo mejor
                   </p>
                 </div>
                 {/* <!-- cta-content end --> */}
@@ -45,7 +44,7 @@ const Footer = () => {
                       gContext.toggleSignInModal();
                     }}
                   >
-                    Log in
+                    Iniciar sesión
                   </a>
                   <a
                     className="btn btn-green btn-h-60 btn-xl mx-4 mt-6 text-uppercase"
@@ -55,7 +54,7 @@ const Footer = () => {
                       gContext.toggleSignUpModal();
                     }}
                   >
-                    Register
+                    Registrarse
                   </a>
                 </div>
                 {/* <!-- cta-btns end --> */}
@@ -73,10 +72,10 @@ const Footer = () => {
               <div className="media mb-11">
                 <img src={imgM} className="align-self-center mr-3" alt="" />
                 <div className="media-body pl-5">
-                  <p className="mb-0 font-size-4 text-white">Contact us at</p>
+                  <p className="mb-0 font-size-4 text-white">Contactenos:</p>
                   <Link href="/#">
                     <a className="mb-0 font-size-4 font-weight-bold">
-                      support@uxtheme.net
+                      soporte@pro.net
                     </a>
                   </Link>
                 </div>
@@ -86,7 +85,7 @@ const Footer = () => {
               <div className="social-icons">
                 <ul className="pl-0 list-unstyled d-flex align-items-end ">
                   <li className="d-flex flex-column justify-content-center px-3 mr-3 font-size-4 heading-default-color">
-                    Follow us on:
+                    Seguinos en:
                   </li>
                   <li className="d-flex flex-column justify-content-center px-3 mr-3">
                     <Link href="/#">
@@ -119,7 +118,7 @@ const Footer = () => {
                   <div className="footer-widget widget2 mb-md-0 mb-13">
                     {/* <!-- footer widget title start --> */}
                     <p className="widget-title font-size-4 text-gray mb-md-8 mb-7">
-                      Company
+                      Compañía
                     </p>
                     {/* <!-- footer widget title end --> */}
                     {/* <!-- widget social menu start --> */}
@@ -127,28 +126,28 @@ const Footer = () => {
                       <li className="mb-6">
                         <Link href="/#">
                           <a className="heading-default-color font-size-4 font-weight-normal">
-                            About us
+                            Sobre nosotros
                           </a>
                         </Link>
                       </li>
                       <li className="mb-6">
                         <Link href="/#">
                           <a className="heading-default-color font-size-4 font-weight-normal">
-                            Contact us
+                            Contactanos
                           </a>
                         </Link>
                       </li>
                       <li className="mb-6">
                         <Link href="/#">
                           <a className="heading-default-color font-size-4 font-weight-normal">
-                            Careers
+                            Empleos
                           </a>
                         </Link>
                       </li>
                       <li className="mb-6">
                         <Link href="/#">
                           <a className="heading-default-color font-size-4 font-weight-normal">
-                            Press
+                            Prensa
                           </a>
                         </Link>
                       </li>
@@ -160,7 +159,7 @@ const Footer = () => {
                   <div className="footer-widget widget3 mb-sm-0 mb-13">
                     {/* <!-- footer widget title start --> */}
                     <p className="widget-title font-size-4 text-gray mb-md-8 mb-7">
-                      Product
+                      Producto
                     </p>
                     {/* <!-- footer widget title end --> */}
                     {/* <!-- widget social menu start --> */}
@@ -168,35 +167,28 @@ const Footer = () => {
                       <li className="mb-6">
                         <Link href="/#">
                           <a className="heading-default-color font-size-4 font-weight-normal">
-                            Features
+                            Características
                           </a>
                         </Link>
                       </li>
                       <li className="mb-6">
                         <Link href="/#">
                           <a className="heading-default-color font-size-4 font-weight-normal">
-                            Pricing
+                            Precios
                           </a>
                         </Link>
                       </li>
                       <li className="mb-6">
                         <Link href="/#">
                           <a className="heading-default-color font-size-4 font-weight-normal">
-                            News
+                            Noticias
                           </a>
                         </Link>
                       </li>
                       <li className="mb-6">
                         <Link href="/#">
                           <a className="heading-default-color font-size-4 font-weight-normal">
-                            Help desk
-                          </a>
-                        </Link>
-                      </li>
-                      <li className="mb-6">
-                        <Link href="/#">
-                          <a className="heading-default-color font-size-4 font-weight-normal">
-                            Support
+                            Soporte
                           </a>
                         </Link>
                       </li>
@@ -204,47 +196,7 @@ const Footer = () => {
                     {/* <!-- widget social menu end --> */}
                   </div>
                 </div>
-                <div className="col-lg-3 col-md-6 col-sm-3 col-xs-6">
-                  <div className="footer-widget widget4 mb-sm-0 mb-13">
-                    {/* <!-- footer widget title start --> */}
-                    <p className="widget-title font-size-4 text-gray mb-md-8 mb-7">
-                      Services
-                    </p>
-                    {/* <!-- footer widget title end --> */}
-                    {/* <!-- widget social menu start --> */}
-                    <ul className="widget-links pl-0 list-unstyled list-hover-primary">
-                      <li className="mb-6">
-                        <Link href="/#">
-                          <a className="heading-default-color font-size-4 font-weight-normal">
-                            Digital Marketing
-                          </a>
-                        </Link>
-                      </li>
-                      <li className="mb-6">
-                        <Link href="/#">
-                          <a className="heading-default-color font-size-4 font-weight-normal">
-                            SEO for Business
-                          </a>
-                        </Link>
-                      </li>
-                      <li className="mb-6">
-                        <Link href="/#">
-                          <a className="heading-default-color font-size-4 font-weight-normal">
-                            Avasta Dash
-                          </a>
-                        </Link>
-                      </li>
-                      <li className="mb-6">
-                        <Link href="/#">
-                          <a className="heading-default-color font-size-4 font-weight-normal">
-                            UI Design
-                          </a>
-                        </Link>
-                      </li>
-                    </ul>
-                    {/* <!-- widget social menu end --> */}
-                  </div>
-                </div>
+
                 <div className="col-lg-3 col-md-6 col-sm-3 col-xs-6">
                   <div className="footer-widget widget4">
                     {/* <!-- footer widget title start --> */}
@@ -256,21 +208,21 @@ const Footer = () => {
                       <li className="mb-6">
                         <Link href="/#">
                           <a className="heading-default-color font-size-4 font-weight-normal">
-                            Privacy Policy
+                            Privacidad
                           </a>
                         </Link>
                       </li>
                       <li className="mb-6">
                         <Link href="/#">
                           <a className="heading-default-color font-size-4 font-weight-normal">
-                            Terms &amp; Conditions
+                            Términos &amp; Condiciones
                           </a>
                         </Link>
                       </li>
                       <li className="mb-6">
                         <Link href="/#">
                           <a className="heading-default-color font-size-4 font-weight-normal">
-                            Return Policy
+                            Política de reembolso
                           </a>
                         </Link>
                       </li>
