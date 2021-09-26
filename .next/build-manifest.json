@@ -24,15 +24,11 @@
     "/_polyfills": [
       "static/runtime/polyfills.js"
     ],
+    "/dashboard-main": [
+      "static/runtime/webpack.js",
+      "static/runtime/main.js"
+    ],
     "/index": [
-      "static/runtime/webpack.js",
-      "static/runtime/main.js"
-    ],
-    "/search-list": [
-      "static/runtime/webpack.js",
-      "static/runtime/main.js"
-    ],
-    "/search-list-2": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ]
