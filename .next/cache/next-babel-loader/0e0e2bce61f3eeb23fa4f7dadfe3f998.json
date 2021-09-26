@@ -1,1 +1,0 @@
-{"ast":null,"code":"export { default } from \"./NestedMenu\";","map":{"version":3,"sources":["C:/Users/adri_/Desktop/Front Profesionales/profront/src/components/NestedMenu/index.js"],"names":["default"],"mappings":"AAAA,SAASA,OAAT,QAAwB,cAAxB","sourcesContent":["export { default } from \"./NestedMenu\";\r\n"]},"metadata":{},"sourceType":"module"}

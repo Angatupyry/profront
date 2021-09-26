@@ -1,1 +1,0 @@
-{"ast":null,"code":"export { default } from \"./ModalVideo\";","map":{"version":3,"sources":["C:/Users/adri_/Desktop/Front Profesionales/profront/src/components/ModalVideo/index.js"],"names":["default"],"mappings":"AAAA,SAASA,OAAT,QAAwB,cAAxB","sourcesContent":["export { default } from \"./ModalVideo\";\r\n"]},"metadata":{},"sourceType":"module"}
