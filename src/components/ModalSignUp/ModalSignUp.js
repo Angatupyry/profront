@@ -4,12 +4,18 @@ import styled from "styled-components";
 import { Modal } from "react-bootstrap";
 import GlobalContext from "../../context/GlobalContext";
 import AuthService from "../../services/auth.service";
+import { Select } from "../../components/Core";
 
 const ModalStyled = styled(Modal)`
   /* &.modal {
     z-index: 10050;
   } */
 `;
+
+const sexo = [
+  { value: "F", label: "Femenino" },
+  { value: "M", label: "Masculino" },
+];
 
 const ModalSignUp = (props) => {
   const [showPassFirst, setShowPassFirst] = useState(true);
@@ -21,6 +27,9 @@ const ModalSignUp = (props) => {
     password: "",
     name: "",
     lastName: "",
+    birthDate: "",
+    sex: "F",
+    sexLabel: "Femenino",
     isProfessional: false,
   });
 
@@ -62,6 +71,8 @@ const ModalSignUp = (props) => {
         state.name,
         state.lastName,
         state.email2,
+        state.birthDate,
+        state.sex,
         state.password,
         state.isProfessional
       );
@@ -79,6 +90,13 @@ const ModalSignUp = (props) => {
     newState[e.target.id] = e.target.value;
     setState(newState);
     console.log(newState);
+  };
+
+  const handleSelect = (e) => {
+    const newState = { ...state };
+    newState["sex"] = e.value;
+    newState["sexLabel"] = e.label;
+    setState(newState);
   };
 
   return (
@@ -215,6 +233,38 @@ const ModalSignUp = (props) => {
                       id="email2"
                       value={state.email2}
                       onChange={handleChange}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label
+                      htmlFor="name"
+                      className="font-size-4 text-black-2 font-weight-semibold line-height-reset"
+                    >
+                      Fecha de nacimiento
+                    </label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      placeholder="Ingrese su fecha de nacimiento"
+                      id="birthDate"
+                      value={state.birthDate}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label
+                      htmlFor="select2"
+                      className="d-block text-black-2 font-size-4 font-weight-semibold mb-4"
+                    >
+                      Sexo
+                    </label>
+                    <Select
+                      options={sexo}
+                      className="form-control pl-0 arrow-3 w-100 font-size-4 d-flex align-items-center w-100 "
+                      border={false}
+                      id="sex"
+                      value={{ label: state.sexLabel, value: state.sex }}
+                      onChange={handleSelect}
                     />
                   </div>
                   <div className="form-group">

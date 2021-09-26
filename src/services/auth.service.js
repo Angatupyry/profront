@@ -8,13 +8,25 @@ class AuthService {
     });
   };
 
-  register = async (nombre, apellido, email, password, esProfesional) => {
-    return http.post("/registro", {
-      nombre: nombre,
-      apellido: apellido,
-      email: email,
+  register = async (
+    nombre,
+    apellido,
+    email,
+    fechaNac,
+    sexo,
+    password,
+    esProfesional
+  ) => {
+    return http.post("/public/usuario/registro", {
+      persona: {
+        nombre: nombre,
+        apellido: apellido,
+        fecha_nacimiento: fechaNac,
+        sexo: sexo,
+      },
+      username: email,
       password: password,
-      esProfesional: esProfesional,
+      usuario_tipo_id: esProfesional ? 2 : 1,
     });
   };
 }
