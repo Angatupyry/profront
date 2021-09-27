@@ -1,11 +1,14 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Router from "next/router";
 import styled from "styled-components";
 import { Modal } from "react-bootstrap";
 import GlobalContext from "../../context/GlobalContext";
 import AuthService from "../../services/auth.service";
 import { Select } from "../../components/Core";
+import Error from "../Error/Error";
 
+const ERRORMSG =
+  "Lo sentimos. Ha ocurrido un error, por favor intente más tarde.";
 const ModalStyled = styled(Modal)`
   /* &.modal {
     z-index: 10050;
@@ -80,16 +83,16 @@ const ModalSignUp = (props) => {
       handleClose();
       Router.push("/dashboard-main");
     } catch (error) {
+      error.message = ERRORMSG;
       setState({ loading: false, error: error });
+      window.scrollTo(0, 0);
     }
   };
 
   const handleChange = (e) => {
     const newState = { ...state };
-    console.log(e.target.value);
     newState[e.target.id] = e.target.value;
     setState(newState);
-    console.log(newState);
   };
 
   const handleSelect = (e) => {
@@ -98,6 +101,10 @@ const ModalSignUp = (props) => {
     newState["sexLabel"] = e.label;
     setState(newState);
   };
+
+  useEffect(() => {
+    setState({ loading: false, error: null });
+  }, []);
 
   return (
     <ModalStyled
@@ -108,6 +115,7 @@ const ModalSignUp = (props) => {
       onHide={gContext.toggleSignUpModal}
     >
       <Modal.Body className="p-0">
+        {state.error && <Error error={state.error} />}
         <button
           type="button"
           className="circle-32 btn-reset bg-white pos-abs-tr mt-n6 mr-lg-n6 focus-reset shadow-10"
