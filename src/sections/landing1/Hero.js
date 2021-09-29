@@ -1,15 +1,16 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import Router from "next/router";
 import { Select } from "../../components/Core";
 import imgH from "../../assets/image/l1/png/hero-image-man.png";
 import imgP from "../../assets/image/patterns/hero-pattern.png";
 
 const defaultCountries = [
-  { value: "sp", label: "Asunción" },
-  { value: "bd", label: "Lambaré" },
-  { value: "usa", label: "Villa Elisa" },
-  { value: "uae", label: "Luque" },
-  { value: "pk", label: "Ñemby" },
+  { value: "1", label: "Asunción" },
+  { value: "2", label: "Lambaré" },
+  { value: "3", label: "Villa Elisa" },
+  { value: "4", label: "Luque" },
+  { value: "5", label: "Ñemby" },
 ];
 
 const defaultServices = [
@@ -20,26 +21,25 @@ const defaultServices = [
   { value: "5", label: "Enseñanza nivel inicial" },
 ];
 
-const Hero = () => {
+const Hero = (props) => {
+  let route = useHistory();
+
   const [state, setState] = React.useState({
     loading: true,
     error: null,
     service: "1",
     serviceLabel: "Manicure",
-    city: "sp",
+    city: "1",
     cityLabel: "Asunción",
   });
   const handleSubmit = async (e) => {
     e.preventDefault();
     setState({ loading: true, error: null });
 
-    try {
-      //await AuthService.login(state.email, state.password);
-      setState({ loading: false });
-      Router.push("/search-list");
-    } catch (error) {
-      setState({ loading: false, error: error });
-    }
+    Router.push({
+      pathname: "/search-list",
+      query: { city: state.city, service: state.service },
+    });
   };
 
   const handleService = (e) => {
