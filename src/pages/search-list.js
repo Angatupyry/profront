@@ -86,16 +86,6 @@ const SearchGrid = () => {
     console.log(newState);
   };
 
-  const handleGoToProfile = async (e) => {
-    e.preventDefault();
-    setState({ loading: true, error: null });
-
-    Router.push({
-      pathname: "/candidate-profile",
-      query: { city: state.city, service: state.service },
-    });
-  };
-
   return (
     <>
       <PageWrapper>
