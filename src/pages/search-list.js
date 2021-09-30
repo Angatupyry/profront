@@ -108,11 +108,14 @@ const SearchGrid = () => {
   }
 
   useEffect(() => {
+    if (!city && !service) {
+      return;
+    }
     scrollToTop();
     if (dataResult.length == 0) {
       fetchData(city, service);
     }
-  }, [dataResult]);
+  }, [dataResult, city, service]);
 
   const handleService = (e) => {
     const newState = { ...state };
