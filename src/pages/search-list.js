@@ -54,7 +54,15 @@ const SearchGrid = () => {
     data: "",
   });
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   useEffect(() => {
+    scrollToTop();
     async function fetchData() {
       setState({ loading: true, error: null });
       try {
@@ -84,16 +92,6 @@ const SearchGrid = () => {
     newState["cityLabel"] = e.label;
     setState(newState);
     console.log(newState);
-  };
-
-  const handleGoToProfile = async (e) => {
-    e.preventDefault();
-    setState({ loading: true, error: null });
-
-    Router.push({
-      pathname: "/candidate-profile",
-      query: { city: state.city, service: state.service },
-    });
   };
 
   return (
