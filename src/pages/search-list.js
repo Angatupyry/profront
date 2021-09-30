@@ -18,6 +18,9 @@ import iconL from "../assets/image/svg/icon-loaction-pin-black.svg";
 import iconS from "../assets/image/svg/icon-suitecase.svg";
 import iconC from "../assets/image/svg/icon-clock.svg";
 
+const cityArray = [];
+const serviceArray = [];
+
 const defaultCountries = [
   { value: "sp", label: "Asunción" },
   { value: "bd", label: "Lambaré" },
@@ -40,18 +43,19 @@ const SearchGrid = () => {
     query: { city, service },
   } = data;
 
-  const [test, setTest] = React.useState({ city });
-  const [testDos, setTestDos] = React.useState({ service });
+  const [cities, setCities] = React.useState([]);
+  const [services, setServices] = React.useState([]);
   const [dataResult, setDataResult] = React.useState([]);
-  console.log("dataResult: ", dataResult);
   const [state, setState] = React.useState({
     loading: true,
     error: null,
-    service: "1",
-    serviceLabel: "Manicure",
-    city: "sp",
-    cityLabel: "Asunción",
-    data: "",
+    service: "",
+    serviceLabel: "",
+    city: "",
+    cityLabel: "",
+    price: "",
+    sex: "",
+    score: "",
   });
 
   const scrollToTop = () => {
@@ -61,20 +65,52 @@ const SearchGrid = () => {
     });
   };
 
+  function isEmpty(value) {
+    return (
+      Boolean(value && typeof value === "object") && !Object.keys(value).length
+    );
+  }
+
+  async function fetchData(city, service) {
+    setState({ loading: true, error: null });
+    try {
+      const response = await BuscadorService.search(city, service);
+      setDataResult(response.data.data);
+      console.log(response);
+      const ciudades = await BuscadorService.getCities();
+      ciudades.data.data.forEach((element) => {
+        cityArray.push({
+          value: element.id.toString(),
+          label: element.nombre,
+        });
+      });
+
+      setCities(cityArray);
+
+      const servicios = await BuscadorService.getServices();
+      servicios.data.data.forEach((element) => {
+        serviceArray.push({
+          value: element.id.toString(),
+          label: element.descripcion,
+        });
+      });
+      setServices(serviceArray);
+      setState({
+        city: cityArray[0].value,
+        cityLabel: cityArray[0].label,
+        service: serviceArray[0].value,
+        serviceLabel: serviceArray[0].label,
+      });
+    } catch (error) {
+      console.log(error);
+      setState({ loading: false, error: error });
+    }
+  }
+
   useEffect(() => {
     scrollToTop();
-    async function fetchData() {
-      setState({ loading: true, error: null });
-      try {
-        const response = await BuscadorService.search(city, service);
-        setDataResult(response.data.data);
-      } catch (error) {
-        console.log(error);
-        setState({ loading: false, error: error });
-      }
-    }
     if (dataResult.length == 0) {
-      fetchData();
+      fetchData(city, service);
     }
   }, [dataResult]);
 
@@ -83,7 +119,6 @@ const SearchGrid = () => {
     newState["service"] = e.value;
     newState["serviceLabel"] = e.label;
     setState(newState);
-    console.log(newState);
   };
 
   const handleCity = (e) => {
@@ -91,76 +126,100 @@ const SearchGrid = () => {
     newState["city"] = e.value;
     newState["cityLabel"] = e.label;
     setState(newState);
-    console.log(newState);
   };
 
-  return (
-    <>
-      <PageWrapper>
-        <div className="bg-default-1 pt-26 pt-lg-28 pb-13 pb-lg-25">
-          <div className="container">
-            <div className="row">
-              <div className="col-12 col-lg-4 col-md-5 col-xs-8">
-                <Sidebar />
-              </div>
-              {/* <!-- Main Body --> */}
-              <div className="col-12 col-xl-8 col-lg-8">
-                {/* <!-- form --> */}
-                <form
-                  action="/"
-                  className="search-form"
-                  // onSubmit={handleSubmit}
-                >
-                  <div className="filter-search-form-2 search-1-adjustment bg-white rounded-sm shadow-7 pr-6 py-6 pl-6">
-                    <div className="filter-inputs">
-                      {/* <!-- .select-city starts --> */}
-                      <div className="form-group position-relative w-lg-50 w-xl-50 w-xxl-50">
-                        <Select
-                          options={defaultServices}
-                          className="pl-8 h-100 arrow-3 font-size-4 d-flex align-items-center w-100"
-                          border={false}
-                          value={{
-                            label: state.serviceLabel,
-                            value: state.service,
-                          }}
-                          onChange={handleService}
-                        />
-                        <span className="h-100 w-px-50 pos-abs-tl d-flex align-items-center justify-content-center font-size-6">
-                          <i className="icon icon-pin-3 text-primary font-weight-bold"></i>
-                        </span>
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setState({ loading: true, error: null });
+
+    Router.push({
+      pathname: "/search-list",
+      query: {
+        city: state.city,
+        service: state.service,
+        price: state.price,
+        sex: state.sex,
+        score: state.score,
+      },
+    });
+    fetchData(state.city, state.service);
+  };
+
+  if (dataResult.length > 0) {
+    return (
+      <>
+        <PageWrapper>
+          <div className="bg-default-1 pt-26 pt-lg-28 pb-13 pb-lg-25">
+            <div className="container">
+              <div className="row">
+                <div className="col-12 col-lg-4 col-md-5 col-xs-8">
+                  <Sidebar />
+                </div>
+                {/* <!-- Main Body --> */}
+                <div className="col-12 col-xl-8 col-lg-8">
+                  {/* <!-- form --> */}
+                  <form
+                    action="/"
+                    className="search-form"
+                    onSubmit={handleSubmit}
+                  >
+                    <div className="filter-search-form-2 search-1-adjustment bg-white rounded-sm shadow-7 pr-6 py-6 pl-6">
+                      <div className="filter-inputs">
+                        {/* <!-- .select-city starts --> */}
+                        <div className="form-group position-relative w-lg-50 w-xl-50 w-xxl-50">
+                          <Select
+                            options={services}
+                            className="pl-8 h-100 arrow-3 font-size-4 d-flex align-items-center w-100"
+                            border={false}
+                            id="service"
+                            value={{
+                              label: state.serviceLabel,
+                              value: state.service,
+                            }}
+                            onChange={handleService}
+                            menuPosition={"fixed"}
+                          />
+                          <span className="h-100 w-px-50 pos-abs-tl d-flex align-items-center justify-content-center font-size-6">
+                            <i className="icon icon-pin-3 text-primary font-weight-bold"></i>
+                          </span>
+                        </div>
+                        {/* <!-- ./select-city ends --> */}
+                        {/* <!-- .select-city starts --> */}
+                        <div className="form-group position-relative w-lg-50 w-xl-50 w-xxl-50">
+                          <Select
+                            options={cities}
+                            className="pl-8 h-100 arrow-3 font-size-4 d-flex align-items-center w-100"
+                            border={false}
+                            id="city"
+                            value={{
+                              label: state.cityLabel,
+                              value: state.city,
+                            }}
+                            onChange={handleCity}
+                          />
+                          <span className="h-100 w-px-50 pos-abs-tl d-flex align-items-center justify-content-center font-size-6">
+                            <i className="icon icon-pin-3 text-primary font-weight-bold"></i>
+                          </span>
+                        </div>
+                        {/* <!-- ./select-city ends --> */}
                       </div>
-                      {/* <!-- ./select-city ends --> */}
-                      {/* <!-- .select-city starts --> */}
-                      <div className="form-group position-relative w-lg-50 w-xl-50 w-xxl-50">
-                        <Select
-                          options={defaultCountries}
-                          className="pl-8 h-100 arrow-3 font-size-4 d-flex align-items-center w-100"
-                          border={false}
-                          value={{ value: city }}
-                          onChange={handleCity}
-                        />
-                        <span className="h-100 w-px-50 pos-abs-tl d-flex align-items-center justify-content-center font-size-6">
-                          <i className="icon icon-pin-3 text-primary font-weight-bold"></i>
-                        </span>
+                      <div className="button-block">
+                        <button className="btn btn-primary line-height-reset h-100 btn-submit w-100 text-uppercase">
+                          Buscar
+                        </button>
                       </div>
-                      {/* <!-- ./select-city ends --> */}
                     </div>
-                    <div className="button-block">
-                      <button className="btn btn-primary line-height-reset h-100 btn-submit w-100 text-uppercase">
-                        Buscar
-                      </button>
-                    </div>
-                  </div>
-                </form>
-                {dataResult != null && (
+                  </form>
                   <div className="pt-12">
                     <div className="d-flex align-items-center justify-content-between mb-6">
                       <h5 className="font-size-4 font-weight-normal text-gray">
-                        <span className="heading-default-color">120 </span>
-                        resultados para{" "}
                         <span className="heading-default-color">
-                          Manicurista
-                        </span>
+                          {dataResult.length}
+                        </span>{" "}
+                        resultados obtenidos
+                        {/* <span className="heading-default-color">
+                          {state.serviceLabel} y {state.cityLabel}
+                        </span> */}
                       </h5>
                       <div className="d-flex align-items-center result-view-type">
                         <Link href="/search-list">
@@ -212,7 +271,7 @@ const SearchGrid = () => {
                                     <span className="text-black-2">
                                       {
                                         profesional.servicio_profesional[0]
-                                          .servicio.monto_hora
+                                          .monto_hora
                                       }
                                     </span>{" "}
                                     Gs.
@@ -307,13 +366,15 @@ const SearchGrid = () => {
                       </Link>
                     </div>
                   </div>
-                )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </PageWrapper>
-    </>
-  );
+        </PageWrapper>
+      </>
+    );
+  } else {
+    return <div>no hay datos</div>;
+  }
 };
 export default SearchGrid;

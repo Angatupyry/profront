@@ -13,6 +13,26 @@ class BuscadorService {
       throw error;
     }
   };
+
+  getCities = async () => {
+    try {
+      const data = await http.get("/public/ciudad", {});
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  getServices = async () => {
+    try {
+      const data = await http.get("/public/servicio", {});
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
 }
 
 export default new BuscadorService();
