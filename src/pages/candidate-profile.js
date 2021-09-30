@@ -38,23 +38,26 @@ const CandidateProfile = () => {
     );
   }
 
+  async function fetchData(id) {
+    setState({ loading: true, error: null });
+    try {
+      const response = await ProfesionalService.getProfile(id);
+      setDataResult(response.data.data[0]);
+      //console.log(response);
+    } catch (error) {
+      console.log(error);
+      setState({ loading: false, error: error });
+    }
+  }
+
   useEffect(() => {
-    console.log(dataResult);
-    async function fetchData() {
-      setState({ loading: true, error: null });
-      try {
-        const response = await ProfesionalService.getProfile(id);
-        setDataResult(response.data.data[0]);
-        //console.log(response);
-      } catch (error) {
-        console.log(error);
-        setState({ loading: false, error: error });
-      }
+    if (!id) {
+      return;
     }
     if (isEmpty(dataResult)) {
-      fetchData();
+      fetchData(id);
     }
-  }, [dataResult]);
+  }, [dataResult, id]);
 
   const transformDate = (date) => {
     let jsDate = new Date(date);
@@ -71,15 +74,15 @@ const CandidateProfile = () => {
               {/* <!-- back Button --> */}
               <div className="row justify-content-center">
                 <div className="col-12 dark-mode-texts">
-                  <div className="mb-9">
-                    <Link href="/search-list">
-                      <a className="d-flex align-items-center ml-4">
-                        <i className="icon icon-small-left bg-white circle-40 mr-5 font-size-7 text-black font-weight-bold shadow-8"></i>
-                        <span className="text-uppercase font-size-3 font-weight-bold text-gray">
-                          Atrás
-                        </span>
-                      </a>
-                    </Link>
+                  <div className="mb-9" onClick={() => data.back()}>
+                    {/* <Link href="#"> */}
+                    <a className="d-flex align-items-center ml-4">
+                      <i className="icon icon-small-left bg-white circle-40 mr-5 font-size-7 text-black font-weight-bold shadow-8"></i>
+                      <span className="text-uppercase font-size-3 font-weight-bold text-gray">
+                        Atrás
+                      </span>
+                    </a>
+                    {/* </Link> */}
                   </div>
                 </div>
               </div>
