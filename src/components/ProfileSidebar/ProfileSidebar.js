@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 
 import imgP from "../../assets/image/l2/jpg/gallery-img19.jpg";
+import imgF from "../../assets/image/svg/icon-fire-rounded.svg";
 
 const Sidebar = (props) => {
   const [data, setData] = React.useState(props.data);
@@ -27,7 +28,7 @@ const Sidebar = (props) => {
                     </a>
                   </Link>
                 </h4>
-                <p className="mb-8">
+                <p className="mb-1">
                   <Link href="/#">
                     <a className="text-gray font-size-4">
                       {" "}
@@ -35,7 +36,17 @@ const Sidebar = (props) => {
                     </a>
                   </Link>
                 </p>
-                <div className="button-block">
+                <div className="col-md-12 text-center pt-2 pt-md-5 px-0 pb-5">
+                  <div className="media justify-content-md-center">
+                    <p className="font-weight-bold font-size-4 text-hit-gray mb-0">
+                      <span className="text-black-2">{data.promedio}</span>{" "}
+                    </p>
+                    <div className="image mr-5 ml-2">
+                      <img src={imgF} alt="" />
+                    </div>
+                  </div>
+                </div>
+                <div className="button-block mt-5">
                   <button className="btn btn-primary line-height-reset btn-submit text-uppercase">
                     Contratar
                   </button>
