@@ -56,6 +56,12 @@ const CandidateProfile = () => {
     }
   }, [dataResult]);
 
+  const transformDate = (date) => {
+    let jsDate = new Date(date);
+    let options = { year: "numeric", month: "long" };
+    return jsDate.toLocaleDateString("es-ES", options);
+  };
+
   if (!isEmpty(dataResult)) {
     return (
       <>
@@ -191,92 +197,55 @@ const CandidateProfile = () => {
                             <h4 className="font-size-6 mb-7 mt-5 text-black-2 font-weight-semibold">
                               Experiencias laborales
                             </h4>
-                            {/* <!-- Single Card --> */}
-                            <div className="w-100">
-                              <div className="d-flex align-items-center pr-11 mb-9 flex-wrap flex-sm-nowrap">
-                                <div className="square-72 d-block mr-8 mb-7 mb-sm-0">
-                                  <img src={imgB1} alt="" />
-                                </div>
-                                <div className="w-100 mt-n2">
-                                  <h3 className="mb-0">
-                                    <Link href="/#">
-                                      <a className="font-size-6 text-black-2 font-weight-semibold">
-                                        Profesora de inglés
-                                      </a>
-                                    </Link>
-                                  </h3>
-                                  <Link href="/#">
-                                    <a className="font-size-4 text-default-color line-height-2">
-                                      CCPA
-                                    </a>
-                                  </Link>
-                                  <div className="d-flex align-items-center justify-content-md-between flex-wrap">
-                                    <Link href="/#">
-                                      <a className="font-size-4 text-gray mr-5">
-                                        Jun 2017 - Abril 2020- 3 años
-                                      </a>
-                                    </Link>
-                                    <Link href="/#">
-                                      <a className="font-size-3 text-gray">
-                                        <span
-                                          className="mr-4"
-                                          css={`
-                                            margin-top: -2px;
-                                          `}
-                                        >
-                                          <img src={imgL} alt="" />
-                                        </span>
-                                        Asunción, PY
-                                      </a>
-                                    </Link>
+                            {dataResult.experiencia_laboral.map(
+                              (experiencia) => {
+                                return (
+                                  <div className="w-100">
+                                    <div className="d-flex align-items-center pr-11 mb-9 flex-wrap flex-sm-nowrap">
+                                      {/* <div className="square-72 d-block mr-8 mb-7 mb-sm-0">
+                                        <img src={imgB1} alt="" />
+                                      </div> */}
+                                      <div className="w-100 mt-n2">
+                                        <h3 className="mb-0">
+                                          <Link href="/#">
+                                            <a className="font-size-5 text-black-2 font-weight-semibold">
+                                              {experiencia.descripcion}
+                                            </a>
+                                          </Link>
+                                        </h3>
+                                        <Link href="/#">
+                                          <a className="font-size-4 text-default-color line-height-2">
+                                            {experiencia.lugar}
+                                          </a>
+                                        </Link>
+                                        <div className="d-flex align-items-center justify-content-md-between flex-wrap">
+                                          <Link href="/#">
+                                            <a className="font-size-3 text-gray mr-5">
+                                              {transformDate(
+                                                experiencia.fecha_desde
+                                              )}
+                                            </a>
+                                          </Link>
+                                          <Link href="/#">
+                                            <a className="font-size-3 text-gray">
+                                              <span
+                                                className="mr-4"
+                                                css={`
+                                                  margin-top: -2px;
+                                                `}
+                                              >
+                                                <img src={imgL} alt="" />
+                                              </span>
+                                              Asunción, PY
+                                            </a>
+                                          </Link>
+                                        </div>
+                                      </div>
+                                    </div>
                                   </div>
-                                </div>
-                              </div>
-                            </div>
-                            {/* <!-- Single Card End --> */}
-                            {/* <!-- Single Card --> */}
-                            <div className="w-100">
-                              <div className="d-flex align-items-center pr-11 mb-9 flex-wrap flex-sm-nowrap">
-                                <div className="square-72 d-block mr-8 mb-7 mb-sm-0">
-                                  <img src={imgB2} alt="" />
-                                </div>
-                                <div className="w-100 mt-n2">
-                                  <h3 className="mb-0">
-                                    <Link href="/#">
-                                      <a className="font-size-6 text-black-2 font-weight-semibold">
-                                        Profesora de inglés
-                                      </a>
-                                    </Link>
-                                  </h3>
-                                  <Link href="/#">
-                                    <a className="font-size-4 text-default-color line-height-2">
-                                      Colegio Alemán
-                                    </a>
-                                  </Link>
-                                  <div className="d-flex align-items-center justify-content-md-between flex-wrap">
-                                    <Link href="/#">
-                                      <a className="font-size-3 text-gray mr-5">
-                                        Ene 2016 - Jun 2017- 1 año y 5 meses
-                                      </a>
-                                    </Link>
-                                    <Link href="/#">
-                                      <a className="font-size-3 text-gray">
-                                        <span
-                                          className="mr-4"
-                                          css={`
-                                            margin-top: -2px;
-                                          `}
-                                        >
-                                          <img src={imgL} alt="" />
-                                        </span>
-                                        Asunción, PY
-                                      </a>
-                                    </Link>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            {/* <!-- Single Card End --> */}
+                                );
+                              }
+                            )}
                           </div>
                           {/* <!-- Card Section End --> */}
                           {/* <!-- Card Section Start --> */}
@@ -284,88 +253,105 @@ const CandidateProfile = () => {
                             <h4 className="font-size-6 mb-7 mt-5 text-black-2 font-weight-semibold">
                               Educación
                             </h4>
-                            {/* <!-- Single Card --> */}
-                            <div className="w-100">
-                              <div className="d-flex align-items-center pr-11 mb-9 flex-wrap flex-sm-nowrap">
-                                <div className="square-72 d-block mr-8 mb-7 mb-sm-0">
-                                  <img src={imgB3} alt="" />
-                                </div>
-                                <div className="w-100 mt-n2">
-                                  <h3 className="mb-0">
-                                    <Link href="/#">
-                                      <a className="font-size-6 text-black-2">
-                                        Master en lengua inglesa
-                                      </a>
-                                    </Link>
-                                  </h3>
-                                  <Link href="/#">
-                                    <a className="font-size-4 text-default-color line-height-2">
-                                      Universidad Nacional de Buenos Aires
-                                    </a>
-                                  </Link>
-                                  <div className="d-flex align-items-center justify-content-md-between flex-wrap">
-                                    <Link href="/#">
-                                      <a className="font-size-3 text-gray mr-5">
-                                        Jun 2013 - Jun 2015- 2 años
-                                      </a>
-                                    </Link>
-                                    <Link href="/#">
-                                      <a className="font-size-3 text-gray">
-                                        <span
-                                          className="mr-4"
-                                          css={`
-                                            margin-top: -2px;
-                                          `}
-                                        >
-                                          <img src={imgL} alt="" />
-                                        </span>
-                                        Buenos Aires, ARG
-                                      </a>
-                                    </Link>
+                            {dataResult.estudio_academico.map((educacion) => {
+                              return (
+                                <div className="w-100">
+                                  <div className="d-flex align-items-center pr-11 mb-9 flex-wrap flex-sm-nowrap">
+                                    {/* <div className="square-72 d-block mr-8 mb-7 mb-sm-0">
+                                      <img src={imgB3} alt="" />
+                                    </div> */}
+                                    <div className="w-100 mt-n2">
+                                      <h3 className="mb-0">
+                                        <Link href="/#">
+                                          <a className="font-size-5 text-black-2">
+                                            {educacion.descripcion}
+                                          </a>
+                                        </Link>
+                                      </h3>
+                                      <Link href="/#">
+                                        <a className="font-size-4 text-default-color line-height-2">
+                                          {
+                                            educacion.carrera_universitaria
+                                              .universidad.nombre
+                                          }
+                                        </a>
+                                      </Link>
+                                      <div className="d-flex align-items-center justify-content-md-between flex-wrap">
+                                        <Link href="/#">
+                                          <a className="font-size-3 text-gray mr-5">
+                                            Jun 2013 - Jun 2015- 2 años
+                                          </a>
+                                        </Link>
+                                        <Link href="/#">
+                                          <a className="font-size-3 text-gray">
+                                            <span
+                                              className="mr-4"
+                                              css={`
+                                                margin-top: -2px;
+                                              `}
+                                            >
+                                              <img src={imgL} alt="" />
+                                            </span>
+                                            Buenos Aires, ARG
+                                          </a>
+                                        </Link>
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            </div>
-                            {/* <!-- Single Card End --> */}
+                              );
+                            })}
                           </div>
                           {/* <!-- Card Section End --> */}
                           <div className="border-top p-5 pl-xs-12 pt-7 pb-5">
                             <h4 className="font-size-6 mb-7 mt-5 text-black-2 font-weight-semibold">
                               Valoraciones
                             </h4>
-                            {/* <!-- Single Card --> */}
-                            <div className="w-100">
-                              <div className="d-flex align-items-center pr-11 mb-9 flex-wrap flex-sm-nowrap">
-                                <div className="w-100 mt-n2">
-                                  <h3 className="mb-0">
-                                    <Link href="/#">
-                                      <a className="font-size-5 text-black-2">
-                                        Enseñanza de inglés
-                                      </a>
-                                    </Link>
-                                  </h3>
-                                  <div className="col-md-12 text-right pt-7 pt-md-5 pl-0">
-                                    <div className="media justify-content-md-start">
-                                      <div className="font-size-3 text-gray mr-5">
-                                        22/03/2021
-                                      </div>
-                                      <p className="font-weight-bold font-size-4 text-hit-gray mb-0">
-                                        <span className="text-black-2">5</span>{" "}
-                                      </p>
-                                      <div className="image mr-5 ml-2">
-                                        <img src={imgF} alt="" />
+                            {dataResult.comentario_profesional.map(
+                              (comentario) => {
+                                return (
+                                  <div className="w-100">
+                                    <div className="d-flex align-items-center pr-11 mb-9 flex-wrap flex-sm-nowrap">
+                                      <div className="w-100 mt-n2">
+                                        <h3 className="mb-0">
+                                          <Link href="/#">
+                                            <a className="font-size-5 text-black-2">
+                                              Enseñanza de inglés
+                                            </a>
+                                          </Link>
+                                        </h3>
+                                        <div className="col-md-12 text-right pt-7 pt-md-5 pl-0">
+                                          <div className="media justify-content-md-start">
+                                            <div className="font-size-3 text-gray mr-5">
+                                              22/03/2021
+                                            </div>
+                                            <p className="font-weight-bold font-size-4 text-hit-gray mb-0">
+                                              <span className="text-black-2">
+                                                {
+                                                  comentario.comentario
+                                                    .calificacion.puntuacion
+                                                }
+                                              </span>{" "}
+                                            </p>
+                                            <div className="image mr-5 ml-2">
+                                              <img src={imgF} alt="" />
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <div className="font-size-4 text-default-color line-height-2 pt-4">
+                                          {
+                                            comentario.comentario.calificacion
+                                              .descripcion
+                                          }
+                                        </div>
+                                        <div className="d-flex align-items-center justify-content-md-between flex-wrap"></div>
                                       </div>
                                     </div>
                                   </div>
-
-                                  <div className="font-size-4 text-default-color line-height-2 pt-4">
-                                    Excelente
-                                  </div>
-                                  <div className="d-flex align-items-center justify-content-md-between flex-wrap"></div>
-                                </div>
-                              </div>
-                            </div>
-                            {/* <!-- Single Card End --> */}
+                                );
+                              }
+                            )}
                           </div>
                           {/* <!-- Card Section End --> */}
                         </Tab.Pane>

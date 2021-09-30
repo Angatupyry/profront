@@ -105,15 +105,13 @@ const Sidebar = (props) => {
                 <h5 className="text-black-2 mb-8 font-size-5">Cobertura</h5>
                 {/* <!-- Single List --> */}
                 <div className="mb-7">
-                  <span class="badge badge-success font-size-3 font-weight-semibold m-1">
-                    Lambaré
-                  </span>
-                  <span class="badge badge-success font-size-3 font-weight-semibold m-1">
-                    Asunción
-                  </span>
-                  <span class="badge badge-success font-size-3 font-weight-semibold m-1">
-                    Villa Elisa
-                  </span>
+                  {data.zona_profesional.map((zonas) => {
+                    return (
+                      <span class="badge badge-success font-size-3 font-weight-semibold m-1">
+                        {zonas.ciudad.nombre}
+                      </span>
+                    );
+                  })}
                 </div>
 
                 <h5 className="text-black-2 mb-8 font-size-5">Imágenes</h5>
