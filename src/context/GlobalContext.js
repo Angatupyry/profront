@@ -10,6 +10,7 @@ const GlobalProvider = ({ children }) => {
   const [signUpModalVisible, setSignUpModalVisible] = useState(false);
   const [videoModalVisible, setVideoModalVisible] = useState(false);
   const [visibleOffCanvas, setVisibleOffCanvas] = useState(false);
+  const [addPaymentModalVisible, setAddPaymentModalVisible] = useState(false);
   const [header, setHeader] = useState({
     theme: "light",
     bgClass: "default",
@@ -57,6 +58,10 @@ const GlobalProvider = ({ children }) => {
     setVisibleOffCanvas(false);
   };
 
+  const toggleAddPaymentModal = () => {
+    setAddPaymentModalVisible(!addPaymentModalVisible);
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -79,6 +84,8 @@ const GlobalProvider = ({ children }) => {
         setHeader,
         footer,
         setFooter,
+        addPaymentModalVisible,
+        toggleAddPaymentModal,
       }}
     >
       {children}
