@@ -7,11 +7,7 @@ import Content1 from "../sections/landing1/Content1";
 import FeaturedJobs from "../sections/landing1/FeaturedJobs";
 import Content2 from "../sections/landing1/Content2";
 
-//import ReactSession from "react-client-session";
-
 const IndexPage = () => {
-  // ReactSession.setStoreType("localStorage");
-  // ReactSession.set("username", "Bob");
   return (
     <>
       <PageWrapper

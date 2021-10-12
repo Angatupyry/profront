@@ -3,7 +3,6 @@ import Link from "next/link";
 import PageWrapper from "../components/PageWrapper";
 import { Select } from "../components/Core";
 import Router, { useRouter } from "next/router";
-import ReactSession from "react-client-session";
 
 import ProfesionalService from "../services/profesional.service";
 
@@ -33,8 +32,6 @@ const horas = [
 let servicesText;
 
 const JobDetails = () => {
-  console.log(ReactSession.get("username"));
-
   const data = useRouter();
   const {
     query: { id },
@@ -51,6 +48,16 @@ const JobDetails = () => {
     horaDesdeLabel: "",
     horaHastaLabel: "",
     tarifa: 0,
+  });
+
+  const [postData, setPostData] = React.useState({
+    profesional_id: id,
+    servicio_profesional_id: "",
+    cliente_id: "",
+    observacion: "",
+    fecha: "",
+    cant_horas: 0,
+    monto: 0,
   });
   const [dataResult, setDataResult] = React.useState({});
 
@@ -72,7 +79,7 @@ const JobDetails = () => {
     try {
       const response = await ProfesionalService.getSolicitation(id);
       setDataResult(response.data.data[0]);
-      console.log(response.data.data[0]);
+      //console.log(response.data.data[0]);
       setState({
         fechaSeleccionada: getTodaysdate(),
         horaDesdeSeleccionada: horas[0].value,
@@ -99,6 +106,7 @@ const JobDetails = () => {
     let montoHora = e.target.getAttribute("montoHora");
     let servicio = e.target.getAttribute("servicio");
     let monto = e.target.getAttribute("monto");
+    let servicioId = e.target.getAttribute("servicioId");
     setState({
       montoServicioSeleccionado: montoHora,
       servicioSeleccionado: servicio,
@@ -109,11 +117,25 @@ const JobDetails = () => {
       horaHastaSeleccionada: horas[1].value,
       horaHastaLabel: horas[1].label,
     });
+
+    setPostData({
+      monto: parseInt(monto),
+      cant_horas: state.horaHastaSeleccionada - state.horaDesdeSeleccionada,
+      servicio_profesional_id: parseInt(servicioId),
+      cliente_id: 1,
+      profesional_id: parseInt(id),
+      fecha: getTodaysdate(),
+      observacion: "",
+    });
   };
 
   const handleDate = (e) => {
     setState({
       fechaSeleccionada: e.label,
+    });
+
+    setPostData({
+      fecha: state.fechaSeleccionada,
     });
   };
 
@@ -284,6 +306,7 @@ const JobDetails = () => {
                                       montohora={descripcionMonto}
                                       servicio={servicio.servicio.descripcion}
                                       monto={servicio.monto_hora}
+                                      servicioId={servicio.servicio.id}
                                     />
                                     <span className="checkbox mr-5"></span>
                                     <span className="font-size-4 mb-0 line-height-reset d-block font-weight-semibold">
@@ -489,7 +512,10 @@ const JobDetails = () => {
                       <div className="row mt-12">
                         <div className="col-md-12 mb-lg-0 mb-12 d-flex justify-content-end">
                           <Link href="/#">
-                            <a className="btn btn-green text-uppercase btn-medium w-180 h-px-48 rounded-3 mr-4 mt-6">
+                            <a
+                              className="btn btn-green text-uppercase btn-medium w-180 h-px-48 rounded-3 mr-4 mt-6"
+                              onClick={handleSubmit}
+                            >
                               Enviar solicitud
                             </a>
                           </Link>
