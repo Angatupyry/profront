@@ -38,6 +38,7 @@ const Hero = (props) => {
     city: "",
     cityLabel: "",
   });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setState({ loading: true, error: null });
@@ -116,10 +117,6 @@ const Hero = (props) => {
       fetchData();
     }
   }, [city]);
-
-  const divStyle = {
-    zIndex: "99999",
-  };
 
   if (city.length > 0 && service.length > 0) {
     return (
