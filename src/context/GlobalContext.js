@@ -11,6 +11,7 @@ const GlobalProvider = ({ children }) => {
   const [videoModalVisible, setVideoModalVisible] = useState(false);
   const [visibleOffCanvas, setVisibleOffCanvas] = useState(false);
   const [addPaymentModalVisible, setAddPaymentModalVisible] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(false);
   const [header, setHeader] = useState({
     theme: "light",
     bgClass: "default",
@@ -62,6 +63,13 @@ const GlobalProvider = ({ children }) => {
     setAddPaymentModalVisible(!addPaymentModalVisible);
   };
 
+  const showPageSpinner = () => {
+    setShowSpinner({ showSpinner: true });
+  };
+  const hidePageSpinner = () => {
+    setShowSpinner({ showSpinner: false });
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -86,6 +94,9 @@ const GlobalProvider = ({ children }) => {
         setFooter,
         addPaymentModalVisible,
         toggleAddPaymentModal,
+        showSpinner,
+        showPageSpinner,
+        hidePageSpinner,
       }}
     >
       {children}

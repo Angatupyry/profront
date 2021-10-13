@@ -6,10 +6,9 @@ import GlobalContext from "../../context/GlobalContext";
 import AuthService from "../../services/auth.service";
 import Error from "../Error/Error";
 import { Select } from "../../components/Core";
+import Loader from "react-loader-spinner";
 
 import MediosPagoService from "../../services/mediosPago.service";
-
-//const tarjetas = [{ value: "C", label: "Crédito" }];
 
 const ModalStyled = styled(Modal)`
   /* &.modal {
@@ -18,7 +17,6 @@ const ModalStyled = styled(Modal)`
 `;
 
 const cardArray = [];
-
 const meses = [
   { value: "1", label: "Enero" },
   { value: "2", label: "Febrero" },
@@ -136,14 +134,20 @@ const ModalAddPayment = (props) => {
   }
 
   useEffect(() => {
+    if (state.loading) {
+      gContext.showPageSpinner();
+    }
+
     if (!tarjetas.length > 0) {
       getCards();
     }
     scrollToTop();
+    setState({ loading: false, error: null });
   }, [tarjetas]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    gContext.showPageSpinner();
     setState({ loading: true, error: null });
     try {
       const response = await MediosPagoService.postCard(
@@ -178,6 +182,17 @@ const ModalAddPayment = (props) => {
 
   return (
     <div>
+      {state.loading && (
+        <div className="spinner">
+          <Loader
+            type="ThreeDots"
+            color="#00b074"
+            height={50}
+            width={50}
+            visible={true}
+          />
+        </div>
+      )}
       <ModalStyled
         {...props}
         size="lg"
@@ -370,8 +385,13 @@ const ModalAddPayment = (props) => {
                       </button>
                     </div>
                     {state.success && (
-                      <div class="alert alert-success" role="alert">
+                      <div className="alert alert-success" role="alert">
                         Tarjeta guardada exitosamente.
+                      </div>
+                    )}
+                    {state.error && (
+                      <div className="alert alert-danger" role="alert">
+                        Ocurrió un error.
                       </div>
                     )}
                   </form>
