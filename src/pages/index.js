@@ -15,17 +15,17 @@ const IndexPage = () => {
   return (
     <>
       <div className="page-container">
-        {gContext.showSpinner && (
+        {/* {gContext.showSpinner && (
           <div className="spinner">
             <Loader
               type="ThreeDots"
               color="#00b074"
               height={50}
               width={50}
-              visible={gContext.showSpinner}
+              visible={false}
             />
           </div>
-        )}
+        )} */}
 
         <PageWrapper
           headerConfig={{
