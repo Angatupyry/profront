@@ -23,22 +23,27 @@ class ProfesionalService {
     }
   };
 
-  postSolicitation = async (data) => {
-    console.log("data es");
-    console.log(data);
+  postSolicitation = async (
+    profesional_id,
+    servicio_profesional_id,
+    cliente_id,
+    observacion,
+    fecha,
+    cant_horas,
+    monto
+  ) => {
     try {
-      if (data.servicio_profesional_id) {
-        const data = await http.post("/public/operacion/consulta", {
-          profesional_id: data.profesional_id,
-          servicio_profesional_id: data.servicio_profesional_id,
-          cliente_id: data.cliente_id,
-          observacion: data.observacion,
-          fecha: data.fecha,
-          cant_horas: data.cant_horas,
-          monto: data.monto,
-        });
-        return data;
-      }
+      //console.log(profesional_id);
+      const data = await http.post("/public/operacion/consulta", {
+        profesional_id: profesional_id,
+        servicio_profesional_id: servicio_profesional_id,
+        cliente_id: cliente_id,
+        observacion: observacion,
+        fecha: fecha,
+        cant_horas: cant_horas,
+        monto: monto,
+      });
+      return data;
     } catch (error) {
       console.log(error);
       throw error;

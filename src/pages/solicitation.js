@@ -29,7 +29,12 @@ const horas = [
   { value: "21", label: "21:00 hs" },
 ];
 
-let servicesText;
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+};
 
 const JobDetails = () => {
   const data = useRouter();
@@ -40,11 +45,12 @@ const JobDetails = () => {
   const [state, setState] = React.useState({
     loading: true,
     error: null,
+    success: null,
     servicioSeleccionado: "",
     montoServicioSeleccionado: "",
     fechaSeleccionada: "",
-    horaDesdeSeleccionada: "",
-    horaHastaSeleccionada: "",
+    horaDesdeSeleccionada: "8",
+    horaHastaSeleccionada: "9",
     horaDesdeLabel: "",
     horaHastaLabel: "",
     tarifa: 0,
@@ -79,7 +85,7 @@ const JobDetails = () => {
     try {
       const response = await ProfesionalService.getSolicitation(id);
       setDataResult(response.data.data[0]);
-      //console.log(response.data.data[0]);
+      console.log(response.data.data[0]);
       setState({
         fechaSeleccionada: getTodaysdate(),
         horaDesdeSeleccionada: horas[0].value,
@@ -130,13 +136,14 @@ const JobDetails = () => {
   };
 
   const handleDate = (e) => {
-    setState({
-      fechaSeleccionada: e.label,
-    });
+    const newState = { ...state };
+    newState["fechaSeleccionada"] =
+      document.getElementById("serviceDate").value;
+    setState(newState);
 
-    setPostData({
-      fecha: state.fechaSeleccionada,
-    });
+    const newPostData = { ...postData };
+    newPostData["fecha"] = document.getElementById("serviceDate").value;
+    setPostData(newPostData);
   };
 
   const handleHoraDesde = (e) => {
@@ -144,6 +151,14 @@ const JobDetails = () => {
     newState["horaDesdeSeleccionada"] = e.value;
     newState["horaDesdeLabel"] = e.label;
     setState(newState);
+    let cant_horas = Math.abs(parseInt(state.horaHastaSeleccionada - e.value));
+
+    const newPostData = { ...postData };
+    newPostData["cant_horas"] = cant_horas;
+    // newPostData["monto"] = Math.abs(
+    //   parseInt(state.montoServicioSeleccionado) * cant_horas
+    // );
+    setPostData(newPostData);
   };
 
   const handleHoraHasta = (e) => {
@@ -151,29 +166,40 @@ const JobDetails = () => {
     newState["horaHastaSeleccionada"] = e.value;
     newState["horaHastaLabel"] = e.label;
     setState(newState);
+    let cant_horas = Math.abs(parseInt(e.value - state.horaDesdeSeleccionada));
+
+    const newPostData = { ...postData };
+    newPostData["cant_horas"] = cant_horas;
+    // newPostData["monto"] = Math.abs(
+    //   parseInt(state.montoServicioSeleccionado) * cant_horas
+    // );
+    setPostData(newPostData);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setState({ loading: true, error: null });
     try {
-      const response = await ProfesionalService.postSolicitation(postData);
-      //setDataResult(response.data.data[0]);
-      console.log(response);
-      // setState({
-      //   fechaSeleccionada: getTodaysdate(),
-      //   horaDesdeSeleccionada: horas[0].value,
-      //   horaDesdeLabel: horas[0].label,
-      //   horaHastaSeleccionada: horas[1].value,
-      //   horaHastaLabel: horas[1].label,
-      // });
+      const response = await ProfesionalService.postSolicitation(
+        postData.profesional_id,
+        postData.servicio_profesional_id,
+        postData.cliente_id,
+        postData.observacion,
+        postData.fecha,
+        postData.cant_horas,
+        postData.monto
+      );
+      scrollToTop();
+      setState({ loading: false, error: null, success: true });
     } catch (error) {
+      scrollToTop();
       console.log(error);
       setState({ loading: false, error: error });
     }
   };
 
   if (!isEmpty(dataResult)) {
+    let servicesText = "";
     return (
       <>
         <PageWrapper headerConfig={{ button: "profile" }}>
@@ -195,11 +221,31 @@ const JobDetails = () => {
                 </div>
                 {/* <!-- back Button End --> */}
                 <div className="col-xl-9 col-lg-11 mb-8 px-xxl-15 px-xl-0">
+                  {state.success && (
+                    <div className="row no-gutters">
+                      <div className="col-md-12">
+                        <div className="alert alert-success" role="alert">
+                          Solicitud creada exitosamente.
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {state.error && (
+                    <div className="row no-gutters">
+                      <div className="col-md-12">
+                        <div className="alert alert-danger" role="alert">
+                          Ocurrió un error al crear la solicitud. Por favor,
+                          intente más tarde.
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="bg-white rounded-4 border border-mercury shadow-9">
                     {/* <!-- Single Featured Job --> */}
                     <div className="pt-9 pl-sm-9 pl-5 pr-sm-9 pr-5 pb-8 border-bottom border-width-1 border-default-color light-mode-texts">
                       <div className="row">
-                        <div className="col-md-6">
+                        <div className="col-md-12">
                           {/* <!-- media start --> */}
                           <div className="media align-items-center">
                             {/* <!-- media logo start --> */}
@@ -221,16 +267,20 @@ const JobDetails = () => {
                                       servicio.servicio.descripcion;
                                     let tamanho =
                                       dataResult.servicio_profesional.length;
-                                    if (tamanho > 1) {
-                                      if (index === 0) {
-                                        servicesText += descripcion + "|";
-                                      } else if (index === tamanho) {
-                                        servicesText += "|" + descripcion;
+                                    if (servicio) {
+                                      if (tamanho > 1) {
+                                        if (
+                                          index === 0 ||
+                                          index === tamanho - 1
+                                        ) {
+                                          servicesText += descripcion;
+                                        } else {
+                                          servicesText +=
+                                            " | " + descripcion + " | ";
+                                        }
                                       } else {
-                                        servicesText += "|" + descripcion + "|";
+                                        servicesText = descripcion;
                                       }
-                                    } else {
-                                      servicesText = descripcion;
                                     }
                                   }
                                 )}
@@ -281,6 +331,7 @@ const JobDetails = () => {
                       {dataResult.servicio_profesional.map(
                         (servicio, index) => {
                           let key = "key-" + index;
+                          let id = "id-" + index;
                           let descripcionMonto =
                             servicio.monto_hora + "Gs./hora";
                           return (
@@ -293,20 +344,20 @@ const JobDetails = () => {
                               <div className="col-md-6 mb-lg-0 mb-6">
                                 <div className="form-group d-flex flex-wrap justify-content-center mb-1">
                                   <label
-                                    htmlFor="radio1"
+                                    htmlFor={id}
                                     className="gr-check-input d-flex  mr-3"
                                   >
                                     <input
                                       className="d-none"
                                       type="radio"
                                       name="isProfesional"
-                                      id="radio1"
+                                      id={id}
                                       //value={state.isProfessional}
                                       onChange={handleRadioBtn}
                                       montohora={descripcionMonto}
                                       servicio={servicio.servicio.descripcion}
                                       monto={servicio.monto_hora}
-                                      servicioId={servicio.servicio.id}
+                                      servicioId={servicio.id}
                                     />
                                     <span className="checkbox mr-5"></span>
                                     <span className="font-size-4 mb-0 line-height-reset d-block font-weight-semibold">
@@ -345,7 +396,7 @@ const JobDetails = () => {
                               type="date"
                               className="form-control"
                               placeholder="Ingrese la fecha"
-                              id="birthDate"
+                              id="serviceDate"
                               value={state.fechaSeleccionada}
                               onChange={handleDate}
                             />
@@ -407,7 +458,7 @@ const JobDetails = () => {
                         </div>
                       </div>
                       <div className="row">
-                        <div className="col-md-6">
+                        <div className="col-md-12">
                           {/* <!-- media start --> */}
                           <div className="media align-items-center">
                             {/* <!-- media logo start --> */}
@@ -500,10 +551,11 @@ const JobDetails = () => {
                           <div className="form-group d-flex flex-wrap justify-content-start mb-1">
                             <span className="font-size-4 mb-0 line-height-reset d-block font-weight-semibold">
                               <div className="text-primary">
-                                {state.tarifa *
-                                  (state.horaHastaSeleccionada -
-                                    state.horaDesdeSeleccionada)}{" "}
-                                Gs{" "}
+                                {state.tarifa &&
+                                  state.tarifa *
+                                    (state.horaHastaSeleccionada -
+                                      state.horaDesdeSeleccionada) +
+                                    " Gs"}
                               </div>
                             </span>
                           </div>

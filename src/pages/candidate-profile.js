@@ -43,7 +43,6 @@ const CandidateProfile = () => {
     try {
       const response = await ProfesionalService.getProfile(id);
       setDataResult(response.data.data[0]);
-      //console.log(response);
     } catch (error) {
       console.log(error);
       setState({ loading: false, error: error });
@@ -66,6 +65,7 @@ const CandidateProfile = () => {
   };
 
   if (!isEmpty(dataResult)) {
+    console.log(dataResult);
     return (
       <>
         <PageWrapper headerConfig={{ button: "profile" }}>

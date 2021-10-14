@@ -6,8 +6,9 @@ import imgF from "../../assets/image/svg/icon-fire-rounded.svg";
 
 const Sidebar = (props) => {
   const [data, setData] = React.useState(props.data);
+  const id = data.id;
   // console.log("props es: " + props.data);
-  // console.log(data);
+  //console.log(data);
   if (data !== null && data !== undefined) {
     return (
       <>
@@ -47,9 +48,11 @@ const Sidebar = (props) => {
                   </div>
                 </div>
                 <div className="button-block mt-5">
-                  <button className="btn btn-primary line-height-reset btn-submit text-uppercase">
-                    Contratar
-                  </button>
+                  <Link href={`/solicitation?id=${id}`}>
+                    <button className="btn btn-primary line-height-reset btn-submit text-uppercase">
+                      Contratar
+                    </button>
+                  </Link>
                 </div>
                 {/* <div className="icon-link d-flex align-items-center justify-content-center flex-wrap">
                   <Link href="/#">
