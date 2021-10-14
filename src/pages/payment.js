@@ -71,6 +71,21 @@ const Payment = () => {
     }
   }, [dataResult, id]);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setState({ loading: true, error: null });
+    try {
+      const response = await ProfesionalService.postTransaction(parseInt(id));
+      console.log(response);
+      scrollToTop();
+      setState({ loading: false, error: null, success: true });
+    } catch (error) {
+      scrollToTop();
+      console.log(error);
+      setState({ loading: false, error: error });
+    }
+  };
+
   if (!isEmpty(dataResult)) {
     let servicesText = "";
     return (
@@ -98,7 +113,7 @@ const Payment = () => {
                     <div className="row no-gutters">
                       <div className="col-md-12">
                         <div className="alert alert-success" role="alert">
-                          Solicitud creada exitosamente.
+                          Pago realizado exitosamente.
                         </div>
                       </div>
                     </div>
@@ -188,7 +203,6 @@ const Payment = () => {
                           <p className="font-size-4 mb-0">
                             {dataResult.fecha.substring(0, 10)} -{" "}
                             {dataResult.observacion}
-                            hs.
                           </p>
                         </div>
                         <div className="col-md-3 mb-lg-0 mb-3">
@@ -294,7 +308,10 @@ const Payment = () => {
                       <div className="row mt-12">
                         <div className="col-md-12 mb-lg-0 mb-12 d-flex justify-content-end">
                           <Link href="/#">
-                            <a className="btn btn-green text-uppercase btn-medium w-180 h-px-48 rounded-3 mr-4 mt-6">
+                            <a
+                              className="btn btn-green text-uppercase btn-medium w-180 h-px-48 rounded-3 mr-4 mt-6"
+                              onClick={handleSubmit}
+                            >
                               Pagar
                             </a>
                           </Link>

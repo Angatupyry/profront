@@ -69,6 +69,16 @@ class ProfesionalService {
       throw error;
     }
   };
+
+  postTransaction = async (id) => {
+    try {
+      const data = await http.post("/public/operacion/pago/" + id, {});
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
 }
 
 export default new ProfesionalService();
