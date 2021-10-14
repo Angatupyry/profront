@@ -101,7 +101,7 @@ const Payment = () => {
                       <a className="d-flex align-items-center ml-4">
                         <i className="icon icon-small-left bg-white circle-40 mr-5 font-size-7 text-black font-weight-bold shadow-8"></i>
                         <span className="text-uppercase font-size-3 font-weight-bold text-gray">
-                          Regresar al perfil
+                          Regresar al dashboard
                         </span>
                       </a>
                     </Link>
