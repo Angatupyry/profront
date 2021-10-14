@@ -104,13 +104,14 @@ const ModalAddPayment = (props) => {
     setState({ loading: true, error: null });
     try {
       const cards = await MediosPagoService.getCards();
-      console.log(cards);
+      //console.log(cards);
       cards.data.data.forEach((element) => {
         cardArray.push({
           value: element.id.toString(),
           label: element.nombre,
         });
       });
+      console.log(cardArray);
       setTarjetas(cardArray);
       setState({
         card: cardArray[0].value,
@@ -142,7 +143,7 @@ const ModalAddPayment = (props) => {
       getCards();
     }
     scrollToTop();
-    setState({ loading: false, error: null });
+    //setState({ loading: false, error: null });
   }, [tarjetas]);
 
   const handleSubmit = async (e) => {
