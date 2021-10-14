@@ -49,6 +49,26 @@ class ProfesionalService {
       throw error;
     }
   };
+
+  getTransaction = async (id) => {
+    try {
+      const data = await http.get("/public/transaccion/" + id);
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  getUserCards = async (id) => {
+    try {
+      const data = await http.get("/public/usuario_tarjeta?usuario__id=" + id);
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
 }
 
 export default new ProfesionalService();

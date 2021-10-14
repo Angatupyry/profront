@@ -131,7 +131,7 @@ const JobDetails = () => {
       cliente_id: 1,
       profesional_id: parseInt(id),
       fecha: getTodaysdate(),
-      observacion: "",
+      observacion: horas[0].label + " a " + horas[1].label,
     });
   };
 
@@ -152,12 +152,11 @@ const JobDetails = () => {
     newState["horaDesdeLabel"] = e.label;
     setState(newState);
     let cant_horas = Math.abs(parseInt(state.horaHastaSeleccionada - e.value));
+    let horario = e.label + " a " + state.horaHastaLabel;
 
     const newPostData = { ...postData };
     newPostData["cant_horas"] = cant_horas;
-    // newPostData["monto"] = Math.abs(
-    //   parseInt(state.montoServicioSeleccionado) * cant_horas
-    // );
+    newPostData["observacion"] = horario;
     setPostData(newPostData);
   };
 
@@ -167,12 +166,11 @@ const JobDetails = () => {
     newState["horaHastaLabel"] = e.label;
     setState(newState);
     let cant_horas = Math.abs(parseInt(e.value - state.horaDesdeSeleccionada));
+    let horario = state.horaDesdeLabel + " a " + e.label;
 
     const newPostData = { ...postData };
     newPostData["cant_horas"] = cant_horas;
-    // newPostData["monto"] = Math.abs(
-    //   parseInt(state.montoServicioSeleccionado) * cant_horas
-    // );
+    newPostData["observacion"] = horario;
     setPostData(newPostData);
   };
 

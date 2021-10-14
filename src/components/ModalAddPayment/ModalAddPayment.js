@@ -104,7 +104,7 @@ const ModalAddPayment = (props) => {
     setState({ loading: true, error: null });
     try {
       const cards = await MediosPagoService.getCards();
-      console.log(cards);
+      //console.log(cards);
       cards.data.data.forEach((element) => {
         cardArray.push({
           value: element.id.toString(),
