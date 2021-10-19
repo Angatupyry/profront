@@ -1,4 +1,5 @@
 import http from "./http-common";
+//import protectedRoute from "./protected-routes";
 
 class MediosPagoService {
   getCards = async () => {
@@ -30,6 +31,16 @@ class MediosPagoService {
         numero_cvc: numero_cvc,
         secuencia: secuencia,
       });
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  getUserCards = async (id) => {
+    try {
+      const data = await http.get("/public/usuario_tarjeta?usuario__id=" + id);
       return data;
     } catch (error) {
       console.log(error);

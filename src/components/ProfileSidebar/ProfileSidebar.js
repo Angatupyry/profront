@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import Link from "next/link";
+import GlobalContext from "../../context/GlobalContext";
 
 import imgP from "../../assets/image/l2/jpg/gallery-img19.jpg";
 import imgF from "../../assets/image/svg/icon-fire-rounded.svg";
 
 const Sidebar = (props) => {
+  const gContext = useContext(GlobalContext);
   const [data, setData] = React.useState(props.data);
   const id = data.id;
   // console.log("props es: " + props.data);
@@ -48,11 +50,27 @@ const Sidebar = (props) => {
                   </div>
                 </div>
                 <div className="button-block mt-5">
-                  <Link href={`/solicitation?id=${id}`}>
-                    <button className="btn btn-primary line-height-reset btn-submit text-uppercase">
-                      Contratar
-                    </button>
-                  </Link>
+                  {localStorage.getItem("user") && (
+                    <Link href={`/solicitation?id=${id}`}>
+                      <button className="btn btn-primary line-height-reset btn-submit text-uppercase">
+                        Contratar
+                      </button>
+                    </Link>
+                  )}
+
+                  {!localStorage.getItem("user") && (
+                    <Link href="#">
+                      <button
+                        className="btn btn-primary line-height-reset btn-submit text-uppercase"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          gContext.toggleSignInModal();
+                        }}
+                      >
+                        Contratar
+                      </button>
+                    </Link>
+                  )}
                 </div>
                 {/* <div className="icon-link d-flex align-items-center justify-content-center flex-wrap">
                   <Link href="/#">
@@ -121,7 +139,7 @@ const Sidebar = (props) => {
                 <div className="mb-7">
                   {data.zona_profesional.map((zonas) => {
                     return (
-                      <span class="badge badge-success font-size-3 font-weight-semibold m-1">
+                      <span className="badge badge-success font-size-3 font-weight-semibold m-1">
                         {zonas.ciudad.nombre}
                       </span>
                     );
@@ -131,9 +149,21 @@ const Sidebar = (props) => {
                 <h5 className="text-black-2 mb-8 font-size-5">Imágenes</h5>
                 {/* <!-- Single List --> */}
                 <div className="mb-7">
-                  <img src={imgP} alt="..." class="profile img-thumbnail m-1" />
-                  <img src={imgP} alt="..." class="profile img-thumbnail m-1" />
-                  <img src={imgP} alt="..." class="profile img-thumbnail m-1" />
+                  <img
+                    src={imgP}
+                    alt="..."
+                    className="profile img-thumbnail m-1"
+                  />
+                  <img
+                    src={imgP}
+                    alt="..."
+                    className="profile img-thumbnail m-1"
+                  />
+                  <img
+                    src={imgP}
+                    alt="..."
+                    className="profile img-thumbnail m-1"
+                  />
                 </div>
                 {/* <!-- Single List --> */}
 

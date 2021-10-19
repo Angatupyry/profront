@@ -3,10 +3,11 @@ import http from "./http-common";
 class AuthService {
   login = async (email, password) => {
     try {
-      await http.post("/login", {
+      const data = await http.post("/login", {
         username: email,
         password: password,
       });
+      return data;
     } catch (error) {
       throw error;
     }
@@ -22,7 +23,7 @@ class AuthService {
     esProfesional
   ) => {
     try {
-      await http.post("/public/usuario/registro", {
+      const data = await http.post("/public/usuario/registro", {
         persona: {
           nombre: nombre,
           apellido: apellido,
@@ -33,6 +34,7 @@ class AuthService {
         password: password,
         usuario_tipo_id: esProfesional ? 2 : 1,
       });
+      return data;
     } catch (error) {
       throw error;
     }

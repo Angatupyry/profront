@@ -35,8 +35,11 @@ const ModalSignIn = (props) => {
     setState({ loading: true, error: null });
 
     try {
-      await AuthService.login(state.email, state.password);
+      const response = await AuthService.login(state.email, state.password);
       setState({ loading: false, error: null });
+      //console.log(response);
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", response.data.user);
       handleClose();
       Router.push("/dashboard-main");
     } catch (error) {

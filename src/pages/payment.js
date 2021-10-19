@@ -6,6 +6,9 @@ import GlobalContext from "../context/GlobalContext";
 import Router, { useRouter } from "next/router";
 
 import ProfesionalService from "../services/profesional.service";
+import MediosPagoService from "../services/mediosPago.service";
+import TransaccionService from "../services/transaccion.service";
+import { numberFormat } from "../utils/utils";
 
 import imgF1 from "../assets/image/l2/png/featured-job-logo-1.png";
 import iconD from "../assets/image/svg/icon-dolor.svg";
@@ -45,11 +48,11 @@ const Payment = () => {
   async function fetchData(id) {
     setState({ loading: true, error: null });
     try {
-      const response = await ProfesionalService.getTransaction(id);
+      const response = await TransaccionService.getTransaction(id);
       setDataResult(response.data.data);
       console.log(response.data.data);
 
-      const tarjetaResponse = await ProfesionalService.getUserCards(
+      const tarjetaResponse = await MediosPagoService.getUserCards(
         response.data.data.cliente.id
       );
       setDataPago(tarjetaResponse.data.data);
@@ -75,7 +78,7 @@ const Payment = () => {
     e.preventDefault();
     setState({ loading: true, error: null });
     try {
-      const response = await ProfesionalService.postTransaction(parseInt(id));
+      const response = await TransaccionService.postTransaction(parseInt(id));
       console.log(response);
       scrollToTop();
       setState({ loading: false, error: null, success: true });
@@ -185,8 +188,10 @@ const Payment = () => {
                           <div className="form-group d-flex flex-wrap justify-content-start mb-1">
                             <span className="font-size-4 mb-0 line-height-reset d-block font-weight-semibold">
                               <div className="text-primary">
-                                {dataResult.servicio_profesional.monto_hora}{" "}
-                                Gs./hora{" "}
+                                {numberFormat(
+                                  dataResult.servicio_profesional.monto_hora
+                                )}{" "}
+                                Gs. / hora{" "}
                               </div>
                             </span>
                           </div>
@@ -235,7 +240,7 @@ const Payment = () => {
                           <div className="form-group d-flex flex-wrap justify-content-start mb-1">
                             <span className="font-size-4 mb-0 line-height-reset d-block font-weight-semibold">
                               <div className="text-primary">
-                                {dataResult.monto} Gs{" "}
+                                {numberFormat(dataResult.monto)} Gs.{" "}
                               </div>
                             </span>
                           </div>

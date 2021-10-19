@@ -6,6 +6,7 @@ import Sidebar from "../components/Sidebar";
 import { Select } from "../components/Core";
 import Router, { useRouter } from "next/router";
 import BuscadorService from "../services/buscador.service";
+import { numberFormat } from "../utils/utils";
 
 import imgF1 from "../assets/image/l2/png/featured-job-logo-2.png";
 import imgF2 from "../assets/image/l2/png/featured-job-logo-2.png";
@@ -272,10 +273,10 @@ const SearchGrid = () => {
                                   </div>
                                   <p className="font-weight-bold font-size-7 text-hit-gray mb-0">
                                     <span className="text-black-2">
-                                      {
+                                      {numberFormat(
                                         profesional.servicio_profesional[0]
                                           .monto_hora
-                                      }
+                                      )}
                                     </span>{" "}
                                     Gs.
                                   </p>

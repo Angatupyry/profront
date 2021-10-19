@@ -75,7 +75,7 @@ const Footer = () => {
                   <p className="mb-0 font-size-4 text-white">Contactenos:</p>
                   <Link href="/#">
                     <a className="mb-0 font-size-4 font-weight-bold">
-                      soporte@pro.net
+                      soporte@todoservicio.com
                     </a>
                   </Link>
                 </div>

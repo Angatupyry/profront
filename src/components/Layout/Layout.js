@@ -18,7 +18,7 @@ import GlobalContext from "../../context/GlobalContext";
 
 import GlobalStyle from "../../utils/globalStyle";
 
-import imgFavicon from "../../assets/favicon.png";
+import imgFavicon from "../../assets/icon.png";
 
 import { get, merge } from "lodash";
 
@@ -94,7 +94,7 @@ const Layout = ({ children, pageContext }) => {
         <div data-theme-mode-panel-active data-theme="light">
           <GlobalStyle />
           <Helmet>
-            <title>JustCamp</title>
+            <title>TodoServicio</title>
             <link rel="icon" type="image/png" href={imgFavicon} />
           </Helmet>
           <Loader id="loading" className={visibleLoader ? "" : "inActive"}>
@@ -126,7 +126,7 @@ const Layout = ({ children, pageContext }) => {
         <div data-theme-mode-panel-active data-theme="light">
           <GlobalStyle />
           <Helmet>
-            <title>JustCamp</title>
+            <title>TodoServicio</title>
             <link rel="icon" type="image/png" href={imgFavicon} />
           </Helmet>
           <Loader id="loading" className={visibleLoader ? "" : "inActive"}>
@@ -163,7 +163,7 @@ const Layout = ({ children, pageContext }) => {
         <div data-theme-mode-panel-active data-theme="light">
           <GlobalStyle />
           <Helmet>
-            <title>JustCamp</title>
+            <title>TodoServicio</title>
             <link rel="icon" type="image/png" href={imgFavicon} />
           </Helmet>
           <Loader id="loading" className={visibleLoader ? "" : "inActive"} />

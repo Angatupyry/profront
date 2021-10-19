@@ -4,7 +4,8 @@ import PageWrapper from "../components/PageWrapper";
 import { Select } from "../components/Core";
 import Router, { useRouter } from "next/router";
 
-import ProfesionalService from "../services/profesional.service";
+import TransaccionService from "../services/transaccion.service";
+import { numberFormat } from "../utils/utils";
 
 import imgF1 from "../assets/image/l2/png/featured-job-logo-1.png";
 import iconD from "../assets/image/svg/icon-dolor.svg";
@@ -83,7 +84,7 @@ const JobDetails = () => {
   async function fetchData(id) {
     setState({ loading: true, error: null });
     try {
-      const response = await ProfesionalService.getSolicitation(id);
+      const response = await TransaccionService.getSolicitation(id);
       setDataResult(response.data.data[0]);
       console.log(response.data.data[0]);
       setState({
@@ -178,7 +179,7 @@ const JobDetails = () => {
     e.preventDefault();
     setState({ loading: true, error: null });
     try {
-      const response = await ProfesionalService.postSolicitation(
+      const response = await TransaccionService.postSolicitation(
         postData.profesional_id,
         postData.servicio_profesional_id,
         postData.cliente_id,
@@ -331,7 +332,7 @@ const JobDetails = () => {
                           let key = "key-" + index;
                           let id = "id-" + index;
                           let descripcionMonto =
-                            servicio.monto_hora + "Gs./hora";
+                            numberFormat(servicio.monto_hora) + " Gs. / hora";
                           return (
                             <div className="row" key={key}>
                               <div className="col-md-6 mb-lg-0 mb-6">
@@ -549,11 +550,12 @@ const JobDetails = () => {
                           <div className="form-group d-flex flex-wrap justify-content-start mb-1">
                             <span className="font-size-4 mb-0 line-height-reset d-block font-weight-semibold">
                               <div className="text-primary">
-                                {state.tarifa &&
-                                  state.tarifa *
-                                    (state.horaHastaSeleccionada -
-                                      state.horaDesdeSeleccionada) +
-                                    " Gs"}
+                                {numberFormat(
+                                  state.tarifa &&
+                                    state.tarifa *
+                                      (state.horaHastaSeleccionada -
+                                        state.horaDesdeSeleccionada)
+                                ) + " Gs."}
                               </div>
                             </span>
                           </div>
