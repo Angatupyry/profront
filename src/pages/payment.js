@@ -38,6 +38,7 @@ const Payment = () => {
 
   const [dataResult, setDataResult] = React.useState({});
   const [dataPago, setDataPago] = React.useState([]);
+  const [enableBtn, setEnableBtn] = React.useState(false);
 
   function isEmpty(value) {
     return (
@@ -87,6 +88,10 @@ const Payment = () => {
       console.log(error);
       setState({ loading: false, error: error });
     }
+  };
+
+  const handleRadioBtn = async (e) => {
+    setEnableBtn(true);
   };
 
   if (!isEmpty(dataResult)) {
@@ -277,8 +282,7 @@ const Payment = () => {
                                     type="radio"
                                     name="isProfesional"
                                     id={id}
-                                    // value={state.isProfessional}
-                                    // onChange={toggleIsProfessional}
+                                    onChange={handleRadioBtn}
                                   />
                                   <span className="checkbox mr-5"></span>
                                   <span className="font-size-4 mb-0 line-height-reset d-block font-weight-semibold">
@@ -312,14 +316,22 @@ const Payment = () => {
                       </div>
                       <div className="row mt-12">
                         <div className="col-md-12 mb-lg-0 mb-12 d-flex justify-content-end">
-                          <Link href="/#">
-                            <a
-                              className="btn btn-green text-uppercase btn-medium w-180 h-px-48 rounded-3 mr-4 mt-6"
-                              onClick={handleSubmit}
-                            >
-                              Pagar
-                            </a>
-                          </Link>
+                          {enableBtn ? (
+                            <Link href="/#">
+                              <a
+                                className="btn btn-green text-uppercase btn-medium w-180 h-px-48 rounded-3 mr-4 mt-6"
+                                onClick={handleSubmit}
+                              >
+                                Pagar
+                              </a>
+                            </Link>
+                          ) : (
+                            <Link href="/#">
+                              <a className="btn btn-green text-uppercase btn-medium w-180 h-px-48 rounded-3 mr-4 mt-6 disabled">
+                                Pagar
+                              </a>
+                            </Link>
+                          )}
                         </div>
                       </div>
                     </div>

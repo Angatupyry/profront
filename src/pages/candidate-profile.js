@@ -98,27 +98,7 @@ const CandidateProfile = () => {
                   <Tab.Container id="left-tabs-example" defaultActiveKey="one">
                     <div className="bg-white rounded-4 shadow-9">
                       {/* <!-- Tab Section Start --> */}
-                      {/* <Nav
-                        className="nav border-bottom border-mercury pl-12"
-                        role="tablist"
-                      >
-                        <li className="tab-menu-items nav-item pr-12">
-                          <Nav.Link
-                            eventKey="one"
-                            className="text-uppercase font-size-3 font-weight-bold text-default-color py-3 px-0"
-                          >
-                            Overview
-                          </Nav.Link>
-                        </li>
-                        <li className="tab-menu-items nav-item pr-12">
-                          <Nav.Link
-                            eventKey="two"
-                            className="text-uppercase font-size-3 font-weight-bold text-default-color py-3 px-0"
-                          >
-                            Contact
-                          </Nav.Link>
-                        </li>
-                      </Nav> */}
+
                       {/* <!-- Tab Content --> */}
                       <Tab.Content>
                         <Tab.Pane eventKey="one">
@@ -130,71 +110,9 @@ const CandidateProfile = () => {
                             <p className="font-size-4 mb-8">
                               {dataResult.descripcion}
                             </p>
-                            {/* <p className="font-size-4 mb-8">
-                              Programming Languages: C/C++, .NET C++, Python,
-                              Bash, Shell, PERL, Regular expressions, Python,
-                              Active-script.
-                            </p> */}
                           </div>
                           {/* <!-- Excerpt End --> */}
-                          {/* <!-- Skills --> */}
-                          {/* <div className="border-top pr-xl-0 pr-xxl-14 p-5 pl-xs-12 pt-7 pb-5">
-                            <h4 className="font-size-6 mb-7 mt-5 text-black-2 font-weight-semibold">
-                              Habilidades
-                            </h4>
-                            <ul className="list-unstyled d-flex align-items-center flex-wrap">
-                              <li>
-                                <Link href="/#">
-                                  <a className="bg-polar text-black-2  mr-6 px-7 mt-2 mb-2 font-size-3 rounded-3 min-height-32 d-flex align-items-center">
-                                    Agile
-                                  </a>
-                                </Link>
-                              </li>
-                              <li>
-                                <Link href="/#">
-                                  <a className="bg-polar text-black-2  mr-6 px-7 mt-2 mb-2 font-size-3 rounded-3 min-height-32 d-flex align-items-center">
-                                    Wireframing
-                                  </a>
-                                </Link>
-                              </li>
-                              <li>
-                                <Link href="/#">
-                                  <a className="bg-polar text-black-2  mr-6 px-7 mt-2 mb-2 font-size-3 rounded-3 min-height-32 d-flex align-items-center">
-                                    Prototyping
-                                  </a>
-                                </Link>
-                              </li>
-                              <li>
-                                <Link href="/#">
-                                  <a className="bg-polar text-black-2  mr-6 px-7 mt-2 mb-2 font-size-3 rounded-3 min-height-32 d-flex align-items-center">
-                                    Information
-                                  </a>
-                                </Link>
-                              </li>
-                              <li>
-                                <Link href="/#">
-                                  <a className="bg-polar text-black-2  mr-6 px-7 mt-2 mb-2 font-size-3 rounded-3 min-height-32 d-flex align-items-center">
-                                    Waterfall Model
-                                  </a>
-                                </Link>
-                              </li>
-                              <li>
-                                <Link href="/#">
-                                  <a className="bg-polar text-black-2  mr-6 px-7 mt-2 mb-2 font-size-3 rounded-3 min-height-32 d-flex align-items-center">
-                                    New Layout
-                                  </a>
-                                </Link>
-                              </li>
-                              <li>
-                                <Link href="/#">
-                                  <a className="bg-polar text-black-2  mr-6 px-7 mt-2 mb-2 font-size-3 rounded-3 min-height-32 d-flex align-items-center">
-                                    Browsing
-                                  </a>
-                                </Link>
-                              </li>
-                            </ul>
-                          </div> */}
-                          {/* <!-- Skills End --> */}
+
                           {/* <!-- Card Section Start --> */}
                           <div className="border-top p-5 pl-xs-12 pt-7 pb-5">
                             <h4 className="font-size-6 mb-7 mt-5 text-black-2 font-weight-semibold">
@@ -205,9 +123,6 @@ const CandidateProfile = () => {
                                 return (
                                   <div className="w-100">
                                     <div className="d-flex align-items-center pr-11 mb-9 flex-wrap flex-sm-nowrap">
-                                      {/* <div className="square-72 d-block mr-8 mb-7 mb-sm-0">
-                                        <img src={imgB1} alt="" />
-                                      </div> */}
                                       <div className="w-100 mt-n2">
                                         <h3 className="mb-0">
                                           <Link href="/#">
@@ -229,19 +144,6 @@ const CandidateProfile = () => {
                                               )}
                                             </a>
                                           </Link>
-                                          <Link href="/#">
-                                            <a className="font-size-3 text-gray">
-                                              <span
-                                                className="mr-4"
-                                                css={`
-                                                  margin-top: -2px;
-                                                `}
-                                              >
-                                                <img src={imgL} alt="" />
-                                              </span>
-                                              Asunción, PY
-                                            </a>
-                                          </Link>
                                         </div>
                                       </div>
                                     </div>
@@ -260,9 +162,6 @@ const CandidateProfile = () => {
                               return (
                                 <div className="w-100">
                                   <div className="d-flex align-items-center pr-11 mb-9 flex-wrap flex-sm-nowrap">
-                                    {/* <div className="square-72 d-block mr-8 mb-7 mb-sm-0">
-                                      <img src={imgB3} alt="" />
-                                    </div> */}
                                     <div className="w-100 mt-n2">
                                       <h3 className="mb-0">
                                         <Link href="/#">
@@ -283,19 +182,6 @@ const CandidateProfile = () => {
                                         <Link href="/#">
                                           <a className="font-size-3 text-gray mr-5">
                                             Jun 2013 - Jun 2015- 2 años
-                                          </a>
-                                        </Link>
-                                        <Link href="/#">
-                                          <a className="font-size-3 text-gray">
-                                            <span
-                                              className="mr-4"
-                                              css={`
-                                                margin-top: -2px;
-                                              `}
-                                            >
-                                              <img src={imgL} alt="" />
-                                            </span>
-                                            Buenos Aires, ARG
                                           </a>
                                         </Link>
                                       </div>

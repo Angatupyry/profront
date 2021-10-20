@@ -4,6 +4,7 @@ import GlobalContext from "../../context/GlobalContext";
 
 import imgP from "../../assets/image/l2/jpg/gallery-img19.jpg";
 import imgF from "../../assets/image/svg/icon-fire-rounded.svg";
+import { numberFormat } from "../../utils";
 
 const Sidebar = (props) => {
   const gContext = useContext(GlobalContext);
@@ -32,12 +33,24 @@ const Sidebar = (props) => {
                   </Link>
                 </h4>
                 <p className="mb-1">
-                  <Link href="/#">
-                    <a className="text-gray font-size-4">
-                      {" "}
-                      {data.servicio_profesional[0].servicio.descripcion}
-                    </a>
-                  </Link>
+                  {data.servicio_profesional.map((servicio, index) => {
+                    if (
+                      index == data.servicio_profesional.length - 1 ||
+                      index == 0
+                    ) {
+                      return (
+                        <span className="text-gray font-size-4">
+                          {servicio.servicio.descripcion}
+                        </span>
+                      );
+                    } else {
+                      return (
+                        <span className="text-gray font-size-4">
+                          {" | " + servicio.servicio.descripcion + " | "}
+                        </span>
+                      );
+                    }
+                  })}
                 </p>
                 <div className="col-md-12 text-center pt-2 pt-md-5 px-0 pb-5">
                   <div className="media justify-content-md-center">
@@ -116,23 +129,18 @@ const Sidebar = (props) => {
                 <h5 className="text-black-2 mb-8 font-size-5">
                   Servicios y tarifas
                 </h5>
-                {/* <!-- Single List --> */}
-                <div className="mb-7">
-                  <p className="font-size-4 mb-0">Enseñanza de guaraní</p>
-                  <h5 className="font-size-4 font-weight-semibold mb-0 text-black-2 text-break">
-                    25.000 Gs./hora
-                  </h5>
-                </div>
-                {/* <!-- Single List --> */}
-
-                {/* <!-- Single List --> */}
-                <div className="mb-7">
-                  <p className="font-size-4 mb-0">Enseñanza de francés</p>
-                  <h5 className="font-size-4 font-weight-semibold mb-0 text-black-2 text-break">
-                    50.000 Gs./hora
-                  </h5>
-                </div>
-                {/* <!-- Single List --> */}
+                {data.servicio_profesional.map((servicio, index) => {
+                  return (
+                    <div className="mb-7">
+                      <p className="font-size-4 mb-0">
+                        {servicio.servicio.descripcion}
+                      </p>
+                      <h5 className="font-size-4 font-weight-semibold mb-0 text-black-2 text-break">
+                        {servicio.monto_hora} / hora
+                      </h5>
+                    </div>
+                  );
+                })}
 
                 <h5 className="text-black-2 mb-8 font-size-5">Cobertura</h5>
                 {/* <!-- Single List --> */}

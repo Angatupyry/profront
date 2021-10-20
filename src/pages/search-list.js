@@ -19,9 +19,6 @@ import iconL from "../assets/image/svg/icon-loaction-pin-black.svg";
 import iconS from "../assets/image/svg/icon-suitecase.svg";
 import iconC from "../assets/image/svg/icon-clock.svg";
 
-const cityArray = [];
-const serviceArray = [];
-
 const defaultCountries = [
   { value: "sp", label: "Asunción" },
   { value: "bd", label: "Lambaré" },
@@ -39,6 +36,8 @@ const defaultServices = [
 ];
 
 const SearchGrid = () => {
+  const cityArray = [];
+  const serviceArray = [];
   const data = useRouter();
   const {
     query: { city, service },

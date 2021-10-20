@@ -6,8 +6,6 @@ import imgH from "../../assets/image/l1/png/hero-image-man.png";
 import imgP from "../../assets/image/patterns/hero-pattern.png";
 import BuscadorService from "../../services/buscador.service";
 
-const cityArray = [];
-const serviceArray = [];
 const defaultCountries = [
   { value: "1", label: "Asunción" },
   { value: "2", label: "Lambaré" },
@@ -27,6 +25,8 @@ const defaultServices = [
 ];
 
 const Hero = (props) => {
+  const cityArray = [];
+  const serviceArray = [];
   let route = useHistory();
   const [city, setCity] = React.useState([]);
   const [service, setService] = React.useState({});

@@ -5,7 +5,7 @@ import { Select } from "../components/Core";
 import Router, { useRouter } from "next/router";
 
 import TransaccionService from "../services/transaccion.service";
-import { numberFormat } from "../utils/utils";
+import { numberFormat, showErrorAlert, showSuccessAlert } from "../utils/utils";
 
 import imgF1 from "../assets/image/l2/png/featured-job-logo-1.png";
 import iconD from "../assets/image/svg/icon-dolor.svg";
@@ -29,13 +29,6 @@ const horas = [
   { value: "20", label: "20:00 hs" },
   { value: "21", label: "21:00 hs" },
 ];
-
-const scrollToTop = () => {
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
-};
 
 const JobDetails = () => {
   const data = useRouter();
@@ -67,6 +60,7 @@ const JobDetails = () => {
     monto: 0,
   });
   const [dataResult, setDataResult] = React.useState({});
+  const [enableBtn, setEnableBtn] = React.useState(true);
 
   function isEmpty(value) {
     return (
@@ -86,7 +80,6 @@ const JobDetails = () => {
     try {
       const response = await TransaccionService.getSolicitation(id);
       setDataResult(response.data.data[0]);
-      console.log(response.data.data[0]);
       setState({
         fechaSeleccionada: getTodaysdate(),
         horaDesdeSeleccionada: horas[0].value,
@@ -95,7 +88,6 @@ const JobDetails = () => {
         horaHastaLabel: horas[1].label,
       });
     } catch (error) {
-      console.log(error);
       setState({ loading: false, error: error });
     }
   }
@@ -114,6 +106,10 @@ const JobDetails = () => {
     let servicio = e.target.getAttribute("servicio");
     let monto = e.target.getAttribute("monto");
     let servicioId = e.target.getAttribute("servicioId");
+    let estadoServicio = dataResult.servicio_profesional.find(
+      (element) => (element.id = servicioId)
+    ).servicio.pendiente;
+
     setState({
       montoServicioSeleccionado: montoHora,
       servicioSeleccionado: servicio,
@@ -134,6 +130,10 @@ const JobDetails = () => {
       fecha: getTodaysdate(),
       observacion: horas[0].label + " a " + horas[1].label,
     });
+
+    if (estadoServicio) {
+      setEnableBtn(false);
+    }
   };
 
   const handleDate = (e) => {
@@ -173,6 +173,7 @@ const JobDetails = () => {
     newPostData["cant_horas"] = cant_horas;
     newPostData["observacion"] = horario;
     setPostData(newPostData);
+    //fieldsControl();
   };
 
   const handleSubmit = async (e) => {
@@ -188,11 +189,9 @@ const JobDetails = () => {
         postData.cant_horas,
         postData.monto
       );
-      scrollToTop();
+
       setState({ loading: false, error: null, success: true });
     } catch (error) {
-      scrollToTop();
-      console.log(error);
       setState({ loading: false, error: error });
     }
   };
@@ -220,25 +219,17 @@ const JobDetails = () => {
                 </div>
                 {/* <!-- back Button End --> */}
                 <div className="col-xl-9 col-lg-11 mb-8 px-xxl-15 px-xl-0">
-                  {state.success && (
-                    <div className="row no-gutters">
-                      <div className="col-md-12">
-                        <div className="alert alert-success" role="alert">
-                          Solicitud creada exitosamente.
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  {state.error && (
-                    <div className="row no-gutters">
-                      <div className="col-md-12">
-                        <div className="alert alert-danger" role="alert">
-                          Ocurrió un error al crear la solicitud. Por favor,
-                          intente más tarde.
-                        </div>
-                      </div>
-                    </div>
-                  )}
+                  {state.success &&
+                    showSuccessAlert("Solicitud creada exitosamente.")}
+                  {state.error &&
+                    showErrorAlert(
+                      " Ocurrió un error al crear la solicitud. Por favor,intente más tarde."
+                    )}
+
+                  {!enableBtn &&
+                    showErrorAlert(
+                      "Servicio se encuentra pendiente. Por favor,intente con otro servicio."
+                    )}
 
                   <div className="bg-white rounded-4 border border-mercury shadow-9">
                     {/* <!-- Single Featured Job --> */}
@@ -563,14 +554,32 @@ const JobDetails = () => {
                       </div>
                       <div className="row mt-12">
                         <div className="col-md-12 mb-lg-0 mb-12 d-flex justify-content-end">
-                          <Link href="/#">
-                            <a
-                              className="btn btn-green text-uppercase btn-medium w-180 h-px-48 rounded-3 mr-4 mt-6"
-                              onClick={handleSubmit}
-                            >
-                              Enviar solicitud
-                            </a>
-                          </Link>
+                          {!postData.fecha ||
+                          !postData.monto ||
+                          !postData.profesional_id ||
+                          !postData.servicio_profesional_id ||
+                          !postData.observacion ||
+                          !postData.cliente_id ||
+                          !postData.cant_horas ||
+                          !enableBtn ? (
+                            <Link href="/#">
+                              <a
+                                className="btn btn-green text-uppercase btn-medium w-180 h-px-48 rounded-3 mr-4 mt-6 disabled"
+                                onClick={handleSubmit}
+                              >
+                                Enviar solicitud
+                              </a>
+                            </Link>
+                          ) : (
+                            <Link href="/#">
+                              <a
+                                className="btn btn-green text-uppercase btn-medium w-180 h-px-48 rounded-3 mr-4 mt-6"
+                                onClick={handleSubmit}
+                              >
+                                Enviar solicitud
+                              </a>
+                            </Link>
+                          )}
                         </div>
                       </div>
                     </div>
