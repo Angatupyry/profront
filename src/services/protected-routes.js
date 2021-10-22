@@ -1,9 +1,16 @@
 import axios from "axios";
 
-export default axios.create({
+const privateReq = axios.create({
   baseURL: "http://localhost:8080/v1",
   headers: {
     "Content-type": "application/json",
-    Authorization: "Bearer" + localStorage.getItem("token"),
   },
 });
+
+privateReq.interceptors.request.use(function (config) {
+  const token = localStorage.getItem("token");
+  config.headers.Authorization = token ? `Bearer ${token}` : "";
+  return config;
+});
+
+export default privateReq;

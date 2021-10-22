@@ -1,4 +1,5 @@
 import http from "./http-common";
+import protectedRoutes from "./protected-routes";
 
 class AuthService {
   login = async (email, password) => {
@@ -36,6 +37,16 @@ class AuthService {
       });
       return data;
     } catch (error) {
+      throw error;
+    }
+  };
+
+  getUser = async (id) => {
+    try {
+      const data = await protectedRoutes.get("/public/usuario/" + id);
+      return data;
+    } catch (error) {
+      console.log(error);
       throw error;
     }
   };

@@ -37,9 +37,9 @@ const ModalSignIn = (props) => {
     try {
       const response = await AuthService.login(state.email, state.password);
       setState({ loading: false, error: null });
-      //console.log(response);
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", response.data.user);
+      localStorage.setItem("token", JSON.stringify(response.data.token));
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+
       handleClose();
       Router.push("/dashboard-main");
     } catch (error) {

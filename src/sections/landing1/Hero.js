@@ -14,8 +14,6 @@ const defaultCountries = [
   { value: "5", label: "Ñemby" },
 ];
 
-console.log(defaultCountries);
-
 const defaultServices = [
   { value: "1", label: "Manicure" },
   { value: "2", label: "Enseñanza de inglés" },
@@ -54,7 +52,6 @@ const Hero = (props) => {
     newState["service"] = e.value;
     newState["serviceLabel"] = e.label;
     setState(newState);
-    //console.log(newState);
   };
 
   const handleCity = (e) => {
@@ -62,7 +59,6 @@ const Hero = (props) => {
     newState["city"] = e.value;
     newState["cityLabel"] = e.label;
     setState(newState);
-    //console.log(newState);
   };
 
   function isEmpty(value) {
@@ -94,7 +90,6 @@ const Hero = (props) => {
         setCity(cityArray);
 
         const servicios = await BuscadorService.getServices();
-        console.log(servicios);
         servicios.data.data.forEach((element) => {
           serviceArray.push({
             value: element.id.toString(),
