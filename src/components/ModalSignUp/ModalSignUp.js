@@ -57,12 +57,6 @@ const ModalSignUp = (props) => {
       newState["isProfessional"] = true;
     }
     setState(newState);
-
-    // if (state.isProfessional) {
-    //   setState({ isProfessional: false });
-    // } else {
-    //   setState({ isProfessional: true });
-    // }
   };
 
   const handleSubmit = async (e) => {
@@ -81,7 +75,9 @@ const ModalSignUp = (props) => {
       );
       setState({ loading: false });
       handleClose();
-      Router.push("/dashboard-main");
+      // Cookies.set("token", response.data.token);
+      // Cookies.set("user", response.data.user);
+      //Router.push("/dashboard-main");
     } catch (error) {
       error.message = ERRORMSG;
       setState({ loading: false, error: error });

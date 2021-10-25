@@ -13,8 +13,7 @@ import Logo from "../Logo";
 import { menuItems } from "./menuItems";
 
 import imgP from "../../assets/image/header-profile.png";
-
-import AuthService from "../../services/auth.service";
+import Cookies from "js-cookie";
 
 const SiteHeader = styled.header`
   .dropdown-toggle::after {
@@ -54,7 +53,6 @@ const Header = () => {
   const gContext = useContext(GlobalContext);
   const [showScrolling, setShowScrolling] = useState(false);
   const [showReveal, setShowReveal] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const size = useWindowSize();
 
@@ -71,34 +69,26 @@ const Header = () => {
     }
   });
 
-  async function fetchData() {
-    let user = JSON.parse(localStorage.getItem("user"));
+  const isLoggedIn = () => {
     try {
-      const response = await AuthService.getUser(user.id);
-      console.log(response.data);
-      setIsLoggedIn(true);
+      let user = Cookies.get("user");
+      let token = Cookies.get("token");
+      console.log(user);
+      if (user && token) {
+        return true;
+      } else {
+        return false;
+      }
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const logged = isLoggedIn();
 
-  const closeSession = async (e) => {
-    e.preventDefault();
-    //setState({ loading: true, error: null });
-
-    try {
-      // setState({ loading: false, error: null });
-      localStorage.setItem("token", null);
-      localStorage.setItem("user", null);
-      setIsLoggedIn(false);
-    } catch (error) {
-      console.log(error);
-      //setState({ loading: false, error: error });
-    }
+  const close = () => {
+    Cookies.remove("user");
+    Cookies.remove("token");
   };
 
   return (
@@ -129,12 +119,12 @@ const Header = () => {
           fluid={gContext.header.isFluid}
           className={gContext.header.isFluid ? "pr-lg-9 pl-lg-9" : ""}
         >
-          <nav className="navbar site-navbar offcanvas-active navbar-expand-lg px-0 py-0 space-between">
-            {/* <!-- Brand Logo--> */}
-            <div className="brand-logo">
-              <Logo white={gContext.header.theme === "dark"} />
-            </div>
-            {isLoggedIn && (
+          {logged ? (
+            <nav className="navbar site-navbar offcanvas-active navbar-expand-lg px-0 py-0 space-between">
+              <div className="brand-logo">
+                <Logo white={gContext.header.theme === "dark"} />
+              </div>
+
               <div className="collapse navbar-collapse">
                 <div className="navbar-nav-wrapper">
                   <ul className="navbar-nav main-menu d-none d-lg-flex">
@@ -268,121 +258,124 @@ const Header = () => {
                   </ul>
                 </div>
               </div>
-            )}
 
-            {gContext.header.button === "cta" && (
-              <div className="header-btn ml-auto ml-lg-0 mr-6 mr-lg-0 d-none d-xs-block">
-                <Link href="/#">
-                  <a className={`btn btn-${gContext.header.variant}`}>
-                    {gContext.header.buttonText}
-                  </a>
-                </Link>
-              </div>
-            )}
-            {
-              isLoggedIn && (
-                // {gContext.header.button === "profile" && (
-                <div className="header-btn-devider ml-auto ml-lg-5 pl-2 d-none d-xs-flex align-items-center">
-                  <div>
-                    <Link href="/#">
-                      <a className="px-3 ml-7 font-size-7 notification-block flex-y-center position-relative">
-                        <i className="fas fa-bell heading-default-color"></i>
-                        <span className="font-size-3 count font-weight-semibold text-white bg-primary circle-24 border border-width-3 border border-white">
-                          3
-                        </span>
-                      </a>
-                    </Link>
-                  </div>
-                  <div>
-                    <Dropdown className="show-gr-dropdown py-5">
-                      <Dropdown.Toggle
-                        as="a"
-                        className="proile media ml-7 flex-y-center"
+              <div className="header-btn-devider ml-auto ml-lg-5 pl-2 d-none d-xs-flex align-items-center">
+                <div>
+                  <Link href="/#">
+                    <a className="px-3 ml-7 font-size-7 notification-block flex-y-center position-relative">
+                      <i className="fas fa-bell heading-default-color"></i>
+                      <span className="font-size-3 count font-weight-semibold text-white bg-primary circle-24 border border-width-3 border border-white">
+                        3
+                      </span>
+                    </a>
+                  </Link>
+                </div>
+                <div>
+                  <Dropdown className="show-gr-dropdown py-5">
+                    <Dropdown.Toggle
+                      as="a"
+                      className="proile media ml-7 flex-y-center"
+                    >
+                      <div className="circle-40">
+                        <img src={imgP} alt="" />
+                      </div>
+                      <i className="fas fa-chevron-down heading-default-color ml-6"></i>
+                    </Dropdown.Toggle>
+                    {size.width <= 991 ? (
+                      <Dropdown.Menu
+                        className="gr-menu-dropdown border-0 border-width-2 py-2 w-auto bg-default"
+                        key="1"
                       >
-                        <div className="circle-40">
-                          <img src={imgP} alt="" />
-                        </div>
-                        <i className="fas fa-chevron-down heading-default-color ml-6"></i>
-                      </Dropdown.Toggle>
-                      {size.width <= 991 ? (
-                        <Dropdown.Menu
-                          className="gr-menu-dropdown border-0 border-width-2 py-2 w-auto bg-default"
-                          key="1"
-                        >
-                          <Link href="/#">
-                            <a className=" dropdown-item py-2 text-red font-size-3 font-weight-semibold line-height-1p2 text-uppercase">
-                              Cerrar sesión
-                            </a>
-                          </Link>
-                        </Dropdown.Menu>
-                      ) : (
-                        <div
-                          className="dropdown-menu gr-menu-dropdown dropdown-right border-0 border-width-2 py-2 w-auto bg-default"
-                          key="2"
-                        >
-                          <Link href="/#">
-                            <a
-                              className=" dropdown-item py-2 text-red font-size-3 font-weight-semibold line-height-1p2 text-uppercase"
-                              onClick={closeSession}
-                            >
-                              Cerrar sesión
-                            </a>
-                          </Link>
-                        </div>
-                      )}
-                    </Dropdown>
-                  </div>
+                        <Link href="/#">
+                          <a className=" dropdown-item py-2 text-red font-size-3 font-weight-semibold line-height-1p2 text-uppercase">
+                            Cerrar sesión
+                          </a>
+                        </Link>
+                      </Dropdown.Menu>
+                    ) : (
+                      <div
+                        className="dropdown-menu gr-menu-dropdown dropdown-right border-0 border-width-2 py-2 w-auto bg-default"
+                        key="2"
+                      >
+                        <Link href="/#">
+                          <a
+                            className=" dropdown-item py-2 text-red font-size-3 font-weight-semibold line-height-1p2 text-uppercase"
+                            onClick={close}
+                          >
+                            Cerrar sesión
+                          </a>
+                        </Link>
+                      </div>
+                    )}
+                  </Dropdown>
                 </div>
-              )
-              // )}
-            }
+              </div>
 
-            {
-              !isLoggedIn && (
-                // {gContext.header.button === "account" && (
-                <div className="header-btns header-btn-devider ml-auto pr-2 ml-lg-6 d-none d-xs-flex">
-                  <a
-                    className="btn btn-transparent text-uppercase font-size-3 heading-default-color focus-reset"
-                    href="/#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      gContext.toggleSignInModal();
-                    }}
-                  >
-                    Iniciar sesión
-                  </a>
-                  <a
-                    className={`btn btn-${gContext.header.variant} text-uppercase font-size-3`}
-                    href="/#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      gContext.toggleSignUpModal();
-                    }}
-                  >
-                    Registrarse
-                  </a>
-                </div>
-              )
-              // )}
-            }
+              <ToggleButton
+                className={`navbar-toggler btn-close-off-canvas ml-3 ${
+                  gContext.visibleOffCanvas ? "collapsed" : ""
+                }`}
+                type="button"
+                data-toggle="collapse"
+                data-target="#mobile-menu"
+                aria-controls="mobile-menu"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+                onClick={gContext.toggleOffCanvas}
+                dark={gContext.header.theme === "dark" ? 1 : 0}
+              >
+                {/* <i className="icon icon-simple-remove icon-close"></i> */}
+                <i className="icon icon-menu-34 icon-burger d-block"></i>
+              </ToggleButton>
+            </nav>
+          ) : (
+            <nav className="navbar site-navbar offcanvas-active navbar-expand-lg px-0 py-0 space-between">
+              {/* <!-- Brand Logo--> */}
+              <div className="brand-logo">
+                <Logo white={gContext.header.theme === "dark"} />
+              </div>
 
-            <ToggleButton
-              className={`navbar-toggler btn-close-off-canvas ml-3 ${
-                gContext.visibleOffCanvas ? "collapsed" : ""
-              }`}
-              type="button"
-              data-toggle="collapse"
-              data-target="#mobile-menu"
-              aria-controls="mobile-menu"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-              onClick={gContext.toggleOffCanvas}
-              dark={gContext.header.theme === "dark" ? 1 : 0}
-            >
-              {/* <i className="icon icon-simple-remove icon-close"></i> */}
-              <i className="icon icon-menu-34 icon-burger d-block"></i>
-            </ToggleButton>
-          </nav>
+              <div className="header-btns header-btn-devider ml-auto pr-2 ml-lg-6 d-none d-xs-flex">
+                <a
+                  className="btn btn-transparent text-uppercase font-size-3 heading-default-color focus-reset"
+                  href="/#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    gContext.toggleSignInModal();
+                  }}
+                >
+                  Iniciar sesión
+                </a>
+                <a
+                  className={`btn btn-${gContext.header.variant} text-uppercase font-size-3`}
+                  href="/#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    gContext.toggleSignUpModal();
+                  }}
+                >
+                  Registrarse
+                </a>
+              </div>
+
+              <ToggleButton
+                className={`navbar-toggler btn-close-off-canvas ml-3 ${
+                  gContext.visibleOffCanvas ? "collapsed" : ""
+                }`}
+                type="button"
+                data-toggle="collapse"
+                data-target="#mobile-menu"
+                aria-controls="mobile-menu"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+                onClick={gContext.toggleOffCanvas}
+                dark={gContext.header.theme === "dark" ? 1 : 0}
+              >
+                {/* <i className="icon icon-simple-remove icon-close"></i> */}
+                <i className="icon icon-menu-34 icon-burger d-block"></i>
+              </ToggleButton>
+            </nav>
+          )}
         </Container>
       </SiteHeader>
       <Offcanvas

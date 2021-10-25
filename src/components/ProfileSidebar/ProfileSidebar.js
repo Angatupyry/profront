@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import Link from "next/link";
 import GlobalContext from "../../context/GlobalContext";
+import Cookies from "js-cookie";
 
 import imgP from "../../assets/image/l2/jpg/gallery-img19.jpg";
 import imgF from "../../assets/image/svg/icon-fire-rounded.svg";
@@ -10,8 +11,24 @@ const Sidebar = (props) => {
   const gContext = useContext(GlobalContext);
   const [data, setData] = React.useState(props.data);
   const id = data.id;
-  // console.log("props es: " + props.data);
-  //console.log(data);
+
+  const isLoggedIn = () => {
+    try {
+      let user = Cookies.get("user");
+      let token = Cookies.get("token");
+      console.log(user);
+      if (user && token) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const logged = isLoggedIn();
+
   if (data !== null && data !== undefined) {
     return (
       <>
@@ -63,7 +80,7 @@ const Sidebar = (props) => {
                   </div>
                 </div>
                 <div className="button-block mt-5">
-                  {localStorage.getItem("user") && (
+                  {logged && (
                     <Link href={`/solicitation?id=${id}`}>
                       <button className="btn btn-primary line-height-reset btn-submit text-uppercase">
                         Contratar
@@ -71,7 +88,7 @@ const Sidebar = (props) => {
                     </Link>
                   )}
 
-                  {!localStorage.getItem("user") && (
+                  {!logged && (
                     <Link href="#">
                       <button
                         className="btn btn-primary line-height-reset btn-submit text-uppercase"

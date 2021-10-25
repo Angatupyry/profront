@@ -1,9 +1,10 @@
 import http from "./http-common";
+import privateRoute from "./protected-routes";
 
 class TransaccionService {
   getSolicitation = async (id) => {
     try {
-      const data = await http.get(
+      const data = await privateRoute.get(
         "/public/usuario/profesional/solicitud/" + id
       );
       return data;
@@ -23,7 +24,6 @@ class TransaccionService {
     monto
   ) => {
     try {
-      //console.log(profesional_id);
       const data = await http.post("/public/operacion/consulta", {
         profesional_id: profesional_id,
         servicio_profesional_id: servicio_profesional_id,

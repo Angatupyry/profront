@@ -68,7 +68,7 @@ const CandidateProfile = () => {
     console.log(dataResult);
     return (
       <>
-        <PageWrapper headerConfig={{ button: "profile" }}>
+        <PageWrapper>
           <div className="bg-default-2 pt-22 pt-lg-25 pb-13 pb-xxl-32">
             <div className="container">
               {/* <!-- back Button --> */}
@@ -329,11 +329,7 @@ const CandidateProfile = () => {
       </>
     );
   } else {
-    return (
-      <PageWrapper headerConfig={{ button: "profile" }}>
-        <div>Hubo un error</div>
-      </PageWrapper>
-    );
+    return <div>Hubo un error</div>;
   }
 };
 export default CandidateProfile;

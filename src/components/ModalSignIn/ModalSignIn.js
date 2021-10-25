@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
-import Router from "next/router";
 import styled from "styled-components";
 import { Modal } from "react-bootstrap";
 import GlobalContext from "../../context/GlobalContext";
 import AuthService from "../../services/auth.service";
 import Error from "../Error/Error";
+import Cookies from "js-cookie";
 
 const ModalStyled = styled(Modal)`
   /* &.modal {
@@ -37,11 +37,10 @@ const ModalSignIn = (props) => {
     try {
       const response = await AuthService.login(state.email, state.password);
       setState({ loading: false, error: null });
-      localStorage.setItem("token", JSON.stringify(response.data.token));
-      localStorage.setItem("user", JSON.stringify(response.data.user));
-
+      Cookies.set("token", response.data.token);
+      Cookies.set("user", response.data.user);
       handleClose();
-      Router.push("/dashboard-main");
+      //Router.push("/dashboard-main");
     } catch (error) {
       console.log(error);
       setState({ loading: false, error: error });

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import GlobalContext from "../context/GlobalContext";
 import PageWrapper from "../components/PageWrapper";
 import Hero from "../sections/landing1/Hero";
@@ -12,6 +12,7 @@ import Loader from "react-loader-spinner";
 
 const IndexPage = () => {
   const gContext = useContext(GlobalContext);
+
   return (
     <>
       <div className="page-container">
