@@ -13,6 +13,7 @@ import ModalApplication from "../ModalApplication";
 import ModalSignIn from "../ModalSignIn";
 import ModalSignUp from "../ModalSignUp";
 import ModalAddPayment from "../ModalAddPayment";
+import ModalConfirmation from "../ModalConfirmation";
 
 import GlobalContext from "../../context/GlobalContext";
 
@@ -111,6 +112,7 @@ const Layout = ({ children, pageContext }) => {
           <ModalSignIn />
           <ModalSignUp />
           <ModalAddPayment />
+          <ModalConfirmation />
         </div>
       </ThemeProvider>
     );
@@ -148,6 +150,7 @@ const Layout = ({ children, pageContext }) => {
           <ModalSignIn />
           <ModalSignUp />
           <ModalAddPayment />
+          <ModalConfirmation />
         </div>
       </ThemeProvider>
     );
@@ -179,6 +182,7 @@ const Layout = ({ children, pageContext }) => {
           <ModalSignIn />
           <ModalSignUp />
           <ModalAddPayment />
+          <ModalConfirmation />
         </div>
       </ThemeProvider>
     </>

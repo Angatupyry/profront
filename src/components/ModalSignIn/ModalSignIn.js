@@ -37,8 +37,8 @@ const ModalSignIn = (props) => {
     try {
       const response = await AuthService.login(state.email, state.password);
       setState({ loading: false, error: null });
-      Cookies.set("token", response.data.token);
-      Cookies.set("user", response.data.user);
+      Cookies.set("token", JSON.stringify(response.data.token));
+      Cookies.set("user", JSON.stringify(response.data.user));
       handleClose();
       //Router.push("/dashboard-main");
     } catch (error) {

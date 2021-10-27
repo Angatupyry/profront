@@ -73,7 +73,6 @@ const Header = () => {
     try {
       let user = Cookies.get("user");
       let token = Cookies.get("token");
-      console.log(user);
       if (user && token) {
         return true;
       } else {

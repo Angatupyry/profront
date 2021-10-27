@@ -59,6 +59,41 @@ class TransaccionService {
       throw error;
     }
   };
+
+  getTransactionList = async (id) => {
+    try {
+      const data = await http.get("/public/transaccion?cliente__id=" + id);
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  getTransactionDetail = async (id, usuario_tipo) => {
+    let tipo = usuario_tipo && usuario_tipo == 1 ? 0 : 1;
+    try {
+      const data = await http.get(
+        "/public/transaccion/solicitud/" + id + "/" + tipo
+      );
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  updateTransaction = async (id) => {
+    try {
+      const data = await http.put("/public/transaccion/" + id, {
+        transaccion_estado_id: 3,
+      });
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
 }
 
 export default new TransaccionService();

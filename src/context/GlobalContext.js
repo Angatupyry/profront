@@ -12,6 +12,8 @@ const GlobalProvider = ({ children }) => {
   const [visibleOffCanvas, setVisibleOffCanvas] = useState(false);
   const [addPaymentModalVisible, setAddPaymentModalVisible] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
+  const [confirmationModalVisible, setConfirmationModalVisible] =
+    useState(false);
   const [header, setHeader] = useState({
     theme: "light",
     bgClass: "default",
@@ -26,6 +28,8 @@ const GlobalProvider = ({ children }) => {
     theme: "dark",
     style: "style1", //style1, style2
   });
+
+  const [transactionId, setTransactionId] = useState(false);
 
   const toggleTheme = () => {
     setThemeDark(!themeDark);
@@ -70,6 +74,10 @@ const GlobalProvider = ({ children }) => {
     setShowSpinner({ showSpinner: false });
   };
 
+  const toggleConfirmationModal = () => {
+    setConfirmationModalVisible(!confirmationModalVisible);
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -97,6 +105,10 @@ const GlobalProvider = ({ children }) => {
         showSpinner,
         showPageSpinner,
         hidePageSpinner,
+        toggleConfirmationModal,
+        confirmationModalVisible,
+        transactionId,
+        setTransactionId,
       }}
     >
       {children}

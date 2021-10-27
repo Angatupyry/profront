@@ -12,6 +12,7 @@ import iconD from "../assets/image/svg/icon-dolor.svg";
 import iconB from "../assets/image/svg/icon-briefcase.svg";
 import iconL from "../assets/image/svg/icon-location.svg";
 import { offset } from "dom-helpers";
+import Cookies from "js-cookie";
 
 const horas = [
   { value: "8", label: "08:00 hs" },
@@ -125,7 +126,7 @@ const JobDetails = () => {
       monto: parseInt(monto),
       cant_horas: state.horaHastaSeleccionada - state.horaDesdeSeleccionada,
       servicio_profesional_id: parseInt(servicioId),
-      cliente_id: 1,
+      cliente_id: JSON.parse(Cookies.get("user")).id,
       profesional_id: parseInt(id),
       fecha: getTodaysdate(),
       observacion: horas[0].label + " a " + horas[1].label,
@@ -173,7 +174,6 @@ const JobDetails = () => {
     newPostData["cant_horas"] = cant_horas;
     newPostData["observacion"] = horario;
     setPostData(newPostData);
-    //fieldsControl();
   };
 
   const handleSubmit = async (e) => {
@@ -207,7 +207,7 @@ const JobDetails = () => {
                 {/* <!-- back Button --> */}
                 <div className="col-xl-10 col-lg-11 mt-4 ml-xxl-32 ml-xl-15 dark-mode-texts">
                   <div className="mb-9">
-                    <Link href="/candidate-profile?id=1">
+                    <Link href={"/candidate-profile?id=" + id}>
                       <a className="d-flex align-items-center ml-4">
                         <i className="icon icon-small-left bg-white circle-40 mr-5 font-size-7 text-black font-weight-bold shadow-8"></i>
                         <span className="text-uppercase font-size-3 font-weight-bold text-gray">

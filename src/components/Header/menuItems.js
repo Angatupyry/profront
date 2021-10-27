@@ -4,7 +4,7 @@ export const menuItems = [
     label: "Mi perfil",
   },
   {
-    name: "solicitudes",
+    name: "transactions-list",
     label: "Solicitudes",
   },
   {
