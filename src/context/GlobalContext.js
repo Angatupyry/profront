@@ -14,6 +14,7 @@ const GlobalProvider = ({ children }) => {
   const [showSpinner, setShowSpinner] = useState(false);
   const [confirmationModalVisible, setConfirmationModalVisible] =
     useState(false);
+  const [valorationModalVisible, setValorationModalVisible] = useState(false);
   const [header, setHeader] = useState({
     theme: "light",
     bgClass: "default",
@@ -30,6 +31,7 @@ const GlobalProvider = ({ children }) => {
   });
 
   const [transactionId, setTransactionId] = useState(false);
+  const [userId, setUserId] = useState(false);
 
   const toggleTheme = () => {
     setThemeDark(!themeDark);
@@ -78,6 +80,10 @@ const GlobalProvider = ({ children }) => {
     setConfirmationModalVisible(!confirmationModalVisible);
   };
 
+  const toggleValorationModal = () => {
+    setValorationModalVisible(!valorationModalVisible);
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -109,6 +115,10 @@ const GlobalProvider = ({ children }) => {
         confirmationModalVisible,
         transactionId,
         setTransactionId,
+        toggleValorationModal,
+        valorationModalVisible,
+        userId,
+        setUserId,
       }}
     >
       {children}

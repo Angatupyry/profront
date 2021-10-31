@@ -220,6 +220,12 @@ const CandidateProfile = () => {
                                                   comentario.comentario
                                                     .calificacion.puntuacion
                                                 }
+                                                {" ( "}
+                                                {
+                                                  comentario.comentario
+                                                    .calificacion.descripcion
+                                                }
+                                                {" ) "}
                                               </span>{" "}
                                             </p>
                                             <div className="image mr-5 ml-2">
@@ -229,10 +235,7 @@ const CandidateProfile = () => {
                                         </div>
 
                                         <div className="font-size-4 text-default-color line-height-2 pt-4">
-                                          {
-                                            comentario.comentario.calificacion
-                                              .descripcion
-                                          }
+                                          {comentario.comentario.descripcion}
                                         </div>
                                         <div className="d-flex align-items-center justify-content-md-between flex-wrap"></div>
                                       </div>

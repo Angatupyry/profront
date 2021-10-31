@@ -102,6 +102,11 @@ const TransactionList = () => {
     gContext.toggleConfirmationModal();
   };
 
+  const toggleValorationModal = (id) => {
+    gContext.setUserId(id);
+    gContext.toggleValorationModal();
+  };
+
   if (dataResult.length > 0) {
     return (
       <>
@@ -156,6 +161,10 @@ const TransactionList = () => {
                             scope="col"
                             className="border-0 font-size-4 font-weight-normal"
                           ></th>
+                          <th
+                            scope="col"
+                            className="border-0 font-size-4 font-weight-normal"
+                          ></th>
                         </tr>
                       </thead>
                       <tbody>
@@ -193,20 +202,6 @@ const TransactionList = () => {
                                   {transaccion.transaccion_estado.nombre}
                                 </h3>
                               </td>
-                              {/* <td className="table-y-middle py-7 min-width-px-170 pr-0">
-                                <div className="">
-                                  <a
-                                    href="/#"
-                                    className="font-size-3 font-weight-bold text-black-2 text-uppercase"
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      gContext.toggleApplicationModal();
-                                    }}
-                                  >
-                                    View Application
-                                  </a>
-                                </div>
-                              </td> */}
                               <td className="table-y-middle py-7 min-width-px-110 pr-0">
                                 <div className="">
                                   <Link
@@ -220,6 +215,27 @@ const TransactionList = () => {
                                   </Link>
                                 </div>
                               </td>
+                              {JSON.parse(Cookies.get("user"))
+                                .usuario_tipo_id == 1 && (
+                                <td className="table-y-middle py-7 min-width-px-170 pr-0">
+                                  <div className="d-flex justify-content-center">
+                                    <Link href="/#">
+                                      <a
+                                        href="/#"
+                                        className="font-size-3 font-weight-bold text-black-2 text-uppercase"
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          toggleValorationModal(
+                                            transaccion.profesional.id
+                                          );
+                                        }}
+                                      >
+                                        Valorar
+                                      </a>
+                                    </Link>
+                                  </div>
+                                </td>
+                              )}
                               <td className="table-y-middle py-7 min-width-px-100 pr-0">
                                 {transaccion.transaccion_estado.id == 2 ||
                                 transaccion.transaccion_estado.id == 5 ? (
