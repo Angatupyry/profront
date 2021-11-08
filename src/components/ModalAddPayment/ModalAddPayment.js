@@ -142,7 +142,6 @@ const ModalAddPayment = (props) => {
       getCards();
     }
     scrollToTop();
-    //setState({ loading: false, error: null });
   }, [tarjetas]);
 
   const handleSubmit = async (e) => {
@@ -259,7 +258,6 @@ const ModalAddPayment = (props) => {
                           label: state.cardLabel,
                           value: state.card,
                         }}
-                        // onChange={handleSelect}
                       />
                     </div>
 

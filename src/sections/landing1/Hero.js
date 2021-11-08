@@ -6,22 +6,6 @@ import imgH from "../../assets/image/l1/png/hero-image-man.png";
 import imgP from "../../assets/image/patterns/hero-pattern.png";
 import BuscadorService from "../../services/buscador.service";
 
-const defaultCountries = [
-  { value: "1", label: "Asunción" },
-  { value: "2", label: "Lambaré" },
-  { value: "3", label: "Villa Elisa" },
-  { value: "4", label: "Luque" },
-  { value: "5", label: "Ñemby" },
-];
-
-const defaultServices = [
-  { value: "1", label: "Manicure" },
-  { value: "2", label: "Enseñanza de inglés" },
-  { value: "3", label: "Personal training" },
-  { value: "4", label: "Psicólogo" },
-  { value: "5", label: "Enseñanza nivel inicial" },
-];
-
 const Hero = (props) => {
   const cityArray = [];
   const serviceArray = [];
@@ -143,17 +127,6 @@ const Hero = (props) => {
                   >
                     <div className="filter-search-form-1 bg-white rounded-sm shadow-4">
                       <div className="filter-inputs">
-                        {/* <div className="form-group position-relative">
-                        <input
-                          className="form-control focus-reset pl-13"
-                          type="text"
-                          id="keyword"
-                          placeholder="Job title"
-                        />
-                        <span className="h-100 w-px-50 pos-abs-tl d-flex align-items-center justify-content-center font-size-6">
-                          <i className="icon icon-zoom-2 text-primary font-weight-bold"></i>
-                        </span>
-                      </div> */}
                         {/* <!-- .select-city starts --> */}
                         <div
                           className="form-group position-relative"

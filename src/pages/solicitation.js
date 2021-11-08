@@ -2,16 +2,12 @@ import React, { useEffect } from "react";
 import Link from "next/link";
 import PageWrapper from "../components/PageWrapper";
 import { Select } from "../components/Core";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 
 import TransaccionService from "../services/transaccion.service";
 import { numberFormat, showErrorAlert, showSuccessAlert } from "../utils/utils";
 
 import imgF1 from "../assets/image/l2/png/featured-job-logo-1.png";
-import iconD from "../assets/image/svg/icon-dolor.svg";
-import iconB from "../assets/image/svg/icon-briefcase.svg";
-import iconL from "../assets/image/svg/icon-location.svg";
-import { offset } from "dom-helpers";
 import Cookies from "js-cookie";
 
 const horas = [
@@ -289,23 +285,6 @@ const JobDetails = () => {
                           {/* <!-- media date end --> */}
                         </div>
                       </div>
-                      {/* <div className="row pt-9">
-                      <div className="col-12">
-                        <div className="card-btn-group">
-                          <Link href="/#">
-                            <a className="btn btn-green text-uppercase btn-medium rounded-3 w-180 mr-4 mb-5">
-                              Apply to this job
-                            </a>
-                          </Link>
-                          <Link href="/#">
-                            <a className="btn btn-outline-mercury text-black-2 text-uppercase h-px-48 rounded-3 mb-5 px-5">
-                              <i className="icon icon-bookmark-2 font-weight-bold mr-4 font-size-4"></i>{" "}
-                              Save job
-                            </a>
-                          </Link>
-                        </div>
-                      </div>
-                    </div> */}
                     </div>
                     {/* <!-- End Single Featured Job --> */}
                     <div className="job-details-content pt-8 pl-sm-9 pl-6 pr-sm-9 pr-6 pb-10 border-bottom border-width-1 border-default-color light-mode-texts">
@@ -342,7 +321,6 @@ const JobDetails = () => {
                                       type="radio"
                                       name="isProfesional"
                                       id={id}
-                                      //value={state.isProfessional}
                                       onChange={handleRadioBtn}
                                       montohora={descripcionMonto}
                                       servicio={servicio.servicio.descripcion}

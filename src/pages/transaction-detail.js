@@ -1,21 +1,17 @@
 import React, { useContext, useEffect } from "react";
 import Link from "next/link";
 import PageWrapper from "../components/PageWrapper";
-import { Select } from "../components/Core";
 import GlobalContext from "../context/GlobalContext";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 
 import ProfesionalService from "../services/profesional.service";
-import MediosPagoService from "../services/mediosPago.service";
 import TransaccionService from "../services/transaccion.service";
 import { numberFormat } from "../utils/utils";
 
 import imgF1 from "../assets/image/l2/png/featured-job-logo-1.png";
-import iconD from "../assets/image/svg/icon-dolor.svg";
-import iconB from "../assets/image/svg/icon-briefcase.svg";
-import iconL from "../assets/image/svg/icon-location.svg";
+
 import Cookies from "js-cookie";
-import { getUserTypeId } from "../utils";
+import { getUserTypeId, constants } from "../utils";
 
 const scrollToTop = () => {
   window.scrollTo({
@@ -36,7 +32,6 @@ const TransactionDetail = () => {
     success: null,
     user_id: "",
   });
-  const gContext = useContext(GlobalContext);
 
   const [dataResult, setDataResult] = React.useState({});
   const [profileData, setProfileData] = React.useState({});
@@ -51,14 +46,16 @@ const TransactionDetail = () => {
     setState({ loading: true, error: null });
     try {
       let usuario_tipo = JSON.parse(Cookies.get("user")).usuario_tipo_id;
+      let clientUserTypeId = getUserTypeId(constants.CLIENT_TYPE.CLIENTE);
+      let isProfessional = usuario_tipo != clientUserTypeId ? true : false;
       const response = await TransaccionService.getTransactionDetail(
         id,
-        usuario_tipo
+        usuario_tipo,
+        clientUserTypeId
       );
       console.log(response);
       setDataResult(response.data.data[0]);
-      let clientUserTypeId = getUserTypeId("cliente");
-      let isProfessional = usuario_tipo != clientUserTypeId ? true : false;
+
       if (!isProfessional) {
         let profesional_id = response.data.data[0].profesional.id;
         const res = await ProfesionalService.getProfile(profesional_id);

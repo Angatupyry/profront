@@ -1,5 +1,4 @@
 import http from "./http-common";
-//import protectedRoute from "./protected-routes";
 
 class MediosPagoService {
   getCards = async () => {

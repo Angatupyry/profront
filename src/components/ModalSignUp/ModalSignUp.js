@@ -6,7 +6,7 @@ import GlobalContext from "../../context/GlobalContext";
 import AuthService from "../../services/auth.service";
 import { Select } from "../../components/Core";
 import Error from "../Error/Error";
-import { getUserType } from "../../utils";
+import { getUserType, getTransactionStates } from "../../utils";
 
 const ERRORMSG =
   "Lo sentimos. Ha ocurrido un error, por favor intente más tarde.";
@@ -66,6 +66,7 @@ const ModalSignUp = (props) => {
 
     try {
       getUserType();
+      getTransactionStates();
       await AuthService.register(
         state.name,
         state.lastName,
@@ -134,64 +135,10 @@ const ModalSignUp = (props) => {
                     disponibles.
                   </p>
                 </div>
-                {/* <div className="border-top border-default-color-2 mt-auto">
-                  <div className="d-flex mx-n9 pt-6 flex-xs-row flex-column">
-                    <div className="pt-5 px-9">
-                      <h3 className="font-size-7 text-white">295</h3>
-                      <p className="font-size-3 text-white gr-opacity-5 line-height-1p4">
-                        New jobs posted today
-                      </p>
-                    </div>
-                    <div className="pt-5 px-9">
-                      <h3 className="font-size-7 text-white">14</h3>
-                      <p className="font-size-3 text-white gr-opacity-5 line-height-1p4">
-                        New companies registered
-                      </p>
-                    </div>
-                  </div>
-                </div> */}
               </div>
             </div>
             <div className="col-lg-7 col-md-6">
               <div className="bg-white-2 h-100 px-11 pt-11 pb-7">
-                {/* <div className="row">
-                  <div className="col-4 col-xs-12">
-                    <a
-                      href="/#"
-                      className="font-size-4 font-weight-semibold position-relative text-white bg-allports h-px-48 flex-all-center w-100 px-6 rounded-5 mb-4"
-                    >
-                      <i className="fab fa-linkedin pos-xs-abs-cl font-size-7 ml-xs-4"></i>{" "}
-                      <span className="d-none d-xs-block">
-                        Import from LinkedIn
-                      </span>
-                    </a>
-                  </div>
-                  <div className="col-4 col-xs-12">
-                    <a
-                      href="/#"
-                      className="font-size-4 font-weight-semibold position-relative text-white bg-poppy h-px-48 flex-all-center w-100 px-6 rounded-5 mb-4"
-                    >
-                      <i className="fab fa-google pos-xs-abs-cl font-size-7 ml-xs-4"></i>{" "}
-                      <span className="d-none d-xs-block">
-                        Import from Google
-                      </span>
-                    </a>
-                  </div>
-                  <div className="col-4 col-xs-12">
-                    <a
-                      href="/#"
-                      className="font-size-4 font-weight-semibold position-relative text-white bg-marino h-px-48 flex-all-center w-100 px-6 rounded-5 mb-4"
-                    >
-                      <i className="fab fa-facebook-square pos-xs-abs-cl font-size-7 ml-xs-4"></i>{" "}
-                      <span className="d-none d-xs-block">
-                        Import from Facebook
-                      </span>
-                    </a>
-                  </div>
-                </div>
-                <div className="or-devider">
-                  <span className="font-size-3 line-height-reset">Or</span>
-                </div> */}
                 <form action="/" onSubmit={handleSubmit}>
                   <div className="form-group">
                     <label
@@ -301,32 +248,7 @@ const ModalSignUp = (props) => {
                       </a>
                     </div>
                   </div>
-                  {/* <div className="form-group">
-                    <label
-                      htmlFor="password2"
-                      className="font-size-4 text-black-2 font-weight-semibold line-height-reset"
-                    >
-                      Confirmar Contraseña
-                    </label>
-                    <div className="position-relative">
-                      <input
-                        type={showPassSecond ? "password" : "text"}
-                        className="form-control"
-                        id="password2"
-                        placeholder="Ingrese su contraseña"
-                      />
-                      <a
-                        href="/#"
-                        className="show-password pos-abs-cr fas mr-6 text-black-2"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          togglePasswordSecond();
-                        }}
-                      >
-                        <span className="d-none">none</span>
-                      </a>
-                    </div>
-                  </div> */}
+
                   <div className="form-group d-flex flex-wrap justify-content-center mb-1">
                     <label
                       htmlFor="isProfesional"
@@ -347,24 +269,12 @@ const ModalSignUp = (props) => {
                         </a>
                       </span>
                     </label>
-                    {/* <a
-                      href="/#"
-                      className="font-size-3 text-dodger line-height-reset"
-                    >
-                      Forget Password
-                    </a> */}
                   </div>
                   <div className="form-group mb-8">
                     <button className="btn btn-primary btn-medium w-100 rounded-5 text-uppercase">
                       Registrarse{" "}
                     </button>
                   </div>
-                  {/* <p className="font-size-4 text-center heading-default-color">
-                    Don’t have an account?{" "}
-                    <a href="/#" className="text-primary">
-                      Create a free account
-                    </a>
-                  </p> */}
                 </form>
               </div>
             </div>

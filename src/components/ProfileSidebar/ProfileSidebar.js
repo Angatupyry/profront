@@ -102,33 +102,6 @@ const Sidebar = (props) => {
                     </Link>
                   )}
                 </div>
-                {/* <div className="icon-link d-flex align-items-center justify-content-center flex-wrap">
-                  <Link href="/#">
-                    <a className="text-smoke circle-32 bg-concrete mr-5 hover-bg-green">
-                      <i className="fab fa-linkedin-in"></i>
-                    </a>
-                  </Link>
-                  <Link href="/#">
-                    <a className="text-smoke circle-32 bg-concrete mr-5 hover-bg-green">
-                      <i className="fab fa-facebook-f"></i>
-                    </a>
-                  </Link>
-                  <Link href="/#">
-                    <a className="text-smoke circle-32 bg-concrete mr-5 hover-bg-green">
-                      <i className="fab fa-twitter"></i>
-                    </a>
-                  </Link>
-                  <Link href="/#">
-                    <a className="text-smoke circle-32 bg-concrete mr-5 hover-bg-green">
-                      <i className="fab fa-dribbble"></i>
-                    </a>
-                  </Link>
-                  <Link href="/#">
-                    <a className="text-smoke circle-32 bg-concrete mr-5 hover-bg-green">
-                      <i className="fab fa-behance"></i>
-                    </a>
-                  </Link>
-                </div> */}
               </div>
               {/* <!-- Top End --> */}
               {/* <!-- Bottom Start --> */}
@@ -190,17 +163,6 @@ const Sidebar = (props) => {
                     className="profile img-thumbnail m-1"
                   />
                 </div>
-                {/* <!-- Single List --> */}
-
-                {/* <div className="mb-7">
-                  <p className="font-size-4 mb-0">Website Linked</p>
-                  <h5 className="font-size-4 font-weight-semibold mb-0">
-                    <Link href="/#">
-                      <a className="text-break">www.nameac.com</a>
-                    </Link>
-                  </h5>
-                </div> */}
-                {/* <!-- Single List --> */}
               </div>
               {/* <!-- Bottom End --> */}
             </div>

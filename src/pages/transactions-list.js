@@ -1,27 +1,16 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useContext } from "react";
+
 import Link from "next/link";
 import PageWrapper from "../components/PageWrapper";
-import Sidebar from "../components/Sidebar";
-import { Select } from "../components/Core";
-import Router, { useRouter } from "next/router";
-import BuscadorService from "../services/buscador.service";
-import { numberFormat } from "../utils/utils";
 import GlobalContext from "../context/GlobalContext";
-
-import imgF1 from "../assets/image/l2/png/featured-job-logo-2.png";
-import imgF2 from "../assets/image/l2/png/featured-job-logo-2.png";
-import imgF3 from "../assets/image/l2/png/featured-job-logo-3.png";
-import imgF4 from "../assets/image/l2/png/featured-job-logo-4.png";
-import imgF5 from "../assets/image/l2/png/featured-job-logo-5.png";
-
-import imgF from "../assets/image/svg/icon-fire-rounded.svg";
-import iconL from "../assets/image/svg/icon-loaction-pin-black.svg";
-import iconS from "../assets/image/svg/icon-suitecase.svg";
-import iconC from "../assets/image/svg/icon-clock.svg";
 import TransaccionService from "../services/transaccion.service";
 import Cookies from "js-cookie";
-import { getUserTypeId } from "../utils";
+import {
+  getUserTypeId,
+  getTransactionStates,
+  getTransactionStateId,
+  constants,
+} from "../utils";
 
 const TransactionList = () => {
   const gContext = useContext(GlobalContext);
@@ -31,6 +20,7 @@ const TransactionList = () => {
     error: null,
   });
   const [clientUserTypeId, setClientUserTypeId] = React.useState("");
+  const [transactionStates, setTransactionStates] = React.useState([]);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -49,13 +39,14 @@ const TransactionList = () => {
     setState({ loading: true, error: null });
     try {
       let cliente_id = JSON.parse(Cookies.get("user")).id;
-      let clientUserTypeId = getUserTypeId("cliente");
+      let clientUserTypeId = getUserTypeId(constants.CLIENT_TYPE.CLIENTE);
       const response = await TransaccionService.getTransactionList(
         cliente_id,
         clientUserTypeId
       );
       setDataResult(response.data.data);
       setClientUserTypeId(clientUserTypeId);
+      setTransactionStates(getTransactionStates());
       setState({ loading: false, error: null });
     } catch (error) {
       console.log(error);
@@ -196,19 +187,6 @@ const TransactionList = () => {
                                 </h3>
                               </td>
                               <td className="table-y-middle py-7 min-width-px-110 pr-0">
-                                {transaccion.transaccion_estado.id == 4 && (
-                                  <div className="">
-                                    <Link
-                                      href={"/payment?id=" + transaccion.id}
-                                    >
-                                      <a className="font-size-3 font-weight-bold text-green text-uppercase">
-                                        Pagar
-                                      </a>
-                                    </Link>
-                                  </div>
-                                )}
-                              </td>
-                              <td className="table-y-middle py-7 min-width-px-110 pr-0">
                                 <div className="">
                                   <Link
                                     href={
@@ -221,11 +199,33 @@ const TransactionList = () => {
                                   </Link>
                                 </div>
                               </td>
+                              <td className="table-y-middle py-7 min-width-px-110 pr-0">
+                                {JSON.parse(Cookies.get("user"))
+                                  .usuario_tipo_id == clientUserTypeId &&
+                                  transaccion.transaccion_estado.id ==
+                                    getTransactionStateId(
+                                      constants.TRANSACTION_STATE.PENDIENTE_PAGO
+                                    ) && (
+                                    <div className="">
+                                      <Link
+                                        href={"/payment?id=" + transaccion.id}
+                                      >
+                                        <a className="font-size-3 font-weight-bold text-green text-uppercase">
+                                          Pagar
+                                        </a>
+                                      </Link>
+                                    </div>
+                                  )}
+                              </td>
 
                               <td className="table-y-middle py-7 min-width-px-170 pr-0">
                                 {JSON.parse(Cookies.get("user"))
                                   .usuario_tipo_id == clientUserTypeId &&
-                                  transaccion.transaccion_estado.id == 1 && (
+                                  transaccion.transaccion_estado.id ==
+                                    getTransactionStateId(
+                                      constants.TRANSACTION_STATE
+                                        .PENDIENTE_VALORACION
+                                    ) && (
                                     <div className="d-flex justify-content-center">
                                       <Link href="/#">
                                         <a
@@ -247,8 +247,15 @@ const TransactionList = () => {
                               </td>
 
                               <td className="table-y-middle py-7 min-width-px-100 pr-0">
-                                {transaccion.transaccion_estado.id == 2 ||
-                                transaccion.transaccion_estado.id == 5 ? (
+                                {transaccion.transaccion_estado.id ==
+                                  getTransactionStateId(
+                                    constants.TRANSACTION_STATE
+                                      .PENDIENTE_APROBACION
+                                  ) ||
+                                transaccion.transaccion_estado.id ==
+                                  getTransactionStateId(
+                                    constants.TRANSACTION_STATE.PENDIENTE_PAGO
+                                  ) ? (
                                   <div className="">
                                     <Link href="/#">
                                       <a

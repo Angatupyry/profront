@@ -1,6 +1,7 @@
 import http from "./http-common";
 import privateRoute from "./protected-routes";
 import Cookies from "js-cookie";
+import { constants, getTransactionStateId } from "../utils";
 
 class TransaccionService {
   getSolicitation = async (id) => {
@@ -78,8 +79,8 @@ class TransaccionService {
     }
   };
 
-  getTransactionDetail = async (id, usuario_tipo) => {
-    let tipo = usuario_tipo && usuario_tipo == 1 ? 0 : 1;
+  getTransactionDetail = async (id, usuario_tipo, clientUserTypeId) => {
+    let tipo = usuario_tipo && usuario_tipo == clientUserTypeId ? 0 : 1;
     try {
       const data = await http.get(
         "/public/transaccion/solicitud/" + id + "/" + tipo
@@ -94,7 +95,9 @@ class TransaccionService {
   updateTransaction = async (id) => {
     try {
       const data = await http.put("/public/transaccion/" + id, {
-        transaccion_estado_id: 3,
+        transaccion_estado_id: getTransactionStateId(
+          constants.TRANSACTION_STATE.RECHAZADO
+        ),
       });
       return data;
     } catch (error) {

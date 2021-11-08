@@ -21,6 +21,7 @@ import iconS from "../assets/image/svg/icon-suitecase.svg";
 import iconC from "../assets/image/svg/icon-clock.svg";
 import TransaccionService from "../services/transaccion.service";
 import Cookies from "js-cookie";
+import { getTransactionStates } from "../utils";
 
 const PaymentsAdmin = () => {
   const gContext = useContext(GlobalContext);
@@ -47,9 +48,7 @@ const PaymentsAdmin = () => {
   async function fetchData() {
     setState({ loading: true, error: null });
     try {
-      const transactionStates = await TransaccionService.getTransactionStates();
-      console.log(transactionStates.data.data);
-      setTransactionStates(transactionStates.data.data);
+      setTransactionStates(getTransactionStates());
       let state = transactionStates.data.data.find(
         (x) => x.nombre.toLowerCase() == "pendiente pago"
       );

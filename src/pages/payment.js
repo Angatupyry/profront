@@ -1,11 +1,9 @@
 import React, { useContext, useEffect } from "react";
 import Link from "next/link";
 import PageWrapper from "../components/PageWrapper";
-import { Select } from "../components/Core";
 import GlobalContext from "../context/GlobalContext";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 
-import ProfesionalService from "../services/profesional.service";
 import MediosPagoService from "../services/mediosPago.service";
 import TransaccionService from "../services/transaccion.service";
 import { numberFormat } from "../utils/utils";
@@ -107,7 +105,6 @@ const Payment = () => {
   const handlePayments = async (e) => {
     var card = document.getElementsByClassName("cardsPayment")[0];
     var transfer = document.getElementsByClassName("transferPayment")[0];
-    console.log(e.target.id);
     if (e.target.id == "card") {
       card.classList.remove("d-none");
       transfer.classList.add("d-none");
@@ -392,7 +389,6 @@ const Payment = () => {
                                 onClick={(e) => {
                                   e.preventDefault();
                                   gContext.toggleAddPaymentModal();
-                                  //gContext.toggleSignUpModal();
                                 }}
                               >
                                 Agregar nuevo medio de pago

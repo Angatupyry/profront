@@ -2,6 +2,7 @@ import Cookies from "js-cookie";
 import React, { useContext } from "react";
 import GlobalContext from "../context/GlobalContext";
 import UsuarioService from "../services/usuario.service";
+import TransactionService from "../services/transaccion.service";
 
 const scrollToTop = () => {
   window.scrollTo({
@@ -57,6 +58,27 @@ export function getUserTypeId(user) {
     let userTypes = JSON.parse(Cookies.get("userTypes"));
     const res = userTypes.find(
       (element) => element.nombre.toLowerCase() == user.toLowerCase()
+    ).id;
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getTransactionStates() {
+  try {
+    const response = await TransactionService.getTransactionStates();
+    Cookies.set("transactionStates", JSON.stringify(response.data.data));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function getTransactionStateId(transaction) {
+  try {
+    let transactionStates = JSON.parse(Cookies.get("transactionStates"));
+    const res = transactionStates.find(
+      (element) => element.nombre.toLowerCase() == transaction.toLowerCase()
     ).id;
     return res;
   } catch (error) {

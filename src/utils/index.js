@@ -1,7 +1,14 @@
 import { breakpoints, device } from "./breakpoints";
 import theme from "./theme";
 import { addDays } from "./addDays";
-import { numberFormat, getUserType, getUserTypeId } from "./utils";
+import { constants } from "./constants";
+import {
+  numberFormat,
+  getUserType,
+  getUserTypeId,
+  getTransactionStateId,
+  getTransactionStates,
+} from "./utils";
 import { checkSession, closeSession, isLoggedIn } from "./checkSession";
 
 export {
@@ -15,4 +22,7 @@ export {
   isLoggedIn,
   getUserType,
   getUserTypeId,
+  getTransactionStateId,
+  getTransactionStates,
+  constants,
 };
