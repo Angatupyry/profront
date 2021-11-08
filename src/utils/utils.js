@@ -1,3 +1,8 @@
+import Cookies from "js-cookie";
+import React, { useContext } from "react";
+import GlobalContext from "../context/GlobalContext";
+import UsuarioService from "../services/usuario.service";
+
 const scrollToTop = () => {
   window.scrollTo({
     top: 0,
@@ -36,3 +41,25 @@ export const showSuccessAlert = (text) => {
     </div>
   );
 };
+
+export async function getUserType() {
+  try {
+    const response = await UsuarioService.getUserType();
+    Cookies.set("userTypes", JSON.stringify(response.data.data));
+    console.log(response.data.data);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function getUserTypeId(user) {
+  try {
+    let userTypes = JSON.parse(Cookies.get("userTypes"));
+    const res = userTypes.find(
+      (element) => element.nombre.toLowerCase() == user.toLowerCase()
+    ).id;
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+}

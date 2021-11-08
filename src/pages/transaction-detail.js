@@ -15,6 +15,7 @@ import iconD from "../assets/image/svg/icon-dolor.svg";
 import iconB from "../assets/image/svg/icon-briefcase.svg";
 import iconL from "../assets/image/svg/icon-location.svg";
 import Cookies from "js-cookie";
+import { getUserTypeId } from "../utils";
 
 const scrollToTop = () => {
   window.scrollTo({
@@ -56,8 +57,8 @@ const TransactionDetail = () => {
       );
       console.log(response);
       setDataResult(response.data.data[0]);
-      let isProfessional =
-        JSON.parse(Cookies.get("user")).usuario_tipo_id == 2 ? true : false;
+      let clientUserTypeId = getUserTypeId("cliente");
+      let isProfessional = usuario_tipo != clientUserTypeId ? true : false;
       if (!isProfessional) {
         let profesional_id = response.data.data[0].profesional.id;
         const res = await ProfesionalService.getProfile(profesional_id);
@@ -106,7 +107,7 @@ const TransactionDetail = () => {
                 {/* <!-- back Button --> */}
                 <div className="col-xl-10 col-lg-11 mt-4 ml-xxl-32 ml-xl-15 dark-mode-texts">
                   <div className="mb-9">
-                    <Link href="/">
+                    <Link href="/transactions-list">
                       <a className="d-flex align-items-center ml-4">
                         <i className="icon icon-small-left bg-white circle-40 mr-5 font-size-7 text-black font-weight-bold shadow-8"></i>
                         <span className="text-uppercase font-size-3 font-weight-bold text-gray">
@@ -182,7 +183,10 @@ const TransactionDetail = () => {
                                           ) {
                                             return (
                                               <span className="text-gray font-size-4">
-                                                {servicio.servicio.descripcion}
+                                                {" "}
+                                                {
+                                                  servicio.servicio.descripcion
+                                                }{" "}
                                               </span>
                                             );
                                           } else {

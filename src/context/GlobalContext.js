@@ -31,7 +31,7 @@ const GlobalProvider = ({ children }) => {
   });
 
   const [transactionId, setTransactionId] = useState(false);
-  const [userId, setUserId] = useState(false);
+  const [userId, setUserId] = useState();
 
   const toggleTheme = () => {
     setThemeDark(!themeDark);

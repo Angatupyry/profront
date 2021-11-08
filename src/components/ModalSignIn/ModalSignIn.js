@@ -5,6 +5,7 @@ import GlobalContext from "../../context/GlobalContext";
 import AuthService from "../../services/auth.service";
 import Error from "../Error/Error";
 import Cookies from "js-cookie";
+import { getUserType } from "../../utils";
 
 const ModalStyled = styled(Modal)`
   /* &.modal {
@@ -39,8 +40,8 @@ const ModalSignIn = (props) => {
       setState({ loading: false, error: null });
       Cookies.set("token", JSON.stringify(response.data.token));
       Cookies.set("user", JSON.stringify(response.data.user));
+      getUserType();
       handleClose();
-      //Router.push("/dashboard-main");
     } catch (error) {
       console.log(error);
       setState({ loading: false, error: error });

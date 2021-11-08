@@ -12,12 +12,13 @@ class CalificacionService {
     }
   };
 
-  postComment = async (descripcion, calificacion, id) => {
+  postComment = async (descripcion, calificacion, id, transaccion_id) => {
     try {
       const data = await http.post("/public/comentario/profesional/" + id, {
         descripcion: descripcion,
         calificacion_id: calificacion,
         usuario_id: id,
+        transaccion_id: transaccion_id,
       });
       return data;
     } catch (error) {

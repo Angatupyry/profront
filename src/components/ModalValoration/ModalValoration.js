@@ -14,19 +14,12 @@ const ModalStyled = styled(Modal)`
   } */
 `;
 
-const calificationArray = [];
-const rango = [
-  { value: "1", label: "1 (Uno)" },
-  { value: "2", label: "2 (Dos)" },
-  { value: "3", label: "3 (Tres)" },
-  { value: "4", label: "4 (Cuatro)" },
-  { value: "5", label: "5 (Cinco)" },
-];
-
 const ModalValoration = (props) => {
+  const calificationArray = [];
   const [calificaciones, setCalificaciones] = React.useState([]);
   const gContext = useContext(GlobalContext);
   const usuario_id = gContext.userId;
+  const transaccion_id = gContext.transactionId;
   const [state, setState] = useState({
     loading: true,
     error: null,
@@ -45,10 +38,12 @@ const ModalValoration = (props) => {
       const response = await CalificacionService.postComment(
         state.comment,
         state.calification,
-        usuario_id
+        usuario_id,
+        transaccion_id
       );
       handleClose();
       gContext.setUserId(null);
+      gContext.setTransactionId(null);
       setState({ loading: false, error: null });
     } catch (error) {
       console.log(error);

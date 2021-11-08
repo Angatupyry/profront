@@ -1,7 +1,7 @@
 import { breakpoints, device } from "./breakpoints";
 import theme from "./theme";
 import { addDays } from "./addDays";
-import { numberFormat } from "./utils";
+import { numberFormat, getUserType, getUserTypeId } from "./utils";
 import { checkSession, closeSession, isLoggedIn } from "./checkSession";
 
 export {
@@ -13,4 +13,6 @@ export {
   checkSession,
   closeSession,
   isLoggedIn,
+  getUserType,
+  getUserTypeId,
 };

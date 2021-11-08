@@ -377,7 +377,11 @@ const SearchGrid = () => {
       </>
     );
   } else {
-    return <div>no hay datos</div>;
+    return (
+      <PageWrapper>
+        <div>no hay datos</div>
+      </PageWrapper>
+    );
   }
 };
 export default SearchGrid;

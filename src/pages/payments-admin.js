@@ -21,16 +21,15 @@ import iconS from "../assets/image/svg/icon-suitecase.svg";
 import iconC from "../assets/image/svg/icon-clock.svg";
 import TransaccionService from "../services/transaccion.service";
 import Cookies from "js-cookie";
-import { getUserTypeId } from "../utils";
 
-const TransactionList = () => {
+const PaymentsAdmin = () => {
   const gContext = useContext(GlobalContext);
+  const [transactionStates, setTransactionStates] = React.useState([]);
   const [dataResult, setDataResult] = React.useState([]);
   const [state, setState] = React.useState({
     loading: true,
     error: null,
   });
-  const [clientUserTypeId, setClientUserTypeId] = React.useState("");
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -48,14 +47,17 @@ const TransactionList = () => {
   async function fetchData() {
     setState({ loading: true, error: null });
     try {
-      let cliente_id = JSON.parse(Cookies.get("user")).id;
-      let clientUserTypeId = getUserTypeId("cliente");
-      const response = await TransaccionService.getTransactionList(
-        cliente_id,
-        clientUserTypeId
+      const transactionStates = await TransaccionService.getTransactionStates();
+      console.log(transactionStates.data.data);
+      setTransactionStates(transactionStates.data.data);
+      let state = transactionStates.data.data.find(
+        (x) => x.nombre.toLowerCase() == "pendiente pago"
+      );
+      const response = await TransaccionService.getTransactionListByState(
+        state.id
       );
       setDataResult(response.data.data);
-      setClientUserTypeId(clientUserTypeId);
+      console.log(response.data.data);
       setState({ loading: false, error: null });
     } catch (error) {
       console.log(error);
@@ -74,6 +76,23 @@ const TransactionList = () => {
     }
   }, [dataResult]);
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setState({ loading: true, error: null });
+
+  //   Router.push({
+  //     pathname: "/search-list",
+  //     query: {
+  //       city: state.city,
+  //       service: state.service,
+  //       price: state.price,
+  //       sex: state.sex,
+  //       score: state.score,
+  //     },
+  //   });
+  //   fetchData(state.city, state.service);
+  // };
+
   const transformDate = (date) => {
     let jsDate = new Date(date);
     let options = { timeZone: "UTC" };
@@ -85,23 +104,29 @@ const TransactionList = () => {
     gContext.toggleConfirmationModal();
   };
 
-  const toggleValorationModal = (id, transaction_id) => {
+  const toggleValorationModal = (id) => {
     gContext.setUserId(id);
-    gContext.setTransactionId(transaction_id);
     gContext.toggleValorationModal();
+  };
+
+  const handleAllRadioBtn = async (e) => {
+    let id = e.target.id;
+    if (condition) {
+    }
   };
 
   if (dataResult.length > 0) {
     return (
       <>
         <PageWrapper>
+          {console.log(dataResult)}
           <div className="bg-default-1 pt-26 pt-lg-28 pb-13 pb-lg-25">
             <div className="container">
               <div className="mb-14">
                 <div className="row mb-11 align-items-center">
                   <div className="col-lg-6 mb-lg-0 mb-4">
                     <h3 className="font-size-6 mb-0">
-                      Listado de solicitudes ({dataResult.length})
+                      Listado de pagos pendientes ({dataResult.length})
                     </h3>
                   </div>
                 </div>
@@ -114,16 +139,22 @@ const TransactionList = () => {
                             scope="col"
                             className="pl-0  border-0 font-size-4 font-weight-normal"
                           >
-                            Servicio
+                            <div class="custom-control custom-checkbox">
+                              <input
+                                type="checkbox"
+                                class="custom-control-input"
+                                id="all"
+                              />
+                              <label class="custom-control-label" for="all">
+                                Servicio
+                              </label>
+                            </div>
                           </th>
                           <th
                             scope="col"
                             className="border-0 font-size-4 font-weight-normal"
                           >
-                            {JSON.parse(Cookies.get("user")).usuario_tipo_id ==
-                            clientUserTypeId
-                              ? "Profesional"
-                              : "Cliente"}
+                            Profesional
                           </th>
                           <th
                             scope="col"
@@ -156,9 +187,24 @@ const TransactionList = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {dataResult.map((transaccion) => {
+                        {dataResult.map((transaccion, index) => {
                           return (
                             <tr className="border border-color-2">
+                              <td className="table-y-middle py-7 min-width-px-235 pr-0">
+                                <div class="custom-control custom-checkbox">
+                                  <input
+                                    type="checkbox"
+                                    class="custom-control-input"
+                                    id={"check-" + index}
+                                  />
+                                  <label
+                                    class="custom-control-label"
+                                    for={"check-" + index}
+                                  >
+                                    {index}
+                                  </label>
+                                </div>
+                              </td>
                               <td className="table-y-middle py-7 min-width-px-235 pr-0">
                                 <h3 className="font-size-4 font-weight-normal text-black-2 mb-0">
                                   {
@@ -223,27 +269,22 @@ const TransactionList = () => {
                               </td>
 
                               <td className="table-y-middle py-7 min-width-px-170 pr-0">
-                                {JSON.parse(Cookies.get("user"))
-                                  .usuario_tipo_id == clientUserTypeId &&
-                                  transaccion.transaccion_estado.id == 1 && (
-                                    <div className="d-flex justify-content-center">
-                                      <Link href="/#">
-                                        <a
-                                          href="/#"
-                                          className="font-size-3 font-weight-bold text-black-2 text-uppercase"
-                                          onClick={(e) => {
-                                            e.preventDefault();
-                                            toggleValorationModal(
-                                              transaccion.profesional.id,
-                                              transaccion.id
-                                            );
-                                          }}
-                                        >
-                                          Valorar
-                                        </a>
-                                      </Link>
-                                    </div>
-                                  )}
+                                <div className="d-flex justify-content-center">
+                                  <Link href="/#">
+                                    <a
+                                      href="/#"
+                                      className="font-size-3 font-weight-bold text-black-2 text-uppercase"
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        toggleValorationModal(
+                                          transaccion.profesional.id
+                                        );
+                                      }}
+                                    >
+                                      Valorar
+                                    </a>
+                                  </Link>
+                                </div>
                               </td>
 
                               <td className="table-y-middle py-7 min-width-px-100 pr-0">
@@ -347,4 +388,4 @@ const TransactionList = () => {
     return <div>no hay datos</div>;
   }
 };
-export default TransactionList;
+export default PaymentsAdmin;

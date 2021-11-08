@@ -9,6 +9,7 @@ import { Select } from "../../components/Core";
 import Loader from "react-loader-spinner";
 
 import MediosPagoService from "../../services/mediosPago.service";
+import Cookies from "js-cookie";
 
 const ModalStyled = styled(Modal)`
   /* &.modal {
@@ -66,7 +67,7 @@ const ModalAddPayment = (props) => {
   const [postData, setPostData] = React.useState({
     descripcion: "",
     tipo_tarjeta_id: 0,
-    usuario_id: 1,
+    usuario_id: 0,
     numero_tarjeta: "",
     fecha_vencimiento_tarjeta: getTodaysdate(),
     numero_cvc: "",
@@ -122,7 +123,7 @@ const ModalAddPayment = (props) => {
         mes_vencimiento_label: meses[0].label,
         anho_vencimiento: anhos[0].value,
         anho_vencimiento_label: anhos[0].label,
-        usuario_id: 1,
+        usuario_id: JSON.parse(Cookies.get("user")).id,
         secuencia: 1,
         fecha_vencimiento_tarjeta: getTodaysdate(),
       });

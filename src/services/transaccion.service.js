@@ -1,5 +1,6 @@
 import http from "./http-common";
 import privateRoute from "./protected-routes";
+import Cookies from "js-cookie";
 
 class TransaccionService {
   getSolicitation = async (id) => {
@@ -50,7 +51,7 @@ class TransaccionService {
     }
   };
 
-  postTransaction = async (id) => {
+  postTransaction = async (id, payment_method) => {
     try {
       const data = await http.post("/public/operacion/pago/" + id, {});
       return data;
@@ -60,10 +61,17 @@ class TransaccionService {
     }
   };
 
-  getTransactionList = async (id) => {
+  getTransactionList = async (id, clientUserTypeId) => {
     try {
-      const data = await http.get("/public/transaccion?cliente__id=" + id);
-      return data;
+      if (JSON.parse(Cookies.get("user")).usuario_tipo_id == clientUserTypeId) {
+        const data = await http.get("/public/transaccion?cliente__id=" + id);
+        return data;
+      } else {
+        const data = await http.get(
+          "/public/transaccion?profesional__id=" + id
+        );
+        return data;
+      }
     } catch (error) {
       console.log(error);
       throw error;
@@ -88,6 +96,28 @@ class TransaccionService {
       const data = await http.put("/public/transaccion/" + id, {
         transaccion_estado_id: 3,
       });
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  getTransactionStates = async () => {
+    try {
+      const data = await http.get("/public/transaccion_estado");
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  getTransactionListByState = async (id) => {
+    try {
+      const data = await http.get(
+        "/public/transaccion?transaccion_estado__id=" + id
+      );
       return data;
     } catch (error) {
       console.log(error);

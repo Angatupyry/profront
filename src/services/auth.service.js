@@ -1,5 +1,6 @@
 import http from "./http-common";
 import protectedRoutes from "./protected-routes";
+import { getUserTypeId } from "../utils";
 
 class AuthService {
   login = async (email, password) => {
@@ -24,6 +25,8 @@ class AuthService {
     esProfesional
   ) => {
     try {
+      let clientUserTypeId = getUserTypeId("cliente");
+      let professionalUserTypeId = getUserTypeId("profesional");
       const data = await http.post("/public/usuario/registro", {
         persona: {
           nombre: nombre,
@@ -33,20 +36,12 @@ class AuthService {
         },
         username: email,
         password: password,
-        usuario_tipo_id: esProfesional ? 2 : 1,
+        usuario_tipo_id: esProfesional
+          ? professionalUserTypeId
+          : clientUserTypeId,
       });
       return data;
     } catch (error) {
-      throw error;
-    }
-  };
-
-  getUser = async (id) => {
-    try {
-      const data = await protectedRoutes.get("/public/usuario/" + id);
-      return data;
-    } catch (error) {
-      console.log(error);
       throw error;
     }
   };

@@ -7,7 +7,7 @@ import AOS from "aos";
 import Header from "../Header";
 import Footer from "../Footer";
 
-import SidebarDashboard from "../SidebarDashboard";
+import SidebarDashboardAdmin from "../SidebarDashboardAdmin";
 import ModalVideo from "../ModalVideo";
 import ModalApplication from "../ModalApplication";
 import ModalSignIn from "../ModalSignIn";
@@ -143,7 +143,7 @@ const Layout = ({ children, pageContext }) => {
             ref={eleRef}
           >
             <Header isDark={gContext.headerDark} />
-            <SidebarDashboard />
+            <SidebarDashboardAdmin />
             {children}
           </div>
 

@@ -6,6 +6,7 @@ import GlobalContext from "../../context/GlobalContext";
 import AuthService from "../../services/auth.service";
 import { Select } from "../../components/Core";
 import Error from "../Error/Error";
+import { getUserType } from "../../utils";
 
 const ERRORMSG =
   "Lo sentimos. Ha ocurrido un error, por favor intente más tarde.";
@@ -64,6 +65,7 @@ const ModalSignUp = (props) => {
     setState({ loading: true, error: null });
 
     try {
+      getUserType();
       await AuthService.register(
         state.name,
         state.lastName,

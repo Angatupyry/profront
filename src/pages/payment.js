@@ -33,6 +33,7 @@ const Payment = () => {
     error: null,
     success: null,
     user_id: "",
+    payment_method: "",
   });
   const gContext = useContext(GlobalContext);
 
@@ -79,10 +80,19 @@ const Payment = () => {
     e.preventDefault();
     setState({ loading: true, error: null });
     try {
-      const response = await TransaccionService.postTransaction(parseInt(id));
+      let payment_method = state.payment_method;
+      const response = await TransaccionService.postTransaction(
+        parseInt(id),
+        payment_method
+      );
       console.log(response);
       scrollToTop();
-      setState({ loading: false, error: null, success: true });
+      setState({
+        loading: false,
+        error: null,
+        success: true,
+        payment_method: payment_method,
+      });
     } catch (error) {
       scrollToTop();
       console.log(error);
@@ -92,6 +102,24 @@ const Payment = () => {
 
   const handleRadioBtn = async (e) => {
     setEnableBtn(true);
+  };
+
+  const handlePayments = async (e) => {
+    var card = document.getElementsByClassName("cardsPayment")[0];
+    var transfer = document.getElementsByClassName("transferPayment")[0];
+    console.log(e.target.id);
+    if (e.target.id == "card") {
+      card.classList.remove("d-none");
+      transfer.classList.add("d-none");
+    } else {
+      card.classList.add("d-none");
+      transfer.classList.remove("d-none");
+      setEnableBtn(true);
+    }
+
+    setState({
+      payment_method: e.target.id,
+    });
   };
 
   if (!isEmpty(dataResult)) {
@@ -117,11 +145,21 @@ const Payment = () => {
                 </div>
                 {/* <!-- back Button End --> */}
                 <div className="col-xl-9 col-lg-11 mb-8 px-xxl-15 px-xl-0">
-                  {state.success && (
+                  {state.success && state.payment_method == "card" && (
                     <div className="row no-gutters">
                       <div className="col-md-12">
                         <div className="alert alert-success" role="alert">
                           Pago realizado exitosamente.
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {state.success && state.payment_method == "transfer" && (
+                    <div className="row no-gutters">
+                      <div className="col-md-12">
+                        <div className="alert alert-success" role="alert">
+                          Pago pendiente. Envíe su comprobante de transferencia
+                          para concretar el pago.
                         </div>
                       </div>
                     </div>
@@ -262,58 +300,169 @@ const Payment = () => {
                           </div>
                         </div>
                       </div>
-                      {dataPago.map((medioPago, index) => {
-                        let id = "id-" + index;
-                        return (
-                          <div className="row">
-                            <div className="col-md-8 mb-lg-0 mb-8">
-                              <p className="font-size-4 mb-0">
-                                {medioPago.numero_tarjeta}
-                              </p>
-                            </div>
-                            <div className="col-md-4 mb-lg-0 mb-4">
-                              <div className="form-group d-flex flex-wrap justify-content-start mb-1">
-                                <label
-                                  htmlFor={id}
-                                  className="gr-check-input d-flex  mr-3"
-                                >
-                                  <input
-                                    className="d-none"
-                                    type="radio"
-                                    name="isProfesional"
-                                    id={id}
-                                    onChange={handleRadioBtn}
-                                  />
-                                  <span className="checkbox mr-5"></span>
-                                  <span className="font-size-4 mb-0 line-height-reset d-block font-weight-semibold">
-                                    <div className="text-primary">
-                                      {medioPago.descripcion}{" "}
-                                    </div>
-                                  </span>
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
 
-                      <div className="row mt-4">
-                        <div className="col-md-12 mb-lg-0 mb-12 d-flex justify-content-end">
-                          <Link href="/#">
-                            <a
-                              className="btn btn-outline-mercury text-black-2 text-uppercase h-px-48 rounded-3 mb-5 px-5 mr-4"
-                              href="/#"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                gContext.toggleAddPaymentModal();
-                                //gContext.toggleSignUpModal();
-                              }}
+                      <div className="row">
+                        <div className="col-md-4 mb-lg-0 mb-4">
+                          <div className="form-group d-flex flex-wrap justify-content-start mb-1">
+                            <label
+                              htmlFor="card"
+                              className="gr-check-input d-flex  mr-3"
                             >
-                              Agregar nuevo medio de pago
-                            </a>
-                          </Link>
+                              <input
+                                className="d-none"
+                                type="radio"
+                                name="payments"
+                                id="card"
+                                onChange={handlePayments}
+                              />
+                              <span className="checkbox mr-5"></span>
+                              <span className="font-size-4 mb-0 line-height-reset d-block font-weight-semibold">
+                                <div className="text-primary">Mis tarjetas</div>
+                              </span>
+                            </label>
+                          </div>
+                          <div className="form-group d-flex flex-wrap justify-content-start mb-1">
+                            <label
+                              htmlFor="transfer"
+                              className="gr-check-input d-flex  mr-3"
+                            >
+                              <input
+                                className="d-none"
+                                type="radio"
+                                name="payments"
+                                id="transfer"
+                                onChange={handlePayments}
+                              />
+                              <span className="checkbox mr-5"></span>
+                              <span className="font-size-4 mb-0 line-height-reset d-block font-weight-semibold">
+                                <div className="text-primary">
+                                  Transferencia
+                                </div>
+                              </span>
+                            </label>
+                          </div>
                         </div>
                       </div>
+                      <div className="cardsPayment d-none">
+                        {dataPago.map((medioPago, index) => {
+                          let id = "id-" + index;
+                          return (
+                            <div className="row">
+                              <div className="col-md-8 mb-lg-0 mb-8">
+                                <h3 className="font-size-6 mb-0">
+                                  Mis tarjetas
+                                </h3>
+                              </div>
+                              <div className="col-md-8 mb-lg-0 mb-8 mt-10">
+                                <p className="font-size-4 mb-0">
+                                  {medioPago.numero_tarjeta}
+                                </p>
+                              </div>
+                              <div className="col-md-4 mb-lg-0 mb-4 mt-10">
+                                <div className="form-group d-flex flex-wrap justify-content-start mb-1">
+                                  <label
+                                    htmlFor={id}
+                                    className="gr-check-input d-flex  mr-3"
+                                  >
+                                    <input
+                                      className="d-none"
+                                      type="radio"
+                                      name="isProfesional"
+                                      id={id}
+                                      onChange={handleRadioBtn}
+                                    />
+                                    <span className="checkbox mr-5"></span>
+                                    <span className="font-size-4 mb-0 line-height-reset d-block font-weight-semibold">
+                                      <div className="text-primary">
+                                        {medioPago.descripcion}{" "}
+                                      </div>
+                                    </span>
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                        <div className="row mt-4">
+                          <div className="col-md-12 mb-lg-0 mb-12 d-flex justify-content-end">
+                            <Link href="/#">
+                              <a
+                                className="btn btn-outline-mercury text-black-2 text-uppercase h-px-48 rounded-3 mb-5 px-5 mr-4"
+                                href="/#"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  gContext.toggleAddPaymentModal();
+                                  //gContext.toggleSignUpModal();
+                                }}
+                              >
+                                Agregar nuevo medio de pago
+                              </a>
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="transferPayment d-none">
+                        <div className="row">
+                          <div className="col-md-8 mb-lg-0 mb-8">
+                            <h3 className="font-size-6 mb-0">
+                              Datos de transferencia
+                            </h3>
+                          </div>
+                        </div>
+                        <div className="row mt-5">
+                          <div className="col-md-12 mb-lg-0 mb-0 mt-5">
+                            <span className="font-size-4 font-weight-semibold text-black-2 mb-4">
+                              BANCO
+                            </span>
+                          </div>
+                          <div className="col-md-9 mb-lg-0 mb-9">
+                            <p className="font-size-4 mb-0">Banco Familiar</p>
+                          </div>
+                        </div>
+                        <div className="row mt-5">
+                          <div className="col-md-12 mb-lg-0 mb-0 mt-5">
+                            <span className="font-size-4 font-weight-semibold text-black-2 mb-4">
+                              Número de cuenta
+                            </span>
+                          </div>
+                          <div className="col-md-9 mb-lg-0 mb-9">
+                            <p className="font-size-4 mb-0">7845481</p>
+                          </div>
+                        </div>
+                        <div className="row mt-5">
+                          <div className="col-md-12 mb-lg-0 mb-0 mt-5">
+                            <span className="font-size-4 font-weight-semibold text-black-2 mb-4">
+                              Titular
+                            </span>
+                          </div>
+                          <div className="col-md-9 mb-lg-0 mb-9">
+                            <p className="font-size-4 mb-0">
+                              TODO SERVICIO S.A
+                            </p>
+                          </div>
+                        </div>
+                        <div className="row mt-5">
+                          <div className="col-md-12 mb-lg-0 mb-0 mt-5">
+                            <span className="font-size-4 font-weight-semibold text-black-2 mb-4">
+                              RUC
+                            </span>
+                          </div>
+                          <div className="col-md-9 mb-lg-0 mb-9">
+                            <p className="font-size-4 mb-0">8006213-7</p>
+                          </div>
+                        </div>
+                        <div className="row mt-5">
+                          <div className="col-md-12 mb-lg-0 mb-0 mt-5">
+                            <span className="font-size-4 font-weight-semibold text-black-2 mb-4">
+                              Obs: Envie su comprobante a
+                              transaccion@todoservicio.com para confirmar esta
+                              transacción.
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
                       <div className="row mt-12">
                         <div className="col-md-12 mb-lg-0 mb-12 d-flex justify-content-end">
                           {enableBtn ? (
