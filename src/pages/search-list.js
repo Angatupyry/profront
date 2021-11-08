@@ -19,22 +19,6 @@ import iconL from "../assets/image/svg/icon-loaction-pin-black.svg";
 import iconS from "../assets/image/svg/icon-suitecase.svg";
 import iconC from "../assets/image/svg/icon-clock.svg";
 
-const defaultCountries = [
-  { value: "sp", label: "Asunción" },
-  { value: "bd", label: "Lambaré" },
-  { value: "usa", label: "Villa Elisa" },
-  { value: "uae", label: "Luque" },
-  { value: "pk", label: "Ñemby" },
-];
-
-const defaultServices = [
-  { value: "1", label: "Manicure" },
-  { value: "2", label: "Enseñanza de inglés" },
-  { value: "3", label: "Personal training" },
-  { value: "4", label: "Psicólogo" },
-  { value: "5", label: "Enseñanza nivel inicial" },
-];
-
 const SearchGrid = () => {
   const cityArray = [];
   const serviceArray = [];
@@ -45,7 +29,7 @@ const SearchGrid = () => {
 
   const [cities, setCities] = React.useState([]);
   const [services, setServices] = React.useState([]);
-  const [dataResult, setDataResult] = React.useState([]);
+  const [dataResult, setDataResult] = React.useState(null);
   const [state, setState] = React.useState({
     loading: true,
     error: null,
@@ -112,7 +96,7 @@ const SearchGrid = () => {
       return;
     }
     scrollToTop();
-    if (dataResult.length == 0) {
+    if (dataResult == undefined || null) {
       fetchData(city, service);
     }
   }, [dataResult, city, service]);
@@ -148,7 +132,7 @@ const SearchGrid = () => {
     fetchData(state.city, state.service);
   };
 
-  if (dataResult.length > 0) {
+  if (dataResult && dataResult.length > 0) {
     return (
       <>
         <PageWrapper>

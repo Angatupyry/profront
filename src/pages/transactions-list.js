@@ -13,8 +13,9 @@ import {
 } from "../utils";
 
 const TransactionList = () => {
+  const filteredIds = [];
   const gContext = useContext(GlobalContext);
-  const [dataResult, setDataResult] = React.useState([]);
+  const [dataResult, setDataResult] = React.useState(null);
   const [state, setState] = React.useState({
     loading: true,
     error: null,
@@ -44,7 +45,18 @@ const TransactionList = () => {
         cliente_id,
         clientUserTypeId
       );
-      setDataResult(response.data.data);
+
+      response.data.data.forEach((x) => {
+        if (x.transaccion_tipo.id == 1 && x.transaccion_estado.id == 1) {
+          filteredIds.push(x.id);
+        }
+      });
+
+      const arr = response.data.data.filter(function (value) {
+        return filteredIds.indexOf(value.id) == -1;
+      });
+
+      setDataResult(arr);
       setClientUserTypeId(clientUserTypeId);
       setTransactionStates(getTransactionStates());
       setState({ loading: false, error: null });
@@ -55,12 +67,8 @@ const TransactionList = () => {
   }
 
   useEffect(() => {
-    if (!dataResult) {
-      return;
-    }
-
     scrollToTop();
-    if (dataResult.length == 0) {
+    if (dataResult == undefined || null) {
       fetchData();
     }
   }, [dataResult]);
@@ -82,7 +90,7 @@ const TransactionList = () => {
     gContext.toggleValorationModal();
   };
 
-  if (dataResult.length > 0) {
+  if (dataResult && dataResult.length > 0) {
     return (
       <>
         <PageWrapper>

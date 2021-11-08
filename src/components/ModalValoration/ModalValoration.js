@@ -68,14 +68,12 @@ const ModalValoration = (props) => {
     setState({ loading: true, error: null });
     try {
       const califications = await CalificacionService.getCalification();
-      console.log(califications);
       califications.data.data.forEach((element) => {
         calificationArray.push({
           value: element.id.toString(),
           label: element.puntuacion + " (" + element.descripcion + ")",
         });
       });
-      console.log(calificationArray);
       setCalificaciones(calificationArray);
       setState({
         calification: calificationArray[0].value,

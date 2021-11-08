@@ -1,32 +1,12 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useContext } from "react";
 import Link from "next/link";
 import PageWrapper from "../components/PageWrapper";
-import Sidebar from "../components/Sidebar";
-import { Select } from "../components/Core";
-import Router, { useRouter } from "next/router";
-import BuscadorService from "../services/buscador.service";
-import { numberFormat } from "../utils/utils";
 import GlobalContext from "../context/GlobalContext";
-
-import imgF1 from "../assets/image/l2/png/featured-job-logo-2.png";
-import imgF2 from "../assets/image/l2/png/featured-job-logo-2.png";
-import imgF3 from "../assets/image/l2/png/featured-job-logo-3.png";
-import imgF4 from "../assets/image/l2/png/featured-job-logo-4.png";
-import imgF5 from "../assets/image/l2/png/featured-job-logo-5.png";
-
-import imgF from "../assets/image/svg/icon-fire-rounded.svg";
-import iconL from "../assets/image/svg/icon-loaction-pin-black.svg";
-import iconS from "../assets/image/svg/icon-suitecase.svg";
-import iconC from "../assets/image/svg/icon-clock.svg";
-import TransaccionService from "../services/transaccion.service";
-import Cookies from "js-cookie";
-import { getTransactionStates } from "../utils";
+import FacturacionService from "../services/facturacion.service";
 
 const PaymentsAdmin = () => {
   const gContext = useContext(GlobalContext);
-  const [transactionStates, setTransactionStates] = React.useState([]);
-  const [dataResult, setDataResult] = React.useState([]);
+  const [dataResult, setDataResult] = React.useState(null);
   const [state, setState] = React.useState({
     loading: true,
     error: null,
@@ -48,13 +28,7 @@ const PaymentsAdmin = () => {
   async function fetchData() {
     setState({ loading: true, error: null });
     try {
-      setTransactionStates(getTransactionStates());
-      let state = transactionStates.data.data.find(
-        (x) => x.nombre.toLowerCase() == "pendiente pago"
-      );
-      const response = await TransaccionService.getTransactionListByState(
-        state.id
-      );
+      const response = await FacturacionService.getTransactionList();
       setDataResult(response.data.data);
       console.log(response.data.data);
       setState({ loading: false, error: null });
@@ -65,32 +39,11 @@ const PaymentsAdmin = () => {
   }
 
   useEffect(() => {
-    if (!dataResult) {
-      return;
-    }
-
     scrollToTop();
-    if (dataResult.length == 0) {
+    if (dataResult == undefined || null) {
       fetchData();
     }
   }, [dataResult]);
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setState({ loading: true, error: null });
-
-  //   Router.push({
-  //     pathname: "/search-list",
-  //     query: {
-  //       city: state.city,
-  //       service: state.service,
-  //       price: state.price,
-  //       sex: state.sex,
-  //       score: state.score,
-  //     },
-  //   });
-  //   fetchData(state.city, state.service);
-  // };
 
   const transformDate = (date) => {
     let jsDate = new Date(date);
@@ -114,7 +67,7 @@ const PaymentsAdmin = () => {
     }
   };
 
-  if (dataResult.length > 0) {
+  if (dataResult && dataResult.length > 0) {
     return (
       <>
         <PageWrapper>
@@ -207,8 +160,8 @@ const PaymentsAdmin = () => {
                               <td className="table-y-middle py-7 min-width-px-235 pr-0">
                                 <h3 className="font-size-4 font-weight-normal text-black-2 mb-0">
                                   {
-                                    transaccion.servicio_profesional.servicio
-                                      .descripcion
+                                    transaccion.transaccion.servicio_profesional
+                                      .servicio.descripcion
                                   }
                                 </h3>
                               </td>
@@ -224,8 +177,14 @@ const PaymentsAdmin = () => {
                                 >
                                   <a className="media min-width-px-235 align-items-center">
                                     <h4 className="font-size-4 mb-0 font-weight-semibold text-black-2">
-                                      {transaccion.profesional.persona.nombre}{" "}
-                                      {transaccion.profesional.persona.apellido}
+                                      {
+                                        transaccion.transaccion.profesional
+                                          .persona.nombre
+                                      }{" "}
+                                      {
+                                        transaccion.transaccion.profesional
+                                          .persona.apellido
+                                      }
                                     </h4>
                                   </a>
                                 </Link>
@@ -237,11 +196,15 @@ const PaymentsAdmin = () => {
                               </td>
                               <td className="table-y-middle py-7 min-width-px-170 pr-0">
                                 <h3 className="font-size-4 font-weight-normal text-black-2 mb-0">
-                                  {transaccion.transaccion_estado.nombre}
+                                  {
+                                    transaccion.transaccion.transaccion_estado
+                                      .nombre
+                                  }
                                 </h3>
                               </td>
                               <td className="table-y-middle py-7 min-width-px-110 pr-0">
-                                {transaccion.transaccion_estado.id == 4 && (
+                                {transaccion.transaccion.transaccion_estado
+                                  .id == 4 && (
                                   <div className="">
                                     <Link
                                       href={"/payment?id=" + transaccion.id}
@@ -276,7 +239,7 @@ const PaymentsAdmin = () => {
                                       onClick={(e) => {
                                         e.preventDefault();
                                         toggleValorationModal(
-                                          transaccion.profesional.id
+                                          transaccion.transaccion.profesional.id
                                         );
                                       }}
                                     >
@@ -287,8 +250,10 @@ const PaymentsAdmin = () => {
                               </td>
 
                               <td className="table-y-middle py-7 min-width-px-100 pr-0">
-                                {transaccion.transaccion_estado.id == 2 ||
-                                transaccion.transaccion_estado.id == 5 ? (
+                                {transaccion.transaccion.transaccion_estado
+                                  .id == 2 ||
+                                transaccion.transaccion.transaccion_estado.id ==
+                                  5 ? (
                                   <div className="">
                                     <Link href="/#">
                                       <a
