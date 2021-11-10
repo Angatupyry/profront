@@ -1,8 +1,8 @@
 import Cookies from "js-cookie";
 import React, { useContext } from "react";
-import GlobalContext from "../context/GlobalContext";
 import UsuarioService from "../services/usuario.service";
 import TransactionService from "../services/transaccion.service";
+import FacturacionService from "../services/facturacion.service";
 
 const scrollToTop = () => {
   window.scrollTo({
@@ -79,6 +79,27 @@ export function getTransactionStateId(transaction) {
     let transactionStates = JSON.parse(Cookies.get("transactionStates"));
     const res = transactionStates.find(
       (element) => element.nombre.toLowerCase() == transaction.toLowerCase()
+    ).id;
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getPaymentStates() {
+  try {
+    const response = await FacturacionService.getPaymentStates();
+    Cookies.set("paymentStates", JSON.stringify(response.data.data));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function getPaymentStateId(payment) {
+  try {
+    let paymentStates = JSON.parse(Cookies.get("paymentStates"));
+    const res = paymentStates.find(
+      (element) => element.nombre.toLowerCase() == payment.toLowerCase()
     ).id;
     return res;
   } catch (error) {

@@ -3,13 +3,21 @@ import Link from "next/link";
 import PageWrapper from "../components/PageWrapper";
 import GlobalContext from "../context/GlobalContext";
 import FacturacionService from "../services/facturacion.service";
+import {
+  showErrorAlert,
+  showSuccessAlert,
+  getPaymentStates,
+} from "../utils/utils";
 
+//const checksArray = [];
 const PaymentsAdmin = () => {
   const gContext = useContext(GlobalContext);
   const [dataResult, setDataResult] = React.useState(null);
+  const [checksArray, setChecksArray] = React.useState([]);
   const [state, setState] = React.useState({
     loading: true,
     error: null,
+    isChecked: false,
   });
 
   const scrollToTop = () => {
@@ -30,7 +38,6 @@ const PaymentsAdmin = () => {
     try {
       const response = await FacturacionService.getTransactionList();
       setDataResult(response.data.data);
-      console.log(response.data.data);
       setState({ loading: false, error: null });
     } catch (error) {
       console.log(error);
@@ -43,6 +50,7 @@ const PaymentsAdmin = () => {
     if (dataResult == undefined || null) {
       fetchData();
     }
+    getPaymentStates();
   }, [dataResult]);
 
   const transformDate = (date) => {
@@ -51,19 +59,87 @@ const PaymentsAdmin = () => {
     return jsDate.toLocaleString("en-GB", options);
   };
 
-  const toggleModal = (id) => {
-    gContext.setTransactionId(id);
-    gContext.toggleConfirmationModal();
+  const emptyChecksArray = () => {
+    const check = document.getElementById("all");
+    const checkboxes = document.getElementsByName("payments-checkbox");
+    var arr = checksArray;
+    for (var checkbox of checkboxes) {
+      checkbox.checked = false;
+      arr = arr.filter((e) => e !== parseInt(checkbox.id));
+    }
+
+    check.checked = false;
+
+    setChecksArray(arr);
   };
 
-  const toggleValorationModal = (id) => {
-    gContext.setUserId(id);
-    gContext.toggleValorationModal();
+  const setCheckedState = (value) => {
+    const newState = { ...state };
+    newState["isChecked"] = value;
+    setState(newState);
   };
 
-  const handleAllRadioBtn = async (e) => {
-    let id = e.target.id;
-    if (condition) {
+  const handleCheckAll = () => {
+    const check = document.getElementById("all");
+    const checkboxes = document.getElementsByName("payments-checkbox");
+
+    if (check.checked) {
+      checksArray.splice(0, checksArray.length);
+      for (var checkbox of checkboxes) {
+        if (!checkbox.disabled) {
+          checkbox.checked = true;
+          checksArray.push(parseInt(checkbox.id));
+        }
+      }
+      setCheckedState(true);
+    } else {
+      var arr = checksArray;
+      for (var checkbox of checkboxes) {
+        checkbox.checked = false;
+        arr = arr.filter((e) => e !== parseInt(checkbox.id));
+      }
+      setChecksArray(arr);
+      setCheckedState(false);
+    }
+  };
+
+  const handleCheckbox = (e) => {
+    const id = e.target.id;
+    const check = document.getElementById(id);
+    const checkAll = document.getElementById("all");
+    if (check.checked) {
+      checksArray.push(parseInt(check.id));
+      setCheckedState(true);
+    } else {
+      var arr = checksArray;
+      arr = arr.filter((e) => e !== parseInt(check.id));
+      setChecksArray(arr);
+      if (checkAll.checked) {
+        checkAll.checked = false;
+      }
+      if (arr.length < 1) {
+        setCheckedState(false);
+      } else {
+        setCheckedState(true);
+      }
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setState({ loading: true, error: null });
+    try {
+      for (const id of checksArray) {
+        const response = await FacturacionService.updateTransaction(id);
+      }
+      setState({ loading: false, error: null, success: true });
+      emptyChecksArray();
+      setTimeout(function () {
+        fetchData();
+      }, 2000);
+    } catch (error) {
+      console.log(error);
+      setState({ loading: false, error: error });
     }
   };
 
@@ -71,14 +147,23 @@ const PaymentsAdmin = () => {
     return (
       <>
         <PageWrapper>
-          {console.log(dataResult)}
           <div className="bg-default-1 pt-26 pt-lg-28 pb-13 pb-lg-25">
             <div className="container">
               <div className="mb-14">
+                <div className="row mb-3 align-items-center">
+                  <div className="col-lg-12 mb-lg-0 mb-4">
+                    {state.success &&
+                      showSuccessAlert("Pago realizado exitosamente.")}
+                    {state.error &&
+                      showErrorAlert(
+                        " Ocurrió un error al realizar el pago. Por favor,intente más tarde."
+                      )}
+                  </div>
+                </div>
                 <div className="row mb-11 align-items-center">
                   <div className="col-lg-6 mb-lg-0 mb-4">
                     <h3 className="font-size-6 mb-0">
-                      Listado de pagos pendientes ({dataResult.length})
+                      Listado de pagos ({dataResult.length})
                     </h3>
                   </div>
                 </div>
@@ -96,11 +181,18 @@ const PaymentsAdmin = () => {
                                 type="checkbox"
                                 class="custom-control-input"
                                 id="all"
+                                onChange={handleCheckAll}
                               />
                               <label class="custom-control-label" for="all">
-                                Servicio
+                                Id transacción
                               </label>
                             </div>
+                          </th>
+                          <th
+                            scope="col"
+                            className="border-0 font-size-4 font-weight-normal"
+                          >
+                            Servicio
                           </th>
                           <th
                             scope="col"
@@ -118,44 +210,48 @@ const PaymentsAdmin = () => {
                             scope="col"
                             className="border-0 font-size-4 font-weight-normal"
                           >
-                            Estado
+                            Estado pago
                           </th>
-                          <th
-                            scope="col"
-                            className="border-0 font-size-4 font-weight-normal"
-                          ></th>
-                          <th
-                            scope="col"
-                            className="border-0 font-size-4 font-weight-normal"
-                          ></th>
-                          <th
-                            scope="col"
-                            className="border-0 font-size-4 font-weight-normal"
-                          ></th>
-                          <th
-                            scope="col"
-                            className="border-0 font-size-4 font-weight-normal"
-                          ></th>
                         </tr>
                       </thead>
                       <tbody>
-                        {dataResult.map((transaccion, index) => {
+                        {dataResult.map((transaccion) => {
                           return (
                             <tr className="border border-color-2">
                               <td className="table-y-middle py-7 min-width-px-235 pr-0">
-                                <div class="custom-control custom-checkbox">
-                                  <input
-                                    type="checkbox"
-                                    class="custom-control-input"
-                                    id={"check-" + index}
-                                  />
-                                  <label
-                                    class="custom-control-label"
-                                    for={"check-" + index}
-                                  >
-                                    {index}
-                                  </label>
-                                </div>
+                                {transaccion.pago_estado.id == 1 ? (
+                                  <div class="custom-control custom-checkbox">
+                                    <input
+                                      type="checkbox"
+                                      class="custom-control-input"
+                                      name="payments-checkbox"
+                                      id={transaccion.id}
+                                      disabled
+                                    />
+                                    <label
+                                      class="custom-control-label"
+                                      for={transaccion.id}
+                                    >
+                                      {transaccion.id}
+                                    </label>
+                                  </div>
+                                ) : (
+                                  <div class="custom-control custom-checkbox">
+                                    <input
+                                      type="checkbox"
+                                      class="custom-control-input"
+                                      name="payments-checkbox"
+                                      id={transaccion.id}
+                                      onChange={handleCheckbox}
+                                    />
+                                    <label
+                                      class="custom-control-label"
+                                      for={transaccion.id}
+                                    >
+                                      {transaccion.id}
+                                    </label>
+                                  </div>
+                                )}
                               </td>
                               <td className="table-y-middle py-7 min-width-px-235 pr-0">
                                 <h3 className="font-size-4 font-weight-normal text-black-2 mb-0">
@@ -196,80 +292,8 @@ const PaymentsAdmin = () => {
                               </td>
                               <td className="table-y-middle py-7 min-width-px-170 pr-0">
                                 <h3 className="font-size-4 font-weight-normal text-black-2 mb-0">
-                                  {
-                                    transaccion.transaccion.transaccion_estado
-                                      .nombre
-                                  }
+                                  {transaccion.pago_estado.nombre}
                                 </h3>
-                              </td>
-                              <td className="table-y-middle py-7 min-width-px-110 pr-0">
-                                {transaccion.transaccion.transaccion_estado
-                                  .id == 4 && (
-                                  <div className="">
-                                    <Link
-                                      href={"/payment?id=" + transaccion.id}
-                                    >
-                                      <a className="font-size-3 font-weight-bold text-green text-uppercase">
-                                        Pagar
-                                      </a>
-                                    </Link>
-                                  </div>
-                                )}
-                              </td>
-                              <td className="table-y-middle py-7 min-width-px-110 pr-0">
-                                <div className="">
-                                  <Link
-                                    href={
-                                      "/transaction-detail?id=" + transaccion.id
-                                    }
-                                  >
-                                    <a className="font-size-3 font-weight-bold text-black-2 text-uppercase">
-                                      Ver detalle
-                                    </a>
-                                  </Link>
-                                </div>
-                              </td>
-
-                              <td className="table-y-middle py-7 min-width-px-170 pr-0">
-                                <div className="d-flex justify-content-center">
-                                  <Link href="/#">
-                                    <a
-                                      href="/#"
-                                      className="font-size-3 font-weight-bold text-black-2 text-uppercase"
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        toggleValorationModal(
-                                          transaccion.transaccion.profesional.id
-                                        );
-                                      }}
-                                    >
-                                      Valorar
-                                    </a>
-                                  </Link>
-                                </div>
-                              </td>
-
-                              <td className="table-y-middle py-7 min-width-px-100 pr-0">
-                                {transaccion.transaccion.transaccion_estado
-                                  .id == 2 ||
-                                transaccion.transaccion.transaccion_estado.id ==
-                                  5 ? (
-                                  <div className="">
-                                    <Link href="/#">
-                                      <a
-                                        className="font-size-3 font-weight-bold text-red-2 text-uppercase"
-                                        onClick={(e) => {
-                                          e.preventDefault();
-                                          toggleModal(transaccion.id);
-                                        }}
-                                      >
-                                        Cancelar
-                                      </a>
-                                    </Link>
-                                  </div>
-                                ) : (
-                                  <div className=""></div>
-                                )}
                               </td>
                             </tr>
                           );
@@ -341,6 +365,26 @@ const PaymentsAdmin = () => {
                       </ul>
                     </nav>
                   </div> */}
+                  <div className="row mt-12">
+                    <div className="col-md-12 mb-lg-0 mb-12 d-flex justify-content-end">
+                      {!state.isChecked ? (
+                        <Link href="/#">
+                          <a className="btn btn-green text-uppercase btn-medium w-180 h-px-48 rounded-3 mr-4 mt-6 disabled">
+                            Pagar
+                          </a>
+                        </Link>
+                      ) : (
+                        <Link href="/#">
+                          <a
+                            className="btn btn-green text-uppercase btn-medium w-180 h-px-48 rounded-3 mr-4 mt-6"
+                            onClick={handleSubmit}
+                          >
+                            Pagar
+                          </a>
+                        </Link>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

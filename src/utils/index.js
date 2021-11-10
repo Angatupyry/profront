@@ -8,6 +8,8 @@ import {
   getUserTypeId,
   getTransactionStateId,
   getTransactionStates,
+  getPaymentStateId,
+  getPaymentStates,
 } from "./utils";
 import { checkSession, closeSession, isLoggedIn } from "./checkSession";
 
@@ -24,5 +26,7 @@ export {
   getUserTypeId,
   getTransactionStateId,
   getTransactionStates,
+  getPaymentStateId,
+  getPaymentStates,
   constants,
 };
