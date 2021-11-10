@@ -9,8 +9,7 @@ import {
   getPaymentStates,
 } from "../utils/utils";
 
-//const checksArray = [];
-const PaymentsAdmin = () => {
+const InvoicesAdmin = () => {
   const gContext = useContext(GlobalContext);
   const [dataResult, setDataResult] = React.useState(null);
   const [checksArray, setChecksArray] = React.useState([]);
@@ -164,7 +163,7 @@ const PaymentsAdmin = () => {
                 <div className="row mb-11 align-items-center">
                   <div className="col-lg-6 mb-lg-0 mb-4">
                     <h3 className="font-size-6 mb-0">
-                      Listado de pagos ({dataResult.length})
+                      Listado de facturas ({dataResult.length})
                     </h3>
                   </div>
                 </div>
@@ -371,7 +370,7 @@ const PaymentsAdmin = () => {
                       {!state.isChecked ? (
                         <Link href="/#">
                           <a className="btn btn-green text-uppercase btn-medium w-180 h-px-48 rounded-3 mr-4 mt-6 disabled">
-                            Pagar
+                            Facturar
                           </a>
                         </Link>
                       ) : (
@@ -380,7 +379,7 @@ const PaymentsAdmin = () => {
                             className="btn btn-green text-uppercase btn-medium w-180 h-px-48 rounded-3 mr-4 mt-6"
                             onClick={handleSubmit}
                           >
-                            Pagar
+                            Facturar
                           </a>
                         </Link>
                       )}
@@ -397,4 +396,4 @@ const PaymentsAdmin = () => {
     return <div>no hay datos</div>;
   }
 };
-export default PaymentsAdmin;
+export default InvoicesAdmin;

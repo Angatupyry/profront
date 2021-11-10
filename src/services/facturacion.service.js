@@ -1,4 +1,4 @@
-import http from "./http-common";
+import http from "./protected-routes";
 import { constants, getPaymentStateId } from "../utils";
 
 class FacturacionService {

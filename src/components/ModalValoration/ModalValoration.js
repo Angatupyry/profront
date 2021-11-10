@@ -7,6 +7,7 @@ import AuthService from "../../services/auth.service";
 import Error from "../Error/Error";
 import Cookies from "js-cookie";
 import CalificacionService from "../../services/calificacion.service";
+import { TransactionList } from "../../pages/transactions-list";
 
 const ModalStyled = styled(Modal)`
   /* &.modal {
@@ -28,6 +29,10 @@ const ModalValoration = (props) => {
     comment: "",
   });
 
+  const fetch = () => {
+    props.fetch();
+  };
+
   const handleClose = () => {
     gContext.toggleValorationModal();
   };
@@ -45,6 +50,7 @@ const ModalValoration = (props) => {
       gContext.setUserId(null);
       gContext.setTransactionId(null);
       setState({ loading: false, error: null });
+      fetch();
     } catch (error) {
       console.log(error);
       setState({ loading: false, error: error });

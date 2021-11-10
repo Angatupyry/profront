@@ -11,13 +11,13 @@ const SidebarAdmin = () => {
     <>
       <Collapse in={gContext.showSidebarDashboard}>
         <div className="dashboard-sidebar-wrapper pt-11" id="sidebar">
-          {/* <div className="brand-logo px-11">
+          <div className="brand-logo px-11">
             <Link href="/">
               <a>
                 <img src={imgL} alt="" />
               </a>
             </Link>
-          </div> */}
+          </div>
           {/* <div className="my-15 px-11">
             <Link href="/#">
               <a className="btn btn-primary btn-xl w-100 text-uppercase">
@@ -34,7 +34,7 @@ const SidebarAdmin = () => {
               </Link>
             </li>
             <li className="">
-              <Link href="/dashboard-jobs">
+              <Link href="/invoices-admin">
                 <a className="px-10 py-1 my-5 font-size-4 font-weight-semibold flex-y-center">
                   <i className="fas fa-briefcase mr-7"></i>Facturación
                 </a>

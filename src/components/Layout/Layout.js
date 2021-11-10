@@ -113,8 +113,6 @@ const Layout = ({ children, pageContext }) => {
           <ModalSignIn />
           <ModalSignUp />
           <ModalAddPayment />
-          <ModalConfirmation />
-          <ModalValoration />
         </div>
       </ThemeProvider>
     );
@@ -152,8 +150,6 @@ const Layout = ({ children, pageContext }) => {
           <ModalSignIn />
           <ModalSignUp />
           <ModalAddPayment />
-          <ModalConfirmation />
-          <ModalValoration />
         </div>
       </ThemeProvider>
     );
@@ -185,8 +181,6 @@ const Layout = ({ children, pageContext }) => {
           <ModalSignIn />
           <ModalSignUp />
           <ModalAddPayment />
-          <ModalConfirmation />
-          <ModalValoration />
         </div>
       </ThemeProvider>
     </>

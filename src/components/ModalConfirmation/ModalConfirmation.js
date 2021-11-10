@@ -21,6 +21,10 @@ const ModalConfirmation = (props) => {
     error: null,
   });
 
+  const fetch = () => {
+    props.fetch();
+  };
+
   const handleClose = () => {
     gContext.toggleConfirmationModal();
   };
@@ -34,6 +38,7 @@ const ModalConfirmation = (props) => {
       handleClose();
       gContext.setTransactionId(null);
       setState({ loading: false, error: null });
+      fetch();
     } catch (error) {
       console.log(error);
       setState({ loading: false, error: error });

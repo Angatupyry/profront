@@ -5,12 +5,10 @@ import PageWrapper from "../components/PageWrapper";
 import GlobalContext from "../context/GlobalContext";
 import TransaccionService from "../services/transaccion.service";
 import Cookies from "js-cookie";
-import {
-  getUserTypeId,
-  getTransactionStates,
-  getTransactionStateId,
-  constants,
-} from "../utils";
+import { getUserTypeId, getTransactionStateId, constants } from "../utils";
+import { showErrorAlert, showSuccessAlert } from "../utils/utils";
+import ModalValoration from "../components/ModalValoration";
+import ModalConfirmation from "../components/ModalConfirmation";
 
 const TransactionList = () => {
   const filteredIds = [];
@@ -19,9 +17,11 @@ const TransactionList = () => {
   const [state, setState] = React.useState({
     loading: true,
     error: null,
+    success: false,
+    isValorated: false,
+    isCancelled: false,
   });
   const [clientUserTypeId, setClientUserTypeId] = React.useState("");
-  const [transactionStates, setTransactionStates] = React.useState([]);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -55,10 +55,8 @@ const TransactionList = () => {
       const arr = response.data.data.filter(function (value) {
         return filteredIds.indexOf(value.id) == -1;
       });
-
       setDataResult(arr);
       setClientUserTypeId(clientUserTypeId);
-      setTransactionStates(getTransactionStates());
       setState({ loading: false, error: null });
     } catch (error) {
       console.log(error);
@@ -90,13 +88,41 @@ const TransactionList = () => {
     gContext.toggleValorationModal();
   };
 
+  const valorate = () => {
+    setState({ loading: false, error: null, isValorated: true });
+    setTimeout(function () {
+      fetchData();
+    }, 2000);
+  };
+
+  const cancel = () => {
+    setState({ loading: false, error: null, isCancelled: true });
+    setTimeout(function () {
+      fetchData();
+    }, 2000);
+  };
+
   if (dataResult && dataResult.length > 0) {
     return (
       <>
+        <ModalValoration fetch={valorate} />
+        <ModalConfirmation fetch={cancel} />
         <PageWrapper>
           <div className="bg-default-1 pt-26 pt-lg-28 pb-13 pb-lg-25">
             <div className="container">
               <div className="mb-14">
+                <div className="row mb-3 align-items-center">
+                  <div className="col-lg-12 mb-lg-0 mb-4">
+                    {state.isValorated &&
+                      showSuccessAlert("Valoración realizada exitosamente.")}
+                    {state.isCancelled &&
+                      showSuccessAlert("Cancelación realizada exitosamente.")}
+                    {state.error &&
+                      showErrorAlert(
+                        " Ocurrió un error al realizar el pago. Por favor,intente más tarde."
+                      )}
+                  </div>
+                </div>
                 <div className="row mb-11 align-items-center">
                   <div className="col-lg-6 mb-lg-0 mb-4">
                     <h3 className="font-size-6 mb-0">
