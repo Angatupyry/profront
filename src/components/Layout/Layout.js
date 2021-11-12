@@ -13,8 +13,6 @@ import ModalApplication from "../ModalApplication";
 import ModalSignIn from "../ModalSignIn";
 import ModalSignUp from "../ModalSignUp";
 import ModalAddPayment from "../ModalAddPayment";
-import ModalConfirmation from "../ModalConfirmation";
-import ModalValoration from "../ModalValoration";
 
 import GlobalContext from "../../context/GlobalContext";
 

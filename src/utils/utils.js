@@ -4,7 +4,7 @@ import UsuarioService from "../services/usuario.service";
 import TransactionService from "../services/transaccion.service";
 import FacturacionService from "../services/facturacion.service";
 
-const scrollToTop = () => {
+export const scrollToTop = () => {
   window.scrollTo({
     top: 0,
     behavior: "smooth",

@@ -17,3 +17,7 @@
     transform: translate(-50%);
     z-index: 999999;
   }
+
+  .feature-cardOne-adjustments {
+    border: 1px solid #e5e5e5;
+  }

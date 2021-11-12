@@ -1,6 +1,6 @@
 export const menuItems = [
   {
-    name: "mi-perfil",
+    name: "myProfile",
     label: "Mi perfil",
   },
   {
