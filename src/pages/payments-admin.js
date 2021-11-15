@@ -8,8 +8,8 @@ import {
   showSuccessAlert,
   getPaymentStates,
 } from "../utils/utils";
+import { constants, getPaymentStateId } from "../utils";
 
-//const checksArray = [];
 const PaymentsAdmin = () => {
   const gContext = useContext(GlobalContext);
   const [dataResult, setDataResult] = React.useState(null);
@@ -27,12 +27,6 @@ const PaymentsAdmin = () => {
       behavior: "smooth",
     });
   };
-
-  function isEmpty(value) {
-    return (
-      Boolean(value && typeof value === "object") && !Object.keys(value).length
-    );
-  }
 
   async function fetchData() {
     setState({ loading: true, error: null });
@@ -56,8 +50,7 @@ const PaymentsAdmin = () => {
 
   const transformDate = (date) => {
     let jsDate = new Date(date);
-    let options = { timeZone: "UTC" };
-    return jsDate.toLocaleString("en-GB", options);
+    return jsDate.toLocaleDateString("en-GB");
   };
 
   const emptyChecksArray = () => {
@@ -90,9 +83,9 @@ const PaymentsAdmin = () => {
         if (!checkbox.disabled) {
           checkbox.checked = true;
           checksArray.push(parseInt(checkbox.id));
+          setCheckedState(true);
         }
       }
-      setCheckedState(true);
     } else {
       var arr = checksArray;
       for (var checkbox of checkboxes) {
@@ -220,7 +213,10 @@ const PaymentsAdmin = () => {
                           return (
                             <tr className="border border-color-2">
                               <td className="table-y-middle py-7 min-width-px-235 pr-0">
-                                {transaccion.pago_estado.id == 1 ? (
+                                {transaccion.pago_estado.id ==
+                                getPaymentStateId(
+                                  constants.PAYMENT_STATE.PAGADO
+                                ) ? (
                                   <div class="custom-control custom-checkbox">
                                     <input
                                       type="checkbox"

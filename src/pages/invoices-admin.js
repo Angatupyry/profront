@@ -6,7 +6,8 @@ import FacturacionService from "../services/facturacion.service";
 import {
   showErrorAlert,
   showSuccessAlert,
-  getPaymentStates,
+  getInvoiceStates,
+  numberFormat,
 } from "../utils/utils";
 
 const InvoicesAdmin = () => {
@@ -27,16 +28,10 @@ const InvoicesAdmin = () => {
     });
   };
 
-  function isEmpty(value) {
-    return (
-      Boolean(value && typeof value === "object") && !Object.keys(value).length
-    );
-  }
-
   async function fetchData() {
     setState({ loading: true, error: null });
     try {
-      const response = await FacturacionService.getTransactionList();
+      const response = await FacturacionService.getInvoicesList();
       setDataResult(response.data.data);
       setState({ loading: false, error: null });
     } catch (error) {
@@ -50,13 +45,12 @@ const InvoicesAdmin = () => {
     if (dataResult == undefined || null) {
       fetchData();
     }
-    getPaymentStates();
+    getInvoiceStates();
   }, [dataResult]);
 
   const transformDate = (date) => {
     let jsDate = new Date(date);
-    let options = { timeZone: "UTC" };
-    return jsDate.toLocaleString("en-GB", options);
+    return jsDate.toLocaleDateString("en-GB");
   };
 
   const emptyChecksArray = () => {
@@ -89,9 +83,9 @@ const InvoicesAdmin = () => {
         if (!checkbox.disabled) {
           checkbox.checked = true;
           checksArray.push(parseInt(checkbox.id));
+          setCheckedState(true);
         }
       }
-      setCheckedState(true);
     } else {
       var arr = checksArray;
       for (var checkbox of checkboxes) {
@@ -130,7 +124,7 @@ const InvoicesAdmin = () => {
     setState({ loading: true, error: null });
     try {
       for (const id of checksArray) {
-        const response = await FacturacionService.updateTransaction(id);
+        const response = await FacturacionService.updateInvoice(id);
       }
       setState({ loading: false, error: null, success: true });
       emptyChecksArray();
@@ -153,10 +147,12 @@ const InvoicesAdmin = () => {
                 <div className="row mb-3 align-items-center">
                   <div className="col-lg-12 mb-lg-0 mb-4">
                     {state.success &&
-                      showSuccessAlert("Pago realizado exitosamente.")}
+                      showSuccessAlert(
+                        "Estados factura actualizados exitosamente."
+                      )}
                     {state.error &&
                       showErrorAlert(
-                        " Ocurrió un error al realizar el pago. Por favor,intente más tarde."
+                        " Ocurrió un error actualizar el estado de la/s factura/as. Por favor,intente más tarde."
                       )}
                   </div>
                 </div>
@@ -184,7 +180,7 @@ const InvoicesAdmin = () => {
                                 onChange={handleCheckAll}
                               />
                               <label class="custom-control-label" for="all">
-                                Id transacción
+                                Nro factura
                               </label>
                             </div>
                           </th>
@@ -192,47 +188,47 @@ const InvoicesAdmin = () => {
                             scope="col"
                             className="border-0 font-size-4 font-weight-normal"
                           >
-                            Servicio
+                            Cliente
                           </th>
                           <th
                             scope="col"
                             className="border-0 font-size-4 font-weight-normal"
                           >
-                            Profesional
+                            Fecha
                           </th>
                           <th
                             scope="col"
                             className="border-0 font-size-4 font-weight-normal"
                           >
-                            Fecha/Hora
+                            Importe total
                           </th>
                           <th
                             scope="col"
                             className="border-0 font-size-4 font-weight-normal"
                           >
-                            Estado pago
+                            Estado factura
                           </th>
                         </tr>
                       </thead>
                       <tbody>
-                        {dataResult.map((transaccion) => {
+                        {dataResult.map((factura) => {
                           return (
                             <tr className="border border-color-2">
                               <td className="table-y-middle py-7 min-width-px-235 pr-0">
-                                {transaccion.pago_estado.id == 1 ? (
+                                {factura.factura_estado.id == 1 ? (
                                   <div class="custom-control custom-checkbox">
                                     <input
                                       type="checkbox"
                                       class="custom-control-input"
                                       name="payments-checkbox"
-                                      id={transaccion.id}
+                                      id={factura.id}
                                       disabled
                                     />
                                     <label
                                       class="custom-control-label"
-                                      for={transaccion.id}
+                                      for={factura.id}
                                     >
-                                      {transaccion.id}
+                                      {factura.nro_factura}
                                     </label>
                                   </div>
                                 ) : (
@@ -241,58 +237,51 @@ const InvoicesAdmin = () => {
                                       type="checkbox"
                                       class="custom-control-input"
                                       name="payments-checkbox"
-                                      id={transaccion.id}
+                                      id={factura.id}
                                       onChange={handleCheckbox}
                                     />
                                     <label
                                       class="custom-control-label"
-                                      for={transaccion.id}
+                                      for={factura.id}
                                     >
-                                      {transaccion.id}
+                                      {factura.nro_factura}
                                     </label>
                                   </div>
                                 )}
                               </td>
-                              <td className="table-y-middle py-7 min-width-px-235 pr-0">
-                                <h3 className="font-size-4 font-weight-normal text-black-2 mb-0">
-                                  {
-                                    transaccion.transaccion.servicio_profesional
-                                      .servicio.descripcion
-                                  }
-                                </h3>
-                              </td>
-                              <th
+
+                              <td
                                 scope="row"
                                 className="pl-6 border-0 py-7 pr-0"
                               >
-                                <Link
-                                  href={
-                                    "/candidate-profile?id=" +
-                                    transaccion.profesional_id
-                                  }
-                                >
+                                <Link href="#">
                                   <a className="media min-width-px-235 align-items-center">
                                     <h4 className="font-size-4 mb-0 font-weight-semibold text-black-2">
                                       {
-                                        transaccion.transaccion.profesional
-                                          .persona.nombre
+                                        factura.transaccion.cliente.persona
+                                          .nombre
                                       }{" "}
                                       {
-                                        transaccion.transaccion.profesional
-                                          .persona.apellido
+                                        factura.transaccion.cliente.persona
+                                          .apellido
                                       }
                                     </h4>
                                   </a>
                                 </Link>
-                              </th>
+                              </td>
                               <td className="table-y-middle py-7 min-width-px-170 pr-0">
                                 <h3 className="font-size-4 font-weight-normal text-black-2 mb-0">
-                                  {transformDate(transaccion.fecha)}
+                                  {transformDate(factura.fecha)}
+                                </h3>
+                              </td>
+                              <td className="table-y-middle py-7 min-width-px-235 pr-0">
+                                <h3 className="font-size-4 font-weight-normal text-black-2 mb-0">
+                                  {numberFormat(factura.importe_total)}
                                 </h3>
                               </td>
                               <td className="table-y-middle py-7 min-width-px-170 pr-0">
                                 <h3 className="font-size-4 font-weight-normal text-black-2 mb-0">
-                                  {transaccion.pago_estado.nombre}
+                                  {factura.factura_estado.nombre}
                                 </h3>
                               </td>
                             </tr>

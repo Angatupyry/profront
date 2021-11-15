@@ -106,3 +106,24 @@ export function getPaymentStateId(payment) {
     console.log(error);
   }
 }
+
+export async function getInvoiceStates() {
+  try {
+    const response = await FacturacionService.getInvoiceStates();
+    Cookies.set("invoiceStates", JSON.stringify(response.data.data));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function getInvoiceStateId(invoice) {
+  try {
+    let invoiceStates = JSON.parse(Cookies.get("invoiceStates"));
+    const res = invoiceStates.find(
+      (element) => element.nombre.toLowerCase() == invoice.toLowerCase()
+    ).id;
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+}

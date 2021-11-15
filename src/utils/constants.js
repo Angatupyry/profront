@@ -15,4 +15,8 @@ export const constants = {
     PAGADO: "PAGADO",
     PENDIENTE: "PENDIENTE",
   },
+  INVOICE_STATE: {
+    FACTURADO: "FACTURADO",
+    PENDIENTE: "PENDIENTE",
+  },
 };
