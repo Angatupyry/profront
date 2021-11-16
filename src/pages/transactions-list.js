@@ -204,8 +204,16 @@ const TransactionList = () => {
                                 >
                                   <a className="media min-width-px-235 align-items-center">
                                     <h4 className="font-size-4 mb-0 font-weight-semibold text-black-2">
-                                      {transaccion.profesional.persona.nombre}{" "}
-                                      {transaccion.profesional.persona.apellido}
+                                      {JSON.parse(Cookies.get("user"))
+                                        .usuario_tipo_id == clientUserTypeId
+                                        ? transaccion.profesional.persona
+                                            .nombre +
+                                          " " +
+                                          transaccion.profesional.persona
+                                            .apellido
+                                        : transaccion.cliente.persona.nombre +
+                                          " " +
+                                          transaccion.cliente.persona.apellido}
                                     </h4>
                                   </a>
                                 </Link>

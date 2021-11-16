@@ -20,4 +20,8 @@ export const constants = {
     FACTURADO: "FACTURADO",
     PENDIENTE: "PENDIENTE",
   },
+  NOTIFICATION_STATE: {
+    LEIDO: "LEÍDO",
+    NO_LEIDO: "NO LEÍDO",
+  },
 };

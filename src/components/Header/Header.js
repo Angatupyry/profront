@@ -14,6 +14,10 @@ import { menuItems } from "./menuItems";
 
 import imgP from "../../assets/image/header-profile.png";
 import Cookies from "js-cookie";
+import { scrollToTop } from "../../utils/utils";
+import NotificationService from "../../services/notificacion.service";
+import TransactionService from "../../services/transaccion.service";
+import { getNotificationStates } from "../../utils";
 
 const SiteHeader = styled.header`
   .dropdown-toggle::after {
@@ -50,11 +54,34 @@ const ToggleButton = styled.button`
 `;
 
 const Header = () => {
+  const transactionsArray = [];
   const gContext = useContext(GlobalContext);
   const [showScrolling, setShowScrolling] = useState(false);
   const [showReveal, setShowReveal] = useState(false);
+  const [state, setState] = React.useState({
+    loading: true,
+    error: null,
+    success: null,
+  });
+  const [notificationsCalled, setNotificationsCalled] = React.useState(false);
+  const [dataResult, setDataResult] = React.useState([]);
+  const [transaction, setTransaction] = React.useState([]);
 
   const size = useWindowSize();
+  const isLoggedIn = () => {
+    try {
+      let user = Cookies.get("user");
+      let token = Cookies.get("token");
+      if (user && token) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const [isLogged, setIsLogged] = React.useState(false);
 
   useScrollPosition(({ prevPos, currPos }) => {
     if (currPos.y < 0) {
@@ -69,26 +96,71 @@ const Header = () => {
     }
   });
 
-  const isLoggedIn = () => {
-    try {
-      let user = Cookies.get("user");
-      let token = Cookies.get("token");
-      if (user && token) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const logged = isLoggedIn();
 
   const close = () => {
     Cookies.remove("user");
     Cookies.remove("token");
+    setIsLogged(false);
+    setNotificationsCalled(false);
   };
+
+  async function getTransactions(response) {
+    setState({ loading: true, error: null });
+    try {
+      for (const notificacion of response.data.data) {
+        const transaction = await TransactionService.getTransaction(
+          notificacion.transaccion_id
+        );
+        transactionsArray.push(transaction.data.data);
+      }
+      setTransaction(transactionsArray);
+    } catch (error) {
+      console.log(error);
+      setState({ loading: false, error: error });
+    }
+  }
+
+  async function getNotifications(client_id) {
+    setState({ loading: true, error: null });
+    try {
+      const response = await NotificationService.getNotification(client_id);
+      getTransactions(response);
+      setDataResult(response.data.data);
+      setNotificationsCalled(true);
+      setState({ loading: false, error: null });
+    } catch (error) {
+      console.log(error);
+      setState({ loading: false, error: error });
+    }
+  }
+
+  async function updateNotification(id) {
+    setState({ loading: true, error: null });
+    try {
+      const response = await NotificationService.updateNotification(id);
+      setState({ loading: false, error: null });
+      setTimeout(function () {
+        let user = JSON.parse(Cookies.get("user"));
+        getNotifications(user.id);
+      }, 2000);
+    } catch (error) {
+      console.log(error);
+      setState({ loading: false, error: error });
+    }
+  }
+
+  useEffect(() => {
+    scrollToTop();
+    getNotificationStates();
+    if (logged) {
+      let user = JSON.parse(Cookies.get("user"));
+      if (!notificationsCalled) {
+        getNotifications(user.id);
+      }
+      setIsLogged(true);
+    }
+  }, [dataResult, logged]);
 
   return (
     <>
@@ -259,7 +331,7 @@ const Header = () => {
               </div>
 
               <div className="header-btn-devider ml-auto ml-lg-5 pl-2 d-none d-xs-flex align-items-center">
-                <div>
+                {/* <div>
                   <Link href="/#">
                     <a className="px-3 ml-7 font-size-7 notification-block flex-y-center position-relative">
                       <i className="fas fa-bell heading-default-color"></i>
@@ -268,6 +340,99 @@ const Header = () => {
                       </span>
                     </a>
                   </Link>
+                </div> */}
+                <div>
+                  <Dropdown className="show-gr-dropdown py-5">
+                    <Dropdown.Toggle
+                      as="a"
+                      className="proile media ml-7 flex-y-center"
+                    >
+                      {dataResult && dataResult.length > 0 ? (
+                        <Link href="/#">
+                          <a className="px-3 ml-7 font-size-7 notification-block flex-y-center position-relative">
+                            <i className="fas fa-bell heading-default-color"></i>
+                            <span className="font-size-3 count font-weight-semibold text-white bg-primary circle-24 border border-width-3 border border-white">
+                              {dataResult.length}
+                            </span>
+                          </a>
+                        </Link>
+                      ) : (
+                        <Link href="/#">
+                          <a className="px-3 ml-7 font-size-7 notification-block flex-y-center position-relative">
+                            <i className="fas fa-bell heading-default-color"></i>
+                          </a>
+                        </Link>
+                      )}
+                    </Dropdown.Toggle>
+
+                    {size.width <= 991 ? (
+                      <Dropdown.Menu
+                        className="gr-menu-dropdown border-0 border-width-2 py-2 w-auto bg-default"
+                        key="1"
+                      >
+                        {dataResult && dataResult.length > 0 ? (
+                          dataResult.map((notificacion) => {
+                            return (
+                              <Link href="/transactions-list">
+                                <a
+                                  className="dropdown-item py-2 font-size-3 font-weight-semibold line-height-1p2"
+                                  href="/#"
+                                  onClick={() =>
+                                    updateNotification(notificacion.id)
+                                  }
+                                >
+                                  {notificacion.mensaje}
+                                  <span className="font-weight-normal">
+                                    Para más información ingrese a{" "}
+                                    <span className="text-green font-weight-semibold">
+                                      Solicitudes
+                                    </span>
+                                  </span>
+                                </a>
+                              </Link>
+                            );
+                          })
+                        ) : (
+                          <div className="dropdown-item py-2 font-size-3 font-weight-semibold line-height-1p2">
+                            {" "}
+                            No posee notificationes
+                          </div>
+                        )}
+                      </Dropdown.Menu>
+                    ) : (
+                      <div
+                        className="dropdown-menu gr-menu-dropdown dropdown-right border-0 border-width-2 py-2 w-auto bg-default notification-dropdown"
+                        key="2"
+                      >
+                        {dataResult && dataResult.length > 0 ? (
+                          dataResult.map((notificacion) => {
+                            return (
+                              <Link href="/transactions-list">
+                                <a
+                                  className="dropdown-item py-2 font-size-3 font-weight-semibold line-height-1p2 "
+                                  onClick={() =>
+                                    updateNotification(notificacion.id)
+                                  }
+                                >
+                                  {notificacion.mensaje}.
+                                  <span className="font-weight-normal">
+                                    Para más información ingrese a{" "}
+                                    <span className="text-green font-weight-semibold">
+                                      Solicitudes
+                                    </span>
+                                  </span>
+                                </a>
+                              </Link>
+                            );
+                          })
+                        ) : (
+                          <div className="dropdown-item py-2 font-size-3 font-weight-semibold line-height-1p2 ">
+                            No posee notificationes
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </Dropdown>
                 </div>
                 <div>
                   <Dropdown className="show-gr-dropdown py-5">

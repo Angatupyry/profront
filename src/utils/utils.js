@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 import UsuarioService from "../services/usuario.service";
 import TransactionService from "../services/transaccion.service";
 import FacturacionService from "../services/facturacion.service";
+import NotificationService from "../services/notificacion.service";
 
 export const scrollToTop = () => {
   window.scrollTo({
@@ -126,6 +127,27 @@ export function getInvoiceStateId(invoice) {
     let invoiceStates = JSON.parse(Cookies.get("invoiceStates"));
     const res = invoiceStates.find(
       (element) => element.nombre.toLowerCase() == invoice.toLowerCase()
+    ).id;
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getNotificationStates() {
+  try {
+    const response = await NotificationService.getNotificationStates();
+    Cookies.set("notificationStates", JSON.stringify(response.data.data));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function getNotificationStateId(notification) {
+  try {
+    let notificationStates = JSON.parse(Cookies.get("notificationStates"));
+    const res = notificationStates.find(
+      (element) => element.nombre.toLowerCase() == notification.toLowerCase()
     ).id;
     return res;
   } catch (error) {

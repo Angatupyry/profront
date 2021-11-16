@@ -12,6 +12,8 @@ import {
   getPaymentStates,
   getInvoiceStateId,
   getInvoiceStates,
+  getNotificationStateId,
+  getNotificationStates,
 } from "./utils";
 import { checkSession, closeSession, isLoggedIn } from "./checkSession";
 
@@ -32,5 +34,7 @@ export {
   getPaymentStates,
   getInvoiceStateId,
   getInvoiceStates,
+  getNotificationStateId,
+  getNotificationStates,
   constants,
 };
