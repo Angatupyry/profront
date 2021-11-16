@@ -1,11 +1,17 @@
 import React, { useContext, useState } from "react";
+import Router from "next/router";
 import styled from "styled-components";
 import { Modal } from "react-bootstrap";
 import GlobalContext from "../../context/GlobalContext";
 import AuthService from "../../services/auth.service";
 import Error from "../Error/Error";
 import Cookies from "js-cookie";
-import { getUserType, getTransactionStates } from "../../utils";
+import {
+  getUserType,
+  getTransactionStates,
+  getUserTypeId,
+  constants,
+} from "../../utils";
 
 const ModalStyled = styled(Modal)`
   /* &.modal {
@@ -38,10 +44,16 @@ const ModalSignIn = (props) => {
     try {
       const response = await AuthService.login(state.email, state.password);
       setState({ loading: false, error: null });
+      console.log(response.data);
       Cookies.set("token", JSON.stringify(response.data.token));
       Cookies.set("user", JSON.stringify(response.data.user));
       getUserType();
       getTransactionStates();
+      let adminUserTypeId = getUserTypeId(constants.CLIENT_TYPE.ADMINISTRADOR);
+      if (response.data.user.usuario_tipo_id == adminUserTypeId) {
+        console.log("soy admin");
+        Router.push("/dashboard-admin");
+      }
       handleClose();
     } catch (error) {
       console.log(error);

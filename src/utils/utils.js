@@ -11,6 +11,12 @@ export const scrollToTop = () => {
   });
 };
 
+export function isEmpty(value) {
+  return (
+    Boolean(value && typeof value === "object") && !Object.keys(value).length
+  );
+}
+
 export const numberFormat = (value) =>
   new Intl.NumberFormat("es-PY", {
     style: "decimal",
@@ -47,7 +53,6 @@ export async function getUserType() {
   try {
     const response = await UsuarioService.getUserType();
     Cookies.set("userTypes", JSON.stringify(response.data.data));
-    console.log(response.data.data);
   } catch (error) {
     console.log(error);
   }
