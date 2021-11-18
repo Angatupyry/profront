@@ -12,7 +12,6 @@ import ModalConfirmation from "../components/ModalConfirmation";
 
 const TransactionList = () => {
   const filteredIds = [];
-  const gContext = useContext(GlobalContext);
   const [dataResult, setDataResult] = React.useState(null);
   const [state, setState] = React.useState({
     loading: true,
@@ -20,6 +19,7 @@ const TransactionList = () => {
     success: false,
     isValorated: false,
     isCancelled: false,
+    isAccepted: false,
   });
   const [clientUserTypeId, setClientUserTypeId] = React.useState("");
 
@@ -46,16 +46,21 @@ const TransactionList = () => {
         clientUserTypeId
       );
 
-      response.data.data.forEach((x) => {
-        if (x.transaccion_tipo.id == 1 && x.transaccion_estado.id == 1) {
-          filteredIds.push(x.id);
-        }
-      });
+      if (JSON.parse(Cookies.get("user")).usuario_tipo_id == clientUserTypeId) {
+        response.data.data.forEach((x) => {
+          if (x.transaccion_tipo.id == 1 && x.transaccion_estado.id == 1) {
+            filteredIds.push(x.id);
+          }
+        });
 
-      const arr = response.data.data.filter(function (value) {
-        return filteredIds.indexOf(value.id) == -1;
-      });
-      setDataResult(arr);
+        const arr = response.data.data.filter(function (value) {
+          return filteredIds.indexOf(value.id) == -1;
+        });
+        setDataResult(arr);
+      } else {
+        setDataResult(response.data.data);
+      }
+
       setClientUserTypeId(clientUserTypeId);
       setState({ loading: false, error: null });
     } catch (error) {
@@ -77,16 +82,9 @@ const TransactionList = () => {
     return jsDate.toLocaleString("en-GB", options);
   };
 
-  const toggleModal = (id) => {
-    gContext.setTransactionId(id);
-    gContext.toggleConfirmationModal();
-  };
+  const toggleModal = (id) => {};
 
-  const toggleValorationModal = (id, transaction_id) => {
-    gContext.setUserId(id);
-    gContext.setTransactionId(transaction_id);
-    gContext.toggleValorationModal();
-  };
+  const toggleValorationModal = (id, transaction_id) => {};
 
   const valorate = () => {
     setState({ loading: false, error: null, isValorated: true });
@@ -102,6 +100,23 @@ const TransactionList = () => {
     }, 2000);
   };
 
+  const acceptTransaction = async (transaccion_id) => {
+    setState({ loading: true, error: null });
+    try {
+      const response = await TransaccionService.updateTransaction(
+        transaccion_id,
+        "A"
+      );
+      setState({ loading: false, error: null, isAccepted: true });
+      setTimeout(function () {
+        fetchData();
+      }, 2000);
+    } catch (error) {
+      console.log(error);
+      setState({ loading: false, error: error });
+    }
+  };
+
   if (dataResult && dataResult.length > 0) {
     return (
       <>
@@ -115,11 +130,15 @@ const TransactionList = () => {
                   <div className="col-lg-12 mb-lg-0 mb-4">
                     {state.isValorated &&
                       showSuccessAlert("Valoración realizada exitosamente.")}
+                    {state.isAccepted &&
+                      showSuccessAlert(
+                        "Confirmación de servicio realizada exitosamente."
+                      )}
                     {state.isCancelled &&
                       showSuccessAlert("Cancelación realizada exitosamente.")}
                     {state.error &&
                       showErrorAlert(
-                        " Ocurrió un error al realizar el pago. Por favor,intente más tarde."
+                        " Ocurrió un error al actualizar la transacción. Por favor,intente más tarde."
                       )}
                   </div>
                 </div>
@@ -254,6 +273,28 @@ const TransactionList = () => {
                                       >
                                         <a className="font-size-3 font-weight-bold text-green text-uppercase">
                                           Pagar
+                                        </a>
+                                      </Link>
+                                    </div>
+                                  )}
+
+                                {JSON.parse(Cookies.get("user"))
+                                  .usuario_tipo_id != clientUserTypeId &&
+                                  transaccion.transaccion_estado.id ==
+                                    getTransactionStateId(
+                                      constants.TRANSACTION_STATE
+                                        .PENDIENTE_APROBACION
+                                    ) && (
+                                    <div className="">
+                                      <Link href="/">
+                                        <a
+                                          className="font-size-3 font-weight-bold text-green text-uppercase"
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            acceptTransaction(transaccion.id);
+                                          }}
+                                        >
+                                          Aceptar
                                         </a>
                                       </Link>
                                     </div>
