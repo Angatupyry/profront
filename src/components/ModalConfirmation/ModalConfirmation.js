@@ -33,7 +33,8 @@ const ModalConfirmation = (props) => {
     setState({ loading: true, error: null });
     try {
       const response = await TransaccionService.updateTransaction(
-        transaccion_id
+        transaccion_id,
+        "R"
       );
       handleClose();
       gContext.setTransactionId(null);
