@@ -118,8 +118,10 @@ const ModalSignUp = (props) => {
       );
       setState({ loading: false, error: null, success: true });
       console.log(response);
-      Cookies.set("token", JSON.stringify(response.data.token));
-      Cookies.set("user", JSON.stringify(response.data.user));
+      //Cookies.set("user", JSON.stringify(response.data.data.usuario));
+      //const login = await AuthService.login(response.data.data.usuario.username, state.password);
+      //Cookies.set("token", JSON.stringify(response.data.token));
+
       //console.log(state);
       setTimeout(() => {
         handleClose();
