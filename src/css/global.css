@@ -1,0 +1,31 @@
+.profile.img-thumbnail {
+    width: 70px;
+    height: 70px;
+}
+
+.spinner {
+    position: fixed;
+    top: 0; left: 0; z-index: 99999;
+    width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    transition: opacity 0.2s;
+  }
+
+  .spinner svg {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%);
+    z-index: 999999;
+  }
+
+  .feature-cardOne-adjustments {
+    border: 1px solid #e5e5e5;
+  }
+
+  .dropdown-menu .dropdown-item {
+    white-space: break-spaces;
+  }
+
+  .notification-dropdown .dropdown-item {
+    border-bottom: 1px solid #e5e5e5;
+  }

@@ -19,6 +19,9 @@ import "../assets/fonts/fontawesome-5/css/all.css";
 import "../scss/bootstrap.scss";
 import "../scss/main.scss";
 
+import "../css/global.css";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+
 const MyApp = ({ Component, pageProps, router }) => {
   if (router.pathname.match(/404/)) {
     return (

@@ -7,17 +7,18 @@ import AOS from "aos";
 import Header from "../Header";
 import Footer from "../Footer";
 
-import SidebarDashboard from "../SidebarDashboard";
+import SidebarDashboardAdmin from "../SidebarDashboardAdmin";
 import ModalVideo from "../ModalVideo";
 import ModalApplication from "../ModalApplication";
 import ModalSignIn from "../ModalSignIn";
 import ModalSignUp from "../ModalSignUp";
+import ModalAddPayment from "../ModalAddPayment";
 
 import GlobalContext from "../../context/GlobalContext";
 
 import GlobalStyle from "../../utils/globalStyle";
 
-import imgFavicon from "../../assets/favicon.png";
+import imgFavicon from "../../assets/icon.png";
 
 import { get, merge } from "lodash";
 
@@ -93,7 +94,7 @@ const Layout = ({ children, pageContext }) => {
         <div data-theme-mode-panel-active data-theme="light">
           <GlobalStyle />
           <Helmet>
-            <title>JustCamp</title>
+            <title>TodoServicio</title>
             <link rel="icon" type="image/png" href={imgFavicon} />
           </Helmet>
           <Loader id="loading" className={visibleLoader ? "" : "inActive"}>
@@ -109,6 +110,7 @@ const Layout = ({ children, pageContext }) => {
           <ModalApplication />
           <ModalSignIn />
           <ModalSignUp />
+          <ModalAddPayment />
         </div>
       </ThemeProvider>
     );
@@ -124,7 +126,7 @@ const Layout = ({ children, pageContext }) => {
         <div data-theme-mode-panel-active data-theme="light">
           <GlobalStyle />
           <Helmet>
-            <title>JustCamp</title>
+            <title>TodoServicio</title>
             <link rel="icon" type="image/png" href={imgFavicon} />
           </Helmet>
           <Loader id="loading" className={visibleLoader ? "" : "inActive"}>
@@ -137,7 +139,7 @@ const Layout = ({ children, pageContext }) => {
             ref={eleRef}
           >
             <Header isDark={gContext.headerDark} />
-            <SidebarDashboard />
+            <SidebarDashboardAdmin />
             {children}
           </div>
 
@@ -145,6 +147,7 @@ const Layout = ({ children, pageContext }) => {
           <ModalApplication />
           <ModalSignIn />
           <ModalSignUp />
+          <ModalAddPayment />
         </div>
       </ThemeProvider>
     );
@@ -160,7 +163,7 @@ const Layout = ({ children, pageContext }) => {
         <div data-theme-mode-panel-active data-theme="light">
           <GlobalStyle />
           <Helmet>
-            <title>JustCamp</title>
+            <title>TodoServicio</title>
             <link rel="icon" type="image/png" href={imgFavicon} />
           </Helmet>
           <Loader id="loading" className={visibleLoader ? "" : "inActive"} />
@@ -175,6 +178,7 @@ const Layout = ({ children, pageContext }) => {
           <ModalApplication />
           <ModalSignIn />
           <ModalSignUp />
+          <ModalAddPayment />
         </div>
       </ThemeProvider>
     </>
