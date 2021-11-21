@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import MediosPagoService from "../services/mediosPago.service";
 import TransaccionService from "../services/transaccion.service";
 import { numberFormat } from "../utils/utils";
-
+import imgM from "../assets/image/WhatsApp_Logo_1.png";
 import imgF1 from "../assets/image/l2/png/featured-job-logo-1.png";
 import iconD from "../assets/image/svg/icon-dolor.svg";
 import iconB from "../assets/image/svg/icon-briefcase.svg";
@@ -449,6 +449,12 @@ const Payment = () => {
                           </div>
                         </div>
                         <div className="row mt-5">
+                          <a
+                            href="https://wa.me/595971500066/?text=¡Hola! Adjunto mi comprobante de pago"
+                            target="_blank"
+                          >
+                            <img src={imgM} width="50" height="50" />
+                          </a>
                           <div className="col-md-12 mb-lg-0 mb-0 mt-5">
                             <span className="font-size-4 font-weight-semibold text-black-2 mb-4">
                               Obs: Envie su comprobante a
