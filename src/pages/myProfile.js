@@ -8,6 +8,7 @@ import { getUserTypeId, constants } from "../utils";
 import ModalAddStudies from "../components/ModalAddStudies";
 import GlobalContext from "../context/GlobalContext";
 import ModalAddWorkExperience from "../components/ModalAddWorkExperience";
+import ModalAddService from "../components/ModalAddService";
 import UsuarioService from "../services/usuario.service";
 import BuscadorService from "../services/buscador.service";
 import AuthService from "../services/auth.service";
@@ -383,6 +384,7 @@ const MyProfile = () => {
           onChange={handleChange}
           data={workExperience}
         />
+        <ModalAddService />
         <PageWrapper>
           <div className=" mt-24 mt-lg-31" id="dashboard-body">
             <div className="container">
@@ -779,6 +781,94 @@ const MyProfile = () => {
                           {JSON.parse(Cookies.get("user")).usuario_tipo_id ==
                             profesionalUserTypeId && (
                             <div>
+                              <h4 className="font-size-6 mt-5 text-black-2 font-weight-semibold">
+                                Servicios
+                              </h4>
+                              <div className="row mb-8">
+                                <div className="col-lg-4 mb-xl-0 mb-7 d-flex justify-content-start">
+                                  {/* <!-- Start Feature One --> */}
+                                  <div className="bg-white px-8 pt-9 pb-7 rounded-4 mb-9 feature-cardOne-adjustments">
+                                    <h2 className="mt-n4 d-flex justify-content-center">
+                                      <Link href="/#">
+                                        <a className="font-size-6 text-black-2 font-weight-bold mb-4">
+                                          Enseñanza de inglés
+                                        </a>
+                                      </Link>
+                                    </h2>
+                                    <ul className="list-unstyled mb-1 card-tag-list d-flex justify-content-center">
+                                      <li>
+                                        <Link href="/#">
+                                          <a className="bg-regent-opacity-15 text-green font-size-3 rounded-3">
+                                            <i className="fa fa-briefcase mr-2 font-weight-bold"></i>{" "}
+                                            Presencial
+                                          </a>
+                                        </Link>
+                                      </li>
+                                      <li>
+                                        <Link href="/#">
+                                          <a className="bg-regent-opacity-15 text-eastern font-size-3 rounded-3">
+                                            <i className="fa fa-clock mr-2 font-weight-bold"></i>{" "}
+                                            Por hora
+                                          </a>
+                                        </Link>
+                                      </li>
+                                      <li>
+                                        <Link href="/#">
+                                          <a className="bg-regent-opacity-15 text-eastern font-size-3 rounded-3">
+                                            <i className="fa fa-dollar-sign mr-2 font-weight-bold"></i>{" "}
+                                            60.000 Gs
+                                          </a>
+                                        </Link>
+                                      </li>
+                                    </ul>
+
+                                    <div className="card-btn-group mt-7 d-flex justify-content-center">
+                                      <Link href="/#">
+                                        <a
+                                          className="text-green font-weight-bold text-uppercase font-size-3 d-flex align-items-center justify-content-center mx-4"
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            gContext.toggleAddServiceModal();
+                                          }}
+                                        >
+                                          Editar{" "}
+                                          <i className="fas fa-edit ml-3 mt-n2 font-size-4"></i>
+                                        </a>
+                                      </Link>
+                                      <Link href="/#">
+                                        <a
+                                          className="text-green font-weight-bold text-uppercase font-size-3 d-flex align-items-center justify-content-center mx-4"
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            gContext.toggleAddServiceModal();
+                                          }}
+                                        >
+                                          Borrar{" "}
+                                          <i className="fas fa-trash-alt ml-3 mt-n2 font-size-4"></i>
+                                        </a>
+                                      </Link>
+                                    </div>
+                                  </div>
+                                  {/* <!-- End Feature One --> */}
+                                </div>
+                                <div className="col-lg-4 mb-xl-0 mb-7 d-flex justify-content-start">
+                                  <div className="text-center pt-5 pt-lg-13">
+                                    <Link href="/#">
+                                      <a
+                                        className="text-green font-weight-bold text-uppercase font-size-3 d-flex align-items-center justify-content-center"
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          gContext.toggleAddServiceModal();
+                                        }}
+                                      >
+                                        Agregar{" "}
+                                        <i className="fas fa-plus ml-3 mt-n2 font-size-4"></i>
+                                      </a>
+                                    </Link>
+                                  </div>
+                                </div>
+                              </div>
+
                               <h4 className="font-size-6 mt-5 text-black-2 font-weight-semibold">
                                 Experiencias laborales
                               </h4>

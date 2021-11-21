@@ -18,6 +18,7 @@ const GlobalProvider = ({ children }) => {
   const [addStudiesModalVisible, setAddStudiesModalVisible] = useState(false);
   const [addWorkExperienceModalVisible, setAddWorkExperienceModalVisible] =
     useState(false);
+  const [addServiceModalVisible, setAddServiceModalVisible] = useState(false);
   const [header, setHeader] = useState({
     theme: "light",
     bgClass: "default",
@@ -95,6 +96,10 @@ const GlobalProvider = ({ children }) => {
     setAddWorkExperienceModalVisible(!addWorkExperienceModalVisible);
   };
 
+  const toggleAddServiceModal = () => {
+    setAddServiceModalVisible(!addServiceModalVisible);
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -134,6 +139,8 @@ const GlobalProvider = ({ children }) => {
         addStudiesModalVisible,
         toggleAddWorkExperienceModal,
         addWorkExperienceModalVisible,
+        toggleAddServiceModal,
+        addServiceModalVisible,
       }}
     >
       {children}
