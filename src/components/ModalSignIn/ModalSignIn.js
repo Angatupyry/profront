@@ -11,6 +11,7 @@ import {
   getTransactionStates,
   getUserTypeId,
   constants,
+  getTransactionTypes,
 } from "../../utils";
 
 const ModalStyled = styled(Modal)`
@@ -49,6 +50,7 @@ const ModalSignIn = (props) => {
       Cookies.set("user", JSON.stringify(response.data.user));
       getUserType();
       getTransactionStates();
+      getTransactionTypes();
       let adminUserTypeId = getUserTypeId(constants.CLIENT_TYPE.ADMINISTRADOR);
       if (response.data.user.usuario_tipo_id == adminUserTypeId) {
         console.log("soy admin");

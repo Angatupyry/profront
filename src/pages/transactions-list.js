@@ -40,16 +40,22 @@ const TransactionList = () => {
   async function fetchData() {
     setState({ loading: true, error: null });
     try {
+      let userTypeId = JSON.parse(Cookies.get("user")).usuario_tipo_id;
       let cliente_id = JSON.parse(Cookies.get("user")).id;
-      let clientUserTypeId = getUserTypeId(constants.CLIENT_TYPE.CLIENTE);
       const response = await TransaccionService.getTransactionList(
         cliente_id,
-        clientUserTypeId
+        userTypeId
       );
+      console.log(response.data.data);
 
       if (JSON.parse(Cookies.get("user")).usuario_tipo_id == clientUserTypeId) {
         response.data.data.forEach((x) => {
-          if (x.transaccion_tipo.id == 1 && x.transaccion_estado.id == 1) {
+          if (
+            x.transaccion_tipo.id ==
+              getTransactionTypeId(constants.TRANSACTION_TYPE.CONSULTA) &&
+            x.transaccion_estado.id ==
+              getTransactionStateId(constants.TRANSACTION_STATE.APROBADO)
+          ) {
             filteredIds.push(x.id);
           }
         });

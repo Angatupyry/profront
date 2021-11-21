@@ -29,7 +29,8 @@ const SidebarAdmin = () => {
             <li className="">
               <Link href="/payments-admin">
                 <a className="px-10 py-1 my-5 font-size-4 font-weight-semibold flex-y-center">
-                  <i className="icon icon-layout-11 mr-7"></i>Pagos
+                  <i className="icon icon-layout-11 mr-7"></i>Pagos a
+                  profesionales
                 </a>
               </Link>
             </li>
@@ -37,6 +38,13 @@ const SidebarAdmin = () => {
               <Link href="/invoices-admin">
                 <a className="px-10 py-1 my-5 font-size-4 font-weight-semibold flex-y-center">
                   <i className="fas fa-briefcase mr-7"></i>Facturación
+                </a>
+              </Link>
+            </li>
+            <li className="">
+              <Link href="/pending-payments-admin">
+                <a className="px-10 py-1 my-5 font-size-4 font-weight-semibold flex-y-center">
+                  <i className="fas fa-briefcase mr-7"></i>Pagos recibidos
                 </a>
               </Link>
             </li>

@@ -154,3 +154,24 @@ export function getNotificationStateId(notification) {
     console.log(error);
   }
 }
+
+export async function getTransactionTypes() {
+  try {
+    const response = await TransactionService.getTransactionTypes();
+    Cookies.set("transactionTypes", JSON.stringify(response.data.data));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function getTransactionTypeId(transaction) {
+  try {
+    let transactionTypes = JSON.parse(Cookies.get("transactionTypes"));
+    const res = transactionTypes.find(
+      (element) => element.nombre.toLowerCase() == transaction.toLowerCase()
+    ).id;
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+}

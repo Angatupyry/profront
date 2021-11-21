@@ -13,10 +13,11 @@ class FacturacionService {
     }
   };
 
-  updateTransaction = async (id) => {
+  updateTransaction = async (id, fecha) => {
     try {
       const data = await http.put("/facturacion/pago/" + id, {
         pago_estado_id: getPaymentStateId(constants.PAYMENT_STATE.PAGADO),
+        fecha: fecha,
       });
       return data;
     } catch (error) {
@@ -45,10 +46,12 @@ class FacturacionService {
     }
   };
 
-  updateInvoice = async (id) => {
+  updateInvoice = async (id, nro_factura, fecha) => {
     try {
       const data = await http.put("/facturacion/factura/" + id, {
         factura_estado_id: getInvoiceStateId(constants.INVOICE_STATE.FACTURADO),
+        nro_factura: nro_factura,
+        fecha: fecha,
       });
       return data;
     } catch (error) {

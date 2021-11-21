@@ -21,6 +21,8 @@ const GlobalProvider = ({ children }) => {
   const [addServiceModalVisible, setAddServiceModalVisible] = useState(false);
   const [updateInvoiceModalVisible, setUpdateInvoiceModalVisible] =
     useState(false);
+  const [updatePaymentModalVisible, setUpdatePaymentModalVisible] =
+    useState(false);
   const [header, setHeader] = useState({
     theme: "light",
     bgClass: "default",
@@ -106,6 +108,10 @@ const GlobalProvider = ({ children }) => {
     setUpdateInvoiceModalVisible(!updateInvoiceModalVisible);
   };
 
+  const toggleUpdatePaymentModal = () => {
+    setUpdatePaymentModalVisible(!updatePaymentModalVisible);
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -149,6 +155,8 @@ const GlobalProvider = ({ children }) => {
         addServiceModalVisible,
         toggleUpdateInvoiceModal,
         updateInvoiceModalVisible,
+        toggleUpdatePaymentModal,
+        updatePaymentModalVisible,
       }}
     >
       {children}

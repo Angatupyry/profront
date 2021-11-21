@@ -156,7 +156,6 @@ const Header = () => {
   useEffect(() => {
     scrollToTop();
     const adminUser = getUserTypeId(constants.CLIENT_TYPE.ADMINISTRADOR);
-    console.log(adminUser);
     setAdminUserTypeId(adminUser);
     getNotificationStates();
     if (logged) {
