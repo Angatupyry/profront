@@ -97,7 +97,7 @@ class TransaccionService {
       if (action.toLowerCase() == "a") {
         const data = await http.put("/public/transaccion/" + id, {
           transaccion_estado_id: getTransactionStateId(
-            constants.TRANSACTION_STATE.APROBADO
+            constants.TRANSACTION_STATE.PENDIENTE_PAGO
           ),
         });
         return data;
