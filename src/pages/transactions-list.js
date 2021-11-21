@@ -12,6 +12,7 @@ import ModalConfirmation from "../components/ModalConfirmation";
 
 const TransactionList = () => {
   const filteredIds = [];
+  const gContext = useContext(GlobalContext);
   const [dataResult, setDataResult] = React.useState(null);
   const [state, setState] = React.useState({
     loading: true,
@@ -82,9 +83,16 @@ const TransactionList = () => {
     return jsDate.toLocaleString("en-GB", options);
   };
 
-  const toggleModal = (id) => {};
+  const toggleModal = (id) => {
+    gContext.setTransactionId(id);
+    gContext.toggleConfirmationModal();
+  };
 
-  const toggleValorationModal = (id, transaction_id) => {};
+  const toggleValorationModal = (id, transaction_id) => {
+    gContext.setUserId(id);
+    gContext.setTransactionId(transaction_id);
+    gContext.toggleValorationModal();
+  };
 
   const valorate = () => {
     setState({ loading: false, error: null, isValorated: true });

@@ -19,6 +19,8 @@ const GlobalProvider = ({ children }) => {
   const [addWorkExperienceModalVisible, setAddWorkExperienceModalVisible] =
     useState(false);
   const [addServiceModalVisible, setAddServiceModalVisible] = useState(false);
+  const [updateInvoiceModalVisible, setUpdateInvoiceModalVisible] =
+    useState(false);
   const [header, setHeader] = useState({
     theme: "light",
     bgClass: "default",
@@ -100,6 +102,10 @@ const GlobalProvider = ({ children }) => {
     setAddServiceModalVisible(!addServiceModalVisible);
   };
 
+  const toggleUpdateInvoiceModal = () => {
+    setUpdateInvoiceModalVisible(!updateInvoiceModalVisible);
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -141,6 +147,8 @@ const GlobalProvider = ({ children }) => {
         addWorkExperienceModalVisible,
         toggleAddServiceModal,
         addServiceModalVisible,
+        toggleUpdateInvoiceModal,
+        updateInvoiceModalVisible,
       }}
     >
       {children}

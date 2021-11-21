@@ -3,12 +3,15 @@ import Link from "next/link";
 import PageWrapper from "../components/PageWrapper";
 import GlobalContext from "../context/GlobalContext";
 import FacturacionService from "../services/facturacion.service";
+import ModalUpdateInvoice from "../components/ModalUpdateInvoice";
 import {
   showErrorAlert,
   showSuccessAlert,
   getInvoiceStates,
   numberFormat,
+  getInvoiceStateId,
 } from "../utils/utils";
+import { constants } from "../utils";
 
 const InvoicesAdmin = () => {
   const gContext = useContext(GlobalContext);
@@ -137,9 +140,16 @@ const InvoicesAdmin = () => {
     }
   };
 
+  const toggleUpdateInvoiceModal = (id) => {
+    // gContext.setUserId(id);
+    // gContext.setTransactionId(transaction_id);
+    gContext.toggleUpdateInvoiceModal();
+  };
+
   if (dataResult && dataResult.length > 0) {
     return (
       <>
+        <ModalUpdateInvoice />
         <PageWrapper>
           <div className="bg-default-1 pt-26 pt-lg-28 pb-13 pb-lg-25">
             <div className="container">
@@ -208,6 +218,7 @@ const InvoicesAdmin = () => {
                           >
                             Estado factura
                           </th>
+                          <th></th>
                         </tr>
                       </thead>
                       <tbody>
@@ -283,6 +294,26 @@ const InvoicesAdmin = () => {
                                 <h3 className="font-size-4 font-weight-normal text-black-2 mb-0">
                                   {factura.factura_estado.nombre}
                                 </h3>
+                              </td>
+                              <td className="table-y-middle py-7 min-width-px-110 pr-0">
+                                {factura.factura_estado.id ==
+                                  getInvoiceStateId(
+                                    constants.INVOICE_STATE.PENDIENTE
+                                  ) && (
+                                  <div className="">
+                                    <Link href="#">
+                                      <a
+                                        className="font-size-3 font-weight-bold text-green text-uppercase"
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          toggleUpdateInvoiceModal(factura.id);
+                                        }}
+                                      >
+                                        Facturar
+                                      </a>
+                                    </Link>
+                                  </div>
+                                )}
                               </td>
                             </tr>
                           );
