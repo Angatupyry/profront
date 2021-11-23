@@ -27,7 +27,7 @@ export const numberFormat = (value) =>
 export const showErrorAlert = (text) => {
   scrollToTop();
   return (
-    <div className="row no-gutters">
+    <div className="row mt-5 no-gutters">
       <div className="col-md-12">
         <div className="alert alert-danger" role="alert">
           {text}
@@ -40,9 +40,22 @@ export const showErrorAlert = (text) => {
 export const showSuccessAlert = (text) => {
   scrollToTop();
   return (
-    <div className="row no-gutters">
+    <div className="row mt-5 no-gutters">
       <div className="col-md-12">
         <div className="alert alert-success" role="alert">
+          {text}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const showWarningAlert = (text) => {
+  scrollToTop();
+  return (
+    <div className="row mt-5 no-gutters">
+      <div className="col-md-12">
+        <div className="alert alert-warning" role="alert">
           {text}
         </div>
       </div>

@@ -62,21 +62,23 @@ class TransaccionService {
     }
   };
 
-  getTransactionList = async (id, userTypeId) => {
+  getTransactionList = async (id, userTypeId, page) => {
     try {
       let clientUserTypeId = getUserTypeId(constants.CLIENT_TYPE.CLIENTE);
       if (id) {
         if (userTypeId == clientUserTypeId) {
-          const data = await http.get("/public/transaccion?cliente__id=" + id);
+          const data = await http.get(
+            "/public/transaccion?cliente__id=" + id + "&pagina=" + page
+          );
           return data;
         } else {
           const data = await http.get(
-            "/public/transaccion?profesional__id=" + id
+            "/public/transaccion?profesional__id=" + id + "&pagina=" + page
           );
           return data;
         }
       } else {
-        const data = await http.get("/public/transaccion");
+        const data = await http.get("/public/transaccion&pagina=" + page);
         return data;
       }
     } catch (error) {

@@ -9,9 +9,7 @@ import TransaccionService from "../services/transaccion.service";
 import { numberFormat } from "../utils/utils";
 import imgM from "../assets/image/WhatsApp_Logo_1.png";
 import imgF1 from "../assets/image/l2/png/featured-job-logo-1.png";
-import iconD from "../assets/image/svg/icon-dolor.svg";
-import iconB from "../assets/image/svg/icon-briefcase.svg";
-import iconL from "../assets/image/svg/icon-location.svg";
+import ModalAddPayment from "../components/ModalAddPayment";
 
 const scrollToTop = () => {
   window.scrollTo({
@@ -123,6 +121,7 @@ const Payment = () => {
     let servicesText = "";
     return (
       <>
+        <ModalAddPayment />
         <PageWrapper headerConfig={{ button: "profile" }}>
           <div className="jobDetails-section bg-default-1 pt-28 pt-lg-27 pb-xl-25 pb-12">
             <div className="container">

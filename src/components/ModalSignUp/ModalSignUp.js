@@ -13,6 +13,7 @@ import {
   isEmpty,
   showErrorAlert,
   showSuccessAlert,
+  showWarningAlert,
   getTransactionStates,
 } from "../../utils/utils";
 import Cookies from "js-cookie";
@@ -44,6 +45,7 @@ const ModalSignUp = (props) => {
   const [state, setState] = useState({
     loading: true,
     error: null,
+    fieldsIncomplete: false,
     email: "",
     password: "",
     name: "",
@@ -76,8 +78,30 @@ const ModalSignUp = (props) => {
     setShowPassFirst(!showPassFirst);
   };
 
-  const togglePasswordSecond = () => {
-    setShowPassSecond(!showPassSecond);
+  const stateIsNotEmpty = () => {
+    let stateArr = [
+      state.name,
+      state.lastName,
+      state.email,
+      state.birthDate,
+      state.sex,
+      state.password,
+      state.docType,
+      state.document_number,
+      state.phone_number,
+      state.addressStreet,
+      state.addressNumber,
+      state.city,
+      state.neighborhood,
+    ];
+
+    for (const element of stateArr) {
+      if (typeof element == "undefined" || element == null || element == "") {
+        return false;
+        break;
+      }
+    }
+    return true;
   };
 
   const toggleIsProfessional = () => {
@@ -97,35 +121,40 @@ const ModalSignUp = (props) => {
     try {
       getUserType();
       getTransactionStates();
-      const response = await AuthService.register(
-        state.name,
-        state.lastName,
-        state.email,
-        state.birthDate,
-        state.sex,
-        state.password,
-        state.isProfessional,
-        state.docType,
-        state.document_number,
-        state.phone_number,
-        1,
-        1,
-        state.isCellPhone,
-        state.addressStreet,
-        state.addressNumber,
-        state.city,
-        state.neighborhood
-      );
-      setState({ loading: false, error: null, success: true });
-      console.log(response);
-      //Cookies.set("user", JSON.stringify(response.data.data.usuario));
-      //const login = await AuthService.login(response.data.data.usuario.username, state.password);
-      //Cookies.set("token", JSON.stringify(response.data.token));
+      if (stateIsNotEmpty()) {
+        const response = await AuthService.register(
+          state.name,
+          state.lastName,
+          state.email,
+          state.birthDate,
+          state.sex,
+          state.password,
+          state.isProfessional,
+          state.docType,
+          state.document_number,
+          state.phone_number,
+          1,
+          1,
+          state.isCellPhone,
+          state.addressStreet,
+          state.addressNumber,
+          state.city,
+          state.neighborhood
+        );
+        setState({ loading: false, error: null, success: true });
+        console.log(response);
+        //Cookies.set("user", JSON.stringify(response.data.data.usuario));
+        //const login = await AuthService.login(response.data.data.usuario.username, state.password);
+        //Cookies.set("token", JSON.stringify(response.data.token));
 
-      //console.log(state);
-      setTimeout(() => {
-        handleClose();
-      }, 2000);
+        //console.log(state);
+        setTimeout(() => {
+          handleClose();
+        }, 5000);
+      } else {
+        setState({ fieldsIncomplete: true });
+        // scrollToTop();
+      }
     } catch (error) {
       console.log(error);
       error.message = ERRORMSG;
@@ -265,7 +294,12 @@ const ModalSignUp = (props) => {
       {/* {console.log(state)} */}
       <Modal.Body className="p-0">
         {state.error && <Error error={state.error} />}
-        {state.success && showSuccessAlert("Registro exitoso.")}
+        {state.fieldsIncomplete &&
+          showWarningAlert("Por favor complete todos los campos.")}
+        {state.success &&
+          showSuccessAlert(
+            "Registro exitoso.Por favor inicie sesión con su nueva cuenta."
+          )}
         <button
           type="button"
           className="circle-32 btn-reset bg-white pos-abs-tr mt-n6 mr-lg-n6 focus-reset shadow-10"
@@ -652,7 +686,7 @@ const ModalSignUp = (props) => {
                     <div className="col-9"></div>
                     <div className="col-3">
                       <div className="form-group mb-8">
-                        <button className="btn btn-primary btn-medium w-100 rounded-5 text-uppercase">
+                        <button className="btn btn-primary btn-medium w-100 rounded-5 text-uppercase ">
                           Registrarse{" "}
                         </button>
                       </div>

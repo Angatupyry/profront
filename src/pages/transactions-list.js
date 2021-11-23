@@ -5,15 +5,24 @@ import PageWrapper from "../components/PageWrapper";
 import GlobalContext from "../context/GlobalContext";
 import TransaccionService from "../services/transaccion.service";
 import Cookies from "js-cookie";
-import { getUserTypeId, getTransactionStateId, constants } from "../utils";
+import {
+  getUserTypeId,
+  getTransactionStateId,
+  constants,
+  getTransactionTypeId,
+} from "../utils";
 import { showErrorAlert, showSuccessAlert } from "../utils/utils";
 import ModalValoration from "../components/ModalValoration";
 import ModalConfirmation from "../components/ModalConfirmation";
+import Pagination from "react-js-pagination";
 
 const TransactionList = () => {
   const filteredIds = [];
+  const pages = [];
   const gContext = useContext(GlobalContext);
   const [dataResult, setDataResult] = React.useState(null);
+  const [pageResult, setPageResult] = React.useState(null);
+  const [activePage, setActivePage] = React.useState(1);
   const [state, setState] = React.useState({
     loading: true,
     error: null,
@@ -37,16 +46,19 @@ const TransactionList = () => {
     );
   }
 
-  async function fetchData() {
+  async function fetchData(pageNumber) {
     setState({ loading: true, error: null });
     try {
       let userTypeId = JSON.parse(Cookies.get("user")).usuario_tipo_id;
       let cliente_id = JSON.parse(Cookies.get("user")).id;
+      let clientUserTypeId = getUserTypeId(constants.CLIENT_TYPE.CLIENTE);
       const response = await TransaccionService.getTransactionList(
         cliente_id,
-        userTypeId
+        userTypeId,
+        pageNumber
       );
-      console.log(response.data.data);
+      console.log(response);
+      setPageResult(response.data.meta);
 
       if (JSON.parse(Cookies.get("user")).usuario_tipo_id == clientUserTypeId) {
         response.data.data.forEach((x) => {
@@ -79,7 +91,7 @@ const TransactionList = () => {
   useEffect(() => {
     scrollToTop();
     if (dataResult == undefined || null) {
-      fetchData();
+      fetchData(activePage);
     }
   }, [dataResult]);
 
@@ -103,14 +115,14 @@ const TransactionList = () => {
   const valorate = () => {
     setState({ loading: false, error: null, isValorated: true });
     setTimeout(function () {
-      fetchData();
+      fetchData(activePage);
     }, 2000);
   };
 
   const cancel = () => {
     setState({ loading: false, error: null, isCancelled: true });
     setTimeout(function () {
-      fetchData();
+      fetchData(activePage);
     }, 2000);
   };
 
@@ -123,12 +135,17 @@ const TransactionList = () => {
       );
       setState({ loading: false, error: null, isAccepted: true });
       setTimeout(function () {
-        fetchData();
+        fetchData(activePage);
       }, 2000);
     } catch (error) {
       console.log(error);
       setState({ loading: false, error: error });
     }
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setActivePage(pageNumber);
+    fetchData(pageNumber);
   };
 
   if (dataResult && dataResult.length > 0) {
@@ -168,6 +185,12 @@ const TransactionList = () => {
                     <table className="table table-striped">
                       <thead>
                         <tr>
+                          <th
+                            scope="col"
+                            className="pl-0  border-0 font-size-4 font-weight-normal"
+                          >
+                            Id
+                          </th>
                           <th
                             scope="col"
                             className="pl-0  border-0 font-size-4 font-weight-normal"
@@ -217,6 +240,11 @@ const TransactionList = () => {
                         {dataResult.map((transaccion) => {
                           return (
                             <tr className="border border-color-2">
+                              <td className="table-y-middle py-7 min-width-px-100 pr-0">
+                                <h3 className="font-size-4 font-weight-normal text-black-2 mb-0">
+                                  {transaccion.id}
+                                </h3>
+                              </td>
                               <td className="table-y-middle py-7 min-width-px-235 pr-0">
                                 <h3 className="font-size-4 font-weight-normal text-black-2 mb-0">
                                   {
@@ -376,6 +404,12 @@ const TransactionList = () => {
                       </tbody>
                     </table>
                   </div>
+                  <Pagination
+                    activePage={activePage}
+                    totalItemsCount={pageResult.registrosFiltro}
+                    pageRangeDisplayed={5}
+                    onChange={handlePageChange.bind(this)}
+                  />
                   {/* <div className="pt-2">
                     <nav aria-label="Page navigation example">
                       <ul className="pagination pagination-hover-primary rounded-0 ml-n2 d-flex justify-content-center">
@@ -388,30 +422,33 @@ const TransactionList = () => {
                             <i className="fas fa-chevron-left"></i>
                           </a>
                         </li>
-                        <li className="page-item">
-                          <a
-                            href="/#"
-                            className="page-link border-0 font-size-4 font-weight-semibold px-3"
-                          >
-                            1
-                          </a>
-                        </li>
-                        <li className="page-item">
-                          <a
-                            href="/#"
-                            className="page-link border-0 font-size-4 font-weight-semibold px-3"
-                          >
-                            2
-                          </a>
-                        </li>
-                        <li className="page-item">
-                          <a
-                            href="/#"
-                            className="page-link border-0 font-size-4 font-weight-semibold px-3"
-                          >
-                            3
-                          </a>
-                        </li>
+
+                        {pageResult.map((pagina, index) => {
+                          if (index == pageResult.length - 1) {
+                            return (
+                              <li className="page-item">
+                                <a
+                                  href="/#"
+                                  className="page-link border-0 font-size-4 font-weight-semibold px-3"
+                                >
+                                  {pagina}
+                                </a>
+                              </li>
+                            );
+                          } else {
+                            return (
+                              <li className="page-item">
+                                <a
+                                  href="/#"
+                                  className="page-link border-0 font-size-4 font-weight-semibold px-3"
+                                >
+                                  {pagina}
+                                </a>
+                              </li>
+                            );
+                          }
+                        })}
+
                         <li className="page-item disabled">
                           <a
                             href="/#"
