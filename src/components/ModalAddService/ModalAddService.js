@@ -99,10 +99,11 @@ const ModalAddService = (props) => {
     e.preventDefault();
     setState({ loading: true, error: null });
     try {
+      let cliente_id = JSON.parse(Cookies.get("user")).id;
       let persona_id = JSON.parse(Cookies.get("user")).persona_id;
       const response = await ProfesionalService.postProfesionalService(
         serviceData.servicio,
-        persona_id,
+        cliente_id,
         serviceData.tarifa,
         serviceData.servicio_tipo,
         serviceData.servicio_modalidad

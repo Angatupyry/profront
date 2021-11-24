@@ -175,17 +175,17 @@ const JobDetails = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setState({ loading: true, error: null });
+    let date = new Date(postData.fecha + "T14:00:00").toISOString();
     try {
       const response = await TransaccionService.postSolicitation(
         postData.profesional_id,
         postData.servicio_profesional_id,
         postData.cliente_id,
         postData.observacion,
-        postData.fecha,
+        date,
         postData.cant_horas,
         postData.monto
       );
-
       setState({ loading: false, error: null, success: true });
     } catch (error) {
       setState({ loading: false, error: error });

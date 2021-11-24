@@ -363,7 +363,91 @@ const SearchGrid = () => {
   } else {
     return (
       <PageWrapper>
-        <div>no hay datos</div>
+        <div className="bg-default-1 pt-26 pt-lg-28 pb-13 pb-lg-25">
+          <div className="container">
+            <div className="row">
+              <div className="col-12 col-lg-4 col-md-5 col-xs-8">
+                <Sidebar />
+              </div>
+              {/* <!-- Main Body --> */}
+              <div className="col-12 col-xl-8 col-lg-8">
+                {/* <!-- form --> */}
+                <form
+                  action="/"
+                  className="search-form"
+                  onSubmit={handleSubmit}
+                >
+                  <div className="filter-search-form-2 search-1-adjustment bg-white rounded-sm shadow-7 pr-6 py-6 pl-6">
+                    <div className="filter-inputs">
+                      {/* <!-- .select-city starts --> */}
+                      <div className="form-group position-relative w-lg-50 w-xl-50 w-xxl-50">
+                        <Select
+                          options={services}
+                          className="pl-8 h-100 arrow-3 font-size-4 d-flex align-items-center w-100"
+                          border={false}
+                          id="service"
+                          value={{
+                            label: state.serviceLabel,
+                            value: state.service,
+                          }}
+                          onChange={handleService}
+                          menuPosition={"fixed"}
+                        />
+                        <span className="h-100 w-px-50 pos-abs-tl d-flex align-items-center justify-content-center font-size-6">
+                          <i className="icon icon-pin-3 text-primary font-weight-bold"></i>
+                        </span>
+                      </div>
+                      {/* <!-- ./select-city ends --> */}
+                      {/* <!-- .select-city starts --> */}
+                      <div className="form-group position-relative w-lg-50 w-xl-50 w-xxl-50">
+                        <Select
+                          options={cities}
+                          className="pl-8 h-100 arrow-3 font-size-4 d-flex align-items-center w-100"
+                          border={false}
+                          id="city"
+                          value={{
+                            label: state.cityLabel,
+                            value: state.city,
+                          }}
+                          onChange={handleCity}
+                        />
+                        <span className="h-100 w-px-50 pos-abs-tl d-flex align-items-center justify-content-center font-size-6">
+                          <i className="icon icon-pin-3 text-primary font-weight-bold"></i>
+                        </span>
+                      </div>
+                      {/* <!-- ./select-city ends --> */}
+                    </div>
+                    <div className="button-block">
+                      <button className="btn btn-primary line-height-reset h-100 btn-submit w-100 text-uppercase">
+                        Buscar
+                      </button>
+                    </div>
+                  </div>
+                </form>
+                <div className="pt-12">
+                  <div className="d-flex align-items-center justify-content-between mb-6">
+                    <h5 className="font-size-4 font-weight-normal text-gray">
+                      <span className="heading-default-color"></span>0
+                      resultados obtenidos
+                    </h5>
+                    <div className="d-flex align-items-center result-view-type">
+                      <Link href="/search-list">
+                        <a className="heading-default-color pl-5 font-size-6 hover-text-hitgray active">
+                          <i className="fa fa-list-ul"></i>
+                        </a>
+                      </Link>
+                      <Link href="/search-grid">
+                        <a className="heading-default-color pl-5 font-size-6 hover-text-hitgray">
+                          <i className="fa fa-th-large"></i>
+                        </a>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </PageWrapper>
     );
   }

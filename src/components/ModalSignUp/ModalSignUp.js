@@ -143,23 +143,21 @@ const ModalSignUp = (props) => {
         );
         setState({ loading: false, error: null, success: true });
         console.log(response);
-        //Cookies.set("user", JSON.stringify(response.data.data.usuario));
-        //const login = await AuthService.login(response.data.data.usuario.username, state.password);
-        //Cookies.set("token", JSON.stringify(response.data.token));
-
-        //console.log(state);
         setTimeout(() => {
           handleClose();
-        }, 5000);
+          setState({ loading: false, error: null, success: false });
+        }, 2000);
       } else {
         setState({ fieldsIncomplete: true });
-        // scrollToTop();
       }
     } catch (error) {
       console.log(error);
       error.message = ERRORMSG;
       setState({ loading: false, error: error });
-      window.scrollTo(0, 0);
+      setTimeout(() => {
+        handleClose();
+        setState({ loading: false, error: null, success: false });
+      }, 2000);
     }
   };
 
@@ -291,7 +289,6 @@ const ModalSignUp = (props) => {
       show={gContext.signUpModalVisible}
       onHide={gContext.toggleSignUpModal}
     >
-      {/* {console.log(state)} */}
       <Modal.Body className="p-0">
         {state.error && <Error error={state.error} />}
         {state.fieldsIncomplete &&

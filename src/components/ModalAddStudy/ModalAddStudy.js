@@ -140,11 +140,11 @@ const ModalAddStudy = (props) => {
     e.preventDefault();
     setState({ loading: true, error: null });
     try {
-      let persona_id = JSON.parse(Cookies.get("user")).persona_id;
+      let cliente_id = JSON.parse(Cookies.get("user")).id;
       const response = await ProfesionalService.postStudies(
         studyData.descripcion,
         studyData.lugar,
-        persona_id,
+        cliente_id,
         studyData.fecha_desde,
         studyData.fecha_hasta
       );

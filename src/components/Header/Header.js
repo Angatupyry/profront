@@ -453,6 +453,9 @@ const Header = () => {
                         className="gr-menu-dropdown border-0 border-width-2 py-2 w-auto bg-default"
                         key="1"
                       >
+                        <span className=" dropdown-item py-2 font-size-2 font-weight-semibold line-height-1p2">
+                          {JSON.parse(Cookies.get("user")).username}
+                        </span>
                         <Link href="/#">
                           <a className=" dropdown-item py-2 text-red font-size-3 font-weight-semibold line-height-1p2 text-uppercase">
                             Cerrar sesión
@@ -464,6 +467,10 @@ const Header = () => {
                         className="dropdown-menu gr-menu-dropdown dropdown-right border-0 border-width-2 py-2 w-auto bg-default"
                         key="2"
                       >
+                        <span className=" dropdown-item py-2 font-size-2 font-weight-semibold line-height-1p2">
+                          {JSON.parse(Cookies.get("user")).username}
+                        </span>
+
                         <Link href="/#">
                           <a
                             className=" dropdown-item py-2 text-red font-size-3 font-weight-semibold line-height-1p2 text-uppercase"

@@ -11,12 +11,15 @@ import {
   getTransactionTypeId,
 } from "../utils";
 import { showErrorAlert, showSuccessAlert } from "../utils/utils";
+import Pagination from "react-js-pagination";
 
 const PendingPaymentsAdmin = () => {
   const filteredIds = [];
   const gContext = useContext(GlobalContext);
   const [dataResult, setDataResult] = React.useState(null);
   const [checksArray, setChecksArray] = React.useState([]);
+  const [pageResult, setPageResult] = React.useState(null);
+  const [activePage, setActivePage] = React.useState(1);
   const [state, setState] = React.useState({
     loading: true,
     error: null,
@@ -38,10 +41,14 @@ const PendingPaymentsAdmin = () => {
     );
   }
 
-  async function fetchData() {
+  async function fetchData(pageNumber) {
     setState({ loading: true, error: null });
     try {
-      const response = await TransaccionService.getTransactionList();
+      const response = await TransaccionService.getTransactionList(
+        "",
+        "",
+        pageNumber
+      );
       response.data.data.forEach((x) => {
         if (
           (x.transaccion_tipo.id ==
@@ -54,6 +61,8 @@ const PendingPaymentsAdmin = () => {
           filteredIds.push(x.id);
         }
       });
+
+      setPageResult(response.data.meta);
 
       const arr = response.data.data.filter(function (value) {
         return filteredIds.indexOf(value.id) != -1;
@@ -72,7 +81,7 @@ const PendingPaymentsAdmin = () => {
   useEffect(() => {
     scrollToTop();
     if (dataResult == undefined || null) {
-      fetchData();
+      fetchData(activePage);
     }
   }, [dataResult]);
 
@@ -158,12 +167,17 @@ const PendingPaymentsAdmin = () => {
       setState({ loading: false, error: null, success: true });
       emptyChecksArray();
       setTimeout(function () {
-        fetchData();
+        fetchData(activePage);
       }, 2000);
     } catch (error) {
       console.log(error);
       setState({ loading: false, error: error });
     }
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setActivePage(pageNumber);
+    fetchData(pageNumber);
   };
 
   if (dataResult && dataResult.length > 0) {
@@ -327,6 +341,12 @@ const PendingPaymentsAdmin = () => {
                       </tbody>
                     </table>
                   </div>
+                  <Pagination
+                    activePage={activePage}
+                    totalItemsCount={pageResult.registrosFiltro}
+                    pageRangeDisplayed={5}
+                    onChange={handlePageChange.bind(this)}
+                  />
 
                   <div className="row mt-12">
                     <div className="col-md-12 mb-lg-0 mb-12 d-flex justify-content-end">

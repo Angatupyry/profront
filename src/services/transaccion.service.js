@@ -78,7 +78,7 @@ class TransaccionService {
           return data;
         }
       } else {
-        const data = await http.get("/public/transaccion&pagina=" + page);
+        const data = await http.get("/public/transaccion?pagina=" + page);
         return data;
       }
     } catch (error) {

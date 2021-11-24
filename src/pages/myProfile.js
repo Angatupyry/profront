@@ -207,14 +207,14 @@ const MyProfile = () => {
         : sexo[1].value;
 
       const services = await ProfesionalService.getProfesionalServices(
-        persona_id
+        cliente_id
       );
 
       const jobExperiences = await ProfesionalService.getJobExperiences(
-        persona_id
+        cliente_id
       );
 
-      const studies = await ProfesionalService.getStudies(persona_id);
+      const studies = await ProfesionalService.getStudies(cliente_id);
       setServices(services.data.data);
       setJobExperience(jobExperiences.data.data);
       setStudies(studies.data.data);

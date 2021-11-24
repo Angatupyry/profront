@@ -99,9 +99,9 @@ const ModalAddWorkExperience = (props) => {
     e.preventDefault();
     setState({ loading: true, error: null });
     try {
-      let persona_id = JSON.parse(Cookies.get("user")).persona_id;
+      let cliente_id = JSON.parse(Cookies.get("user")).id;
       const response = await ProfesionalService.postJobExperiences(
-        persona_id,
+        cliente_id,
         jobData.empresa,
         jobData.fecha_inicio,
         jobData.fecha_fin,
@@ -121,6 +121,7 @@ const ModalAddWorkExperience = (props) => {
     } catch (error) {
       scrollToTop();
       console.log(error);
+      error.message = ERRORMSG;
       setState({ loading: false, error: error });
     }
   };
@@ -161,7 +162,7 @@ const ModalAddWorkExperience = (props) => {
                       htmlFor="titulo"
                       className="font-size-4 text-black-2 font-weight-semibold line-height-reset"
                     >
-                      Título
+                      Cargo
                     </label>
                     <input
                       type="text"
