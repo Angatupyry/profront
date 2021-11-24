@@ -22,46 +22,11 @@ const ModalStyled = styled(Modal)`
   } */
 `;
 
-const sexo = [
-  { value: "F", label: "Femenino" },
-  { value: "M", label: "Masculino" },
-];
-
-const meses = [
-  { value: "1", label: "Enero" },
-  { value: "2", label: "Febrero" },
-  { value: "3", label: "Marzo" },
-  { value: "4", label: "Abril" },
-  { value: "5", label: "Mayo" },
-  { value: "6", label: "Junio" },
-  { value: "7", label: "Julio" },
-  { value: "8", label: "Agosto" },
-  { value: "9", label: "Setiembre" },
-  { value: "10", label: "Octubre" },
-  { value: "11", label: "Noviembre" },
-  { value: "12", label: "Diciembre" },
-];
-
-const anhos = [
-  { value: "2021", label: "2021" },
-  { value: "2022", label: "2022" },
-  { value: "2023", label: "2023" },
-  { value: "2024", label: "2024" },
-  { value: "2025", label: "2025" },
-  { value: "2026", label: "2026" },
-  { value: "2027", label: "2027" },
-  { value: "2028", label: "2028" },
-  { value: "2029", label: "2029" },
-  { value: "2030", label: "2030" },
-];
-
 const servicio_modalidad = [{ value: "1", label: "Presencial" }];
 const servicio_tipo = [{ value: "1", label: "Por hora" }];
 
 const ModalAddService = (props) => {
   const serviceArray = [];
-  const [showPassFirst, setShowPassFirst] = useState(true);
-  const [showPassSecond, setShowPassSecond] = useState(true);
   const [serviceData, setServiceData] = useState({
     servicio: "",
     servicio_label: "",
@@ -77,8 +42,6 @@ const ModalAddService = (props) => {
     error: null,
   });
   const [service, setService] = useState(null);
-  const [servicesToInsert, setServicesToInsert] = useState([]);
-
   const gContext = useContext(GlobalContext);
   const handleClose = () => {
     gContext.toggleAddServiceModal();
@@ -124,17 +87,6 @@ const ModalAddService = (props) => {
       setState({ loading: false, error: error });
     }
   }
-
-  // const addService = (e) => {
-  //   e.preventDefault();
-  //   console.log(servicesToInsert);
-  //   const newServices = [...servicesToInsert, serviceData];
-  //   // //let arr = [];
-  //   // newServices = { ...newServices, state };
-  //   setServicesToInsert(newServices);
-  //   handleClose();
-  //   //console.log(newServices);
-  // };
 
   const handleChange = (e) => {
     const newState = { ...serviceData };
@@ -261,7 +213,7 @@ const ModalAddService = (props) => {
                           Servicio tipo
                         </label>
                         <Select
-                          options={meses}
+                          options={servicio_tipo}
                           className="form-control pl-0 arrow-3 w-100 font-size-4 d-flex align-items-center w-100 "
                           border={false}
                           value={{
@@ -281,7 +233,7 @@ const ModalAddService = (props) => {
                           Servicio modalidad
                         </label>
                         <Select
-                          options={meses}
+                          options={servicio_tipo}
                           className="form-control pl-0 arrow-3 w-100 font-size-4 d-flex align-items-center w-100 "
                           border={false}
                           id="sex"

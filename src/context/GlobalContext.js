@@ -15,7 +15,7 @@ const GlobalProvider = ({ children }) => {
   const [confirmationModalVisible, setConfirmationModalVisible] =
     useState(false);
   const [valorationModalVisible, setValorationModalVisible] = useState(false);
-  const [addStudiesModalVisible, setAddStudiesModalVisible] = useState(false);
+  const [addStudyModalVisible, setAddStudyModalVisible] = useState(false);
   const [addWorkExperienceModalVisible, setAddWorkExperienceModalVisible] =
     useState(false);
   const [addServiceModalVisible, setAddServiceModalVisible] = useState(false);
@@ -24,6 +24,9 @@ const GlobalProvider = ({ children }) => {
   const [updatePaymentModalVisible, setUpdatePaymentModalVisible] =
     useState(false);
   const [editServiceModalVisible, setEditServiceModalVisible] = useState(false);
+  const [editJobExperienceModalVisible, setEditJobExperienceModalVisible] =
+    useState(false);
+  const [editStudyModalVisible, setEditStudyModalVisible] = useState(false);
   const [header, setHeader] = useState({
     theme: "light",
     bgClass: "default",
@@ -93,8 +96,8 @@ const GlobalProvider = ({ children }) => {
     setValorationModalVisible(!valorationModalVisible);
   };
 
-  const toggleAddStudiesModal = () => {
-    setAddStudiesModalVisible(!addStudiesModalVisible);
+  const toggleAddStudyModal = () => {
+    setAddStudyModalVisible(!addStudyModalVisible);
   };
 
   const toggleAddWorkExperienceModal = () => {
@@ -115,6 +118,14 @@ const GlobalProvider = ({ children }) => {
 
   const toggleEditServiceModal = () => {
     setEditServiceModalVisible(!editServiceModalVisible);
+  };
+
+  const toggleEditJobExperienceModal = () => {
+    setEditJobExperienceModalVisible(!editJobExperienceModalVisible);
+  };
+
+  const toggleEditStudyModal = () => {
+    setEditStudyModalVisible(!editStudyModalVisible);
   };
 
   return (
@@ -152,8 +163,8 @@ const GlobalProvider = ({ children }) => {
         valorationModalVisible,
         userId,
         setUserId,
-        toggleAddStudiesModal,
-        addStudiesModalVisible,
+        toggleAddStudyModal,
+        addStudyModalVisible,
         toggleAddWorkExperienceModal,
         addWorkExperienceModalVisible,
         toggleAddServiceModal,
@@ -164,6 +175,10 @@ const GlobalProvider = ({ children }) => {
         updatePaymentModalVisible,
         toggleEditServiceModal,
         editServiceModalVisible,
+        toggleEditJobExperienceModal,
+        editJobExperienceModalVisible,
+        toggleEditStudyModal,
+        editStudyModalVisible,
       }}
     >
       {children}

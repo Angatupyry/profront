@@ -21,7 +21,7 @@ const sexo = [
   { value: "M", label: "Masculino" },
 ];
 
-const ModalAddStudies = (props) => {
+const ModalAddStudy = (props) => {
   const [showPassFirst, setShowPassFirst] = useState(true);
   const [showPassSecond, setShowPassSecond] = useState(true);
   const [state, setState] = useState({
@@ -39,7 +39,7 @@ const ModalAddStudies = (props) => {
 
   const gContext = useContext(GlobalContext);
   const handleClose = () => {
-    gContext.toggleSignUpModal();
+    gContext.toggleAddStudyModal();
   };
 
   const togglePasswordFirst = () => {
@@ -110,8 +110,8 @@ const ModalAddStudies = (props) => {
       {...props}
       size="lg"
       centered
-      show={gContext.addStudiesModalVisible}
-      onHide={gContext.toggleAddStudiesModal}
+      show={gContext.addStudyModalVisible}
+      onHide={gContext.toggleAddStudyModal}
     >
       <Modal.Body className="p-0">
         {state.error && <Error error={state.error} />}
@@ -284,4 +284,4 @@ const ModalAddStudies = (props) => {
   );
 };
 
-export default ModalAddStudies;
+export default ModalAddStudy;

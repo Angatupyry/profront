@@ -42,3 +42,7 @@
     font-weight: bold;
     color: yellow;
   }
+
+  .profileCard {
+    max-width: 260px;
+  }

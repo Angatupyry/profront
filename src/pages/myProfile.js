@@ -10,11 +10,12 @@ import {
   numberFormat,
 } from "../utils/utils";
 import { getUserTypeId, constants } from "../utils";
-import ModalAddStudies from "../components/ModalAddStudies";
+import ModalAddStudy from "../components/ModalAddStudy";
 import GlobalContext from "../context/GlobalContext";
 import ModalAddWorkExperience from "../components/ModalAddWorkExperience";
 import ModalAddService from "../components/ModalAddService";
 import ModalEditService from "../components/ModalEditService";
+import ModalEditJobExperience from "../components/ModalEditJobExperience";
 import UsuarioService from "../services/usuario.service";
 import BuscadorService from "../services/buscador.service";
 import AuthService from "../services/auth.service";
@@ -63,11 +64,22 @@ const MyProfile = () => {
     tarifa: 0,
   });
 
+  const [editJobExperience, setEditJobExperience] = useState({
+    id: "",
+    profesional_id: "",
+    lugar: "",
+    fecha_inicio: "",
+    fecha_fin: "",
+    descripcion: "",
+  });
+
   const [state, setState] = useState({
     loading: true,
     error: null,
     serviceDeleted: false,
     serviceUpdated: false,
+    jobExperienceDeleted: false,
+    jobExperienceUpdated: false,
   });
 
   const [workExperience, setWorkExperience] = useState({
@@ -76,6 +88,12 @@ const MyProfile = () => {
     dateFrom: "",
     dateTo: "",
   });
+
+  const transformDate = (date) => {
+    let jsDate = new Date(date);
+    let options = { year: "numeric", month: "long" };
+    return jsDate.toLocaleDateString("es-ES", options);
+  };
 
   async function updateNeighborhoods(cityId) {
     try {
@@ -185,7 +203,6 @@ const MyProfile = () => {
       );
 
       const studies = await ProfesionalService.getStudies(persona_id);
-      console.log(services.data.data);
       console.log(jobExperiences.data.data);
       console.log(studies.data.data);
 
@@ -197,7 +214,7 @@ const MyProfile = () => {
       setDocType(docTypeArray);
       setNeighborhood(neighborhoodArray);
       setSex({ label: sexLabel, value: sexValue });
-      console.log(personalData.data.data);
+      //console.log(personalData.data.data);
       setPersonalData(personalData.data.data);
       setState({ loading: false, error: null });
     } catch (error) {
@@ -229,7 +246,6 @@ const MyProfile = () => {
     newAddress[e.target.id] = e.target.value;
     newState.persona_direccion[0] = newAddress;
     setPersonalData(newState);
-    console.log(newState);
   };
 
   const handleDocument = (e) => {
@@ -238,7 +254,6 @@ const MyProfile = () => {
     newDocument[e.target.id] = e.target.value;
     newState.persona_documento[0] = newDocument;
     setPersonalData(newState);
-    console.log(newState);
   };
 
   const handleDocumentType = (e) => {
@@ -253,7 +268,6 @@ const MyProfile = () => {
     newDocumentType["abreviatura"] = arr[0].replace(/\s/g, "");
     newState.persona_documento[0].documento_tipo = newDocumentType;
     setPersonalData(newState);
-    console.log(newState);
   };
 
   const handleDepartment = async (e) => {
@@ -338,7 +352,6 @@ const MyProfile = () => {
     newPhone[e.target.id] = e.target.value;
     newState.persona_telefono[0] = newPhone;
     setPersonalData(newState);
-    console.log(newState);
   };
 
   const handleRadioBtn = async (e) => {
@@ -352,7 +365,6 @@ const MyProfile = () => {
     newPhone["celular"] = isCellPhone;
     newState.persona_telefono[0] = newPhone;
     setPersonalData(newState);
-    console.log(newState);
   };
 
   const handleSubmit = async (e) => {
@@ -413,7 +425,6 @@ const MyProfile = () => {
     const newState = { ...personalData };
     newState[e.target.id] = e.target.value;
     setPersonalData(newState);
-    console.log(newState);
   };
 
   const updatePage = () => {
@@ -442,6 +453,25 @@ const MyProfile = () => {
     }
   };
 
+  const deleteJobExperience = async (id) => {
+    setState({ loading: true, error: null });
+    try {
+      const deleteJobExperience = await ProfesionalService.deleteJobExperience(
+        id
+      );
+
+      setState({ loading: false, error: null, jobExperienceDeleted: true });
+      setTimeout(() => {
+        fetchData();
+      }, 2000);
+    } catch (error) {
+      console.log(error);
+      error.message = ERRORMSG;
+      setState({ loading: false, error: error });
+      window.scrollTo(0, 0);
+    }
+  };
+
   const updateService = async (id) => {
     let servicio = services.filter((x) => x.id == id);
     setEditServiceData({
@@ -456,6 +486,20 @@ const MyProfile = () => {
       tarifa: servicio[0].monto_hora,
     });
     gContext.toggleEditServiceModal();
+  };
+
+  const updateJobExperience = async (id) => {
+    let experiencia = jobExperience.filter((x) => x.id == id);
+    setEditJobExperience({
+      id: experiencia[0].id,
+      profesional_id: experiencia[0].usuario.id,
+      lugar: experiencia[0].lugar,
+      fecha_inicio: experiencia[0].fecha_desde,
+      fecha_fin: experiencia[0].fecha_hasta,
+      descripcion: experiencia[0].descripcion,
+    });
+    gContext.toggleEditJobExperienceModal();
+    console.log(experiencia[0].id);
   };
 
   const handleEditSubmit = async (e) => {
@@ -480,6 +524,33 @@ const MyProfile = () => {
       error.message = ERRORMSG;
       setState({ loading: false, error: error });
       window.scrollTo(0, 0);
+      gContext.toggleEditServiceModal();
+    }
+  };
+
+  const handleEditJobExperienceSubmit = async (e) => {
+    e.preventDefault();
+    setState({ loading: true, error: null });
+    try {
+      const updateService = await ProfesionalService.updateJobExperience(
+        editJobExperience.id,
+        editJobExperience.profesional_id,
+        editJobExperience.lugar,
+        editJobExperience.fecha_inicio,
+        editJobExperience.fecha_fin,
+        editJobExperience.descripcion
+      );
+      gContext.toggleEditJobExperienceModal();
+      setState({ loading: false, error: null, jobExperienceUpdated: true });
+      setTimeout(() => {
+        fetchData();
+      }, 2000);
+    } catch (error) {
+      console.log(error);
+      error.message = ERRORMSG;
+      setState({ loading: false, error: error });
+      window.scrollTo(0, 0);
+      gContext.toggleEditJobExperienceModal();
     }
   };
 
@@ -487,6 +558,14 @@ const MyProfile = () => {
     const newState = { ...editServiceData };
     newState[e.target.id] = e.target.value;
     setEditServiceData(newState);
+    console.log(newState);
+  };
+
+  const handleEditJobExperienceChange = (e) => {
+    const newState = { ...editJobExperience };
+    newState[e.target.id] = e.target.value;
+    setEditJobExperience(newState);
+    console.log(newState);
   };
 
   const handleEditService = (e) => {
@@ -499,12 +578,8 @@ const MyProfile = () => {
   if (personalData) {
     return (
       <>
-        <ModalAddStudies />
-        <ModalAddWorkExperience
-          onSubmit={handleSubmit}
-          onChange={handleChange}
-          data={workExperience}
-        />
+        <ModalAddStudy />
+        <ModalAddWorkExperience fetch={updatePage} />
         <ModalAddService fetch={updatePage} />
 
         <ModalEditService
@@ -512,6 +587,12 @@ const MyProfile = () => {
           onSubmit={handleEditSubmit}
           onChange={handleEditChange}
           handleSelect={handleEditService}
+        />
+
+        <ModalEditJobExperience
+          jobData={editJobExperience}
+          onSubmit={handleEditJobExperienceSubmit}
+          onChange={handleEditJobExperienceChange}
         />
 
         <PageWrapper>
@@ -526,6 +607,14 @@ const MyProfile = () => {
                       showSuccessAlert("Servicio eliminado exitosamente.")}
                     {state.serviceUpdated &&
                       showSuccessAlert("Servicio actualizado exitosamente.")}
+                    {state.jobExperienceDeleted &&
+                      showSuccessAlert(
+                        "Experiencia laboral eliminada exitosamente."
+                      )}
+                    {state.jobExperienceUpdated &&
+                      showSuccessAlert(
+                        "Experiencia laboral actualizada exitosamente."
+                      )}
                     {state.error &&
                       showErrorAlert(
                         " Ocurrió un error al actualizar el perfil. Por favor, intente más tarde."
@@ -915,14 +1004,15 @@ const MyProfile = () => {
                             profesionalUserTypeId && (
                             <div>
                               <h4 className="font-size-6 mt-5 text-black-2 font-weight-semibold">
-                                Servicios
+                                Servicios{" "}
+                                <span className="font-size-3">(Máximo: 4)</span>
                               </h4>
                               <div className="row mb-8">
                                 {services.map((servicio) => {
                                   return (
                                     <div className="col-lg-4 mb-xl-0 mb-7 d-flex justify-content-start">
                                       {/* <!-- Start Feature One --> */}
-                                      <div className="bg-white px-8 pt-9 pb-7 rounded-4 mb-9 feature-cardOne-adjustments">
+                                      <div className="bg-white px-8 pt-9 pb-7 rounded-4 mb-9 feature-cardOne-adjustments profileCard">
                                         <h2 className="mt-n4 d-flex justify-content-center">
                                           <Link href="/#">
                                             <a className="font-size-6 text-black-2 font-weight-bold mb-4">
@@ -1016,80 +1106,192 @@ const MyProfile = () => {
                               </div>
 
                               <h4 className="font-size-6 mt-5 text-black-2 font-weight-semibold">
-                                Experiencias laborales
+                                Experiencias laborales{" "}
+                                <span className="font-size-3">(Máximo: 4)</span>
                               </h4>
                               <div className="row mb-8">
-                                <div className="col-lg-4 mb-xl-0 mb-7 d-flex justify-content-start">
-                                  {/* <!-- Start Feature One --> */}
-                                  <div className="bg-white px-8 pt-9 pb-7 rounded-4 mb-9 feature-cardOne-adjustments">
-                                    <Link href="/#">
-                                      <a className="font-size-3 d-block mb-0 text-gray">
-                                        CCPA
-                                      </a>
-                                    </Link>
-                                    <h2 className="mt-n4">
-                                      <Link href="/#">
-                                        <a className="font-size-7 text-black-2 font-weight-bold mb-4">
-                                          Profesor de inglés
-                                        </a>
-                                      </Link>
-                                    </h2>
-                                    <ul className="list-unstyled mb-1 card-tag-list">
-                                      <li>
+                                {jobExperience.map((experiencia) => {
+                                  return (
+                                    <div className="col-lg-4 mb-xl-0 mb-7 d-flex justify-content-start">
+                                      {/* <!-- Start Feature One --> */}
+                                      <div className="bg-white px-8 pt-9 pb-7 rounded-4 mb-9 feature-cardOne-adjustments profileCard">
                                         <Link href="/#">
-                                          <a className="bg-regent-opacity-15 text-eastern font-size-3 rounded-3">
-                                            <i className="fa fa-clock mr-2 font-weight-bold"></i>{" "}
-                                            Marzo 2019 - Agosto 2021
+                                          <a className="font-size-3 d-block mb-0 text-gray">
+                                            {experiencia.lugar}
                                           </a>
                                         </Link>
-                                      </li>
-                                    </ul>
+                                        <h2 className="mt-n4">
+                                          <Link href="/#">
+                                            <a className="font-size-6 text-black-2 font-weight-bold mb-4">
+                                              {experiencia.descripcion}
+                                            </a>
+                                          </Link>
+                                        </h2>
+                                        <ul className="list-unstyled mb-1 card-tag-list">
+                                          <li>
+                                            <Link href="/#">
+                                              <a className="bg-regent-opacity-15 text-eastern font-size-3 rounded-3">
+                                                <i className="fa fa-clock mr-2 font-weight-bold"></i>{" "}
+                                                {transformDate(
+                                                  experiencia.fecha_desde
+                                                )}
+                                                {" - "}
+                                                {transformDate(
+                                                  experiencia.fecha_hasta
+                                                )}
+                                              </a>
+                                            </Link>
+                                          </li>
+                                        </ul>
 
-                                    <div className="card-btn-group mt-7">
+                                        <div className="card-btn-group mt-7">
+                                          <Link href="/#">
+                                            <a
+                                              className="text-green font-weight-bold text-uppercase font-size-3 d-flex align-items-center justify-content-center mx-4"
+                                              onClick={(e) => {
+                                                e.preventDefault();
+                                                updateJobExperience(
+                                                  experiencia.id
+                                                );
+                                              }}
+                                            >
+                                              Editar{" "}
+                                              <i className="fas fa-edit ml-3 mt-n2 font-size-4"></i>
+                                            </a>
+                                          </Link>
+                                          <Link href="/#">
+                                            <a
+                                              className="text-green font-weight-bold text-uppercase font-size-3 d-flex align-items-center justify-content-center mx-4"
+                                              onClick={(e) => {
+                                                e.preventDefault();
+                                                deleteJobExperience(
+                                                  experiencia.id
+                                                );
+                                              }}
+                                            >
+                                              Borrar{" "}
+                                              <i className="fas fa-trash-alt ml-3 mt-n2 font-size-4"></i>
+                                            </a>
+                                          </Link>
+                                        </div>
+                                      </div>
+                                      {/* <!-- End Feature One --> */}
+                                    </div>
+                                  );
+                                })}
+
+                                {jobExperience.length < 4 && (
+                                  <div className="col-lg-4 mb-xl-0 mb-7 d-flex justify-content-start">
+                                    <div className="text-center pt-5 pt-lg-13">
                                       <Link href="/#">
                                         <a
-                                          className="text-green font-weight-bold text-uppercase font-size-3 d-flex align-items-center justify-content-center mx-4"
+                                          className="text-green font-weight-bold text-uppercase font-size-3 d-flex align-items-center justify-content-center"
                                           onClick={(e) => {
                                             e.preventDefault();
                                             gContext.toggleAddWorkExperienceModal();
                                           }}
                                         >
-                                          Editar{" "}
-                                          <i className="fas fa-edit ml-3 mt-n2 font-size-4"></i>
-                                        </a>
-                                      </Link>
-                                      <Link href="/#">
-                                        <a
-                                          className="text-green font-weight-bold text-uppercase font-size-3 d-flex align-items-center justify-content-center mx-4"
-                                          onClick={(e) => {
-                                            e.preventDefault();
-                                            gContext.toggleAddWorkExperienceModal();
-                                          }}
-                                        >
-                                          Borrar{" "}
-                                          <i className="fas fa-trash-alt ml-3 mt-n2 font-size-4"></i>
+                                          Agregar{" "}
+                                          <i className="fas fa-plus ml-3 mt-n2 font-size-4"></i>
                                         </a>
                                       </Link>
                                     </div>
                                   </div>
-                                  {/* <!-- End Feature One --> */}
-                                </div>
-                                <div className="col-lg-4 mb-xl-0 mb-7 d-flex justify-content-start">
-                                  <div className="text-center pt-5 pt-lg-13">
-                                    <Link href="/#">
-                                      <a
-                                        className="text-green font-weight-bold text-uppercase font-size-3 d-flex align-items-center justify-content-center"
-                                        onClick={(e) => {
-                                          e.preventDefault();
-                                          gContext.toggleAddWorkExperienceModal();
-                                        }}
-                                      >
-                                        Agregar{" "}
-                                        <i className="fas fa-plus ml-3 mt-n2 font-size-4"></i>
-                                      </a>
-                                    </Link>
+                                )}
+                              </div>
+
+                              <h4 className="font-size-6 mt-5 text-black-2 font-weight-semibold">
+                                Estudios académicos{" "}
+                                <span className="font-size-3">(Máximo: 4)</span>
+                              </h4>
+                              <div className="row mb-8">
+                                {studies.map((estudio) => {
+                                  return (
+                                    <div className="col-lg-4 mb-xl-0 mb-7 d-flex justify-content-start">
+                                      {/* <!-- Start Feature One --> */}
+                                      <div className="bg-white px-8 pt-9 pb-7 rounded-4 mb-9 feature-cardOne-adjustments profileCard">
+                                        <Link href="/#">
+                                          <a className="font-size-3 d-block mb-0 text-gray">
+                                            {
+                                              estudio.carrera_universitaria
+                                                .universidad.nombre
+                                            }
+                                          </a>
+                                        </Link>
+                                        <h2 className="mt-n4">
+                                          <Link href="/#">
+                                            <a className="font-size-6 text-black-2 font-weight-bold mb-4">
+                                              {estudio.descripcion}
+                                            </a>
+                                          </Link>
+                                        </h2>
+                                        <ul className="list-unstyled mb-1 card-tag-list">
+                                          <li>
+                                            <Link href="/#">
+                                              <a className="bg-regent-opacity-15 text-eastern font-size-3 rounded-3">
+                                                <i className="fa fa-clock mr-2 font-weight-bold"></i>{" "}
+                                                {transformDate(
+                                                  estudio.fecha_desde
+                                                )}
+                                                {" - "}
+                                                {transformDate(
+                                                  estudio.fecha_hasta
+                                                )}
+                                              </a>
+                                            </Link>
+                                          </li>
+                                        </ul>
+
+                                        <div className="card-btn-group mt-7">
+                                          <Link href="/#">
+                                            <a
+                                              className="text-green font-weight-bold text-uppercase font-size-3 d-flex align-items-center justify-content-center mx-4"
+                                              onClick={(e) => {
+                                                e.preventDefault();
+                                                updateStudy(estudio.id);
+                                              }}
+                                            >
+                                              Editar{" "}
+                                              <i className="fas fa-edit ml-3 mt-n2 font-size-4"></i>
+                                            </a>
+                                          </Link>
+                                          <Link href="/#">
+                                            <a
+                                              className="text-green font-weight-bold text-uppercase font-size-3 d-flex align-items-center justify-content-center mx-4"
+                                              onClick={(e) => {
+                                                e.preventDefault();
+                                                deleteStudy(estudio.id);
+                                              }}
+                                            >
+                                              Borrar{" "}
+                                              <i className="fas fa-trash-alt ml-3 mt-n2 font-size-4"></i>
+                                            </a>
+                                          </Link>
+                                        </div>
+                                      </div>
+                                      {/* <!-- End Feature One --> */}
+                                    </div>
+                                  );
+                                })}
+
+                                {studies.length < 4 && (
+                                  <div className="col-lg-4 mb-xl-0 mb-7 d-flex justify-content-start">
+                                    <div className="text-center pt-5 pt-lg-13">
+                                      <Link href="/#">
+                                        <a
+                                          className="text-green font-weight-bold text-uppercase font-size-3 d-flex align-items-center justify-content-center"
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            gContext.toggleAddStudyModal();
+                                          }}
+                                        >
+                                          Agregar{" "}
+                                          <i className="fas fa-plus ml-3 mt-n2 font-size-4"></i>
+                                        </a>
+                                      </Link>
+                                    </div>
                                   </div>
-                                </div>
+                                )}
                               </div>
                             </div>
                           )}
