@@ -47,6 +47,16 @@ class ProfesionalService {
     }
   };
 
+  getCareers = async () => {
+    try {
+      const data = await http.get("/public/carrera_universitaria");
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
   postProfesionalService = async (
     servicio_id,
     profesional_id,
@@ -93,7 +103,7 @@ class ProfesionalService {
 
   postStudies = async (
     descripcion,
-    carrera_universitaria_id,
+    lugar,
     profesional_id,
     certificado_imagen,
     fecha_desde,
@@ -102,7 +112,7 @@ class ProfesionalService {
     try {
       const data = await http.post("/public/estudio_academico", {
         descripcion: descripcion,
-        carrera_universitaria_id: carrera_universitaria_id,
+        lugar: lugar,
         profesional_id: profesional_id,
         certificado_imagen: certificado_imagen,
         fecha_desde: fecha_desde,
@@ -194,7 +204,7 @@ class ProfesionalService {
   updateStudy = async (
     id,
     descripcion,
-    carrera_universitaria_id,
+    lugar,
     profesional_id,
     certificado_imagen,
     fecha_desde,
@@ -203,7 +213,7 @@ class ProfesionalService {
     try {
       const data = await http.put("/public/estudio_academico/" + id, {
         descripcion: descripcion,
-        carrera_universitaria_id: carrera_universitaria_id,
+        lugar: lugar,
         profesional_id: profesional_id,
         certificado_imagen: certificado_imagen,
         fecha_desde: fecha_desde,

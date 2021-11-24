@@ -16,6 +16,7 @@ import ModalAddWorkExperience from "../components/ModalAddWorkExperience";
 import ModalAddService from "../components/ModalAddService";
 import ModalEditService from "../components/ModalEditService";
 import ModalEditJobExperience from "../components/ModalEditJobExperience";
+import ModalEditStudy from "../components/ModalEditStudy";
 import UsuarioService from "../services/usuario.service";
 import BuscadorService from "../services/buscador.service";
 import AuthService from "../services/auth.service";
@@ -73,6 +74,15 @@ const MyProfile = () => {
     descripcion: "",
   });
 
+  const [editStudyData, setEditStudyData] = useState({
+    id: "",
+    descripcion: "",
+    lugar: "",
+    profesional_id: "",
+    fecha_desde: "",
+    fecha_hasta: "",
+  });
+
   const [state, setState] = useState({
     loading: true,
     error: null,
@@ -80,6 +90,8 @@ const MyProfile = () => {
     serviceUpdated: false,
     jobExperienceDeleted: false,
     jobExperienceUpdated: false,
+    studyDeleted: false,
+    studyUpdated: false,
   });
 
   const [workExperience, setWorkExperience] = useState({
@@ -203,9 +215,6 @@ const MyProfile = () => {
       );
 
       const studies = await ProfesionalService.getStudies(persona_id);
-      console.log(jobExperiences.data.data);
-      console.log(studies.data.data);
-
       setServices(services.data.data);
       setJobExperience(jobExperiences.data.data);
       setStudies(studies.data.data);
@@ -214,7 +223,6 @@ const MyProfile = () => {
       setDocType(docTypeArray);
       setNeighborhood(neighborhoodArray);
       setSex({ label: sexLabel, value: sexValue });
-      //console.log(personalData.data.data);
       setPersonalData(personalData.data.data);
       setState({ loading: false, error: null });
     } catch (error) {
@@ -472,6 +480,23 @@ const MyProfile = () => {
     }
   };
 
+  const deleteStudy = async (id) => {
+    setState({ loading: true, error: null });
+    try {
+      const deleteStudy = await ProfesionalService.deleteStudy(id);
+
+      setState({ loading: false, error: null, studyDeleted: true });
+      setTimeout(() => {
+        fetchData();
+      }, 2000);
+    } catch (error) {
+      console.log(error);
+      error.message = ERRORMSG;
+      setState({ loading: false, error: error });
+      window.scrollTo(0, 0);
+    }
+  };
+
   const updateService = async (id) => {
     let servicio = services.filter((x) => x.id == id);
     setEditServiceData({
@@ -499,7 +524,19 @@ const MyProfile = () => {
       descripcion: experiencia[0].descripcion,
     });
     gContext.toggleEditJobExperienceModal();
-    console.log(experiencia[0].id);
+  };
+
+  const updateStudy = async (id) => {
+    let estudio = studies.filter((x) => x.id == id);
+    setEditStudyData({
+      id: estudio[0].id,
+      descripcion: estudio[0].descripcion,
+      lugar: estudio[0].lugar,
+      profesional_id: estudio[0].profesional.id,
+      fecha_desde: estudio[0].fecha_desde,
+      fecha_hasta: estudio[0].fecha_hasta,
+    });
+    gContext.toggleEditStudyModal();
   };
 
   const handleEditSubmit = async (e) => {
@@ -525,6 +562,33 @@ const MyProfile = () => {
       setState({ loading: false, error: error });
       window.scrollTo(0, 0);
       gContext.toggleEditServiceModal();
+    }
+  };
+
+  const handleEditStudySubmit = async (e) => {
+    e.preventDefault();
+    setState({ loading: true, error: null });
+    try {
+      const updateStudy = await ProfesionalService.updateStudy(
+        editStudyData.id,
+        editStudyData.descripcion,
+        editStudyData.lugar,
+        editStudyData.profesional_id,
+        null,
+        editStudyData.fecha_desde,
+        editStudyData.fecha_hasta
+      );
+      gContext.toggleEditStudyModal();
+      setState({ loading: false, error: null, studyUpdated: true });
+      setTimeout(() => {
+        fetchData();
+      }, 2000);
+    } catch (error) {
+      console.log(error);
+      error.message = ERRORMSG;
+      setState({ loading: false, error: error });
+      window.scrollTo(0, 0);
+      gContext.toggleEditStudyModal();
     }
   };
 
@@ -561,6 +625,13 @@ const MyProfile = () => {
     console.log(newState);
   };
 
+  const handleEditStudyChange = (e) => {
+    const newState = { ...editStudyData };
+    newState[e.target.id] = e.target.value;
+    setEditStudyData(newState);
+    console.log(newState);
+  };
+
   const handleEditJobExperienceChange = (e) => {
     const newState = { ...editJobExperience };
     newState[e.target.id] = e.target.value;
@@ -578,7 +649,7 @@ const MyProfile = () => {
   if (personalData) {
     return (
       <>
-        <ModalAddStudy />
+        <ModalAddStudy fetch={updatePage} />
         <ModalAddWorkExperience fetch={updatePage} />
         <ModalAddService fetch={updatePage} />
 
@@ -593,6 +664,12 @@ const MyProfile = () => {
           jobData={editJobExperience}
           onSubmit={handleEditJobExperienceSubmit}
           onChange={handleEditJobExperienceChange}
+        />
+
+        <ModalEditStudy
+          studyData={editStudyData}
+          onSubmit={handleEditStudySubmit}
+          onChange={handleEditStudyChange}
         />
 
         <PageWrapper>
@@ -614,6 +691,14 @@ const MyProfile = () => {
                     {state.jobExperienceUpdated &&
                       showSuccessAlert(
                         "Experiencia laboral actualizada exitosamente."
+                      )}
+                    {state.studyDeleted &&
+                      showSuccessAlert(
+                        "Estudio académico eliminado exitosamente."
+                      )}
+                    {state.studyUpdated &&
+                      showSuccessAlert(
+                        "Estudio académico actualizado exitosamente."
                       )}
                     {state.error &&
                       showErrorAlert(
@@ -1212,10 +1297,7 @@ const MyProfile = () => {
                                       <div className="bg-white px-8 pt-9 pb-7 rounded-4 mb-9 feature-cardOne-adjustments profileCard">
                                         <Link href="/#">
                                           <a className="font-size-3 d-block mb-0 text-gray">
-                                            {
-                                              estudio.carrera_universitaria
-                                                .universidad.nombre
-                                            }
+                                            {estudio.lugar}
                                           </a>
                                         </Link>
                                         <h2 className="mt-n4">

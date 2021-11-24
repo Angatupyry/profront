@@ -10,8 +10,9 @@ import {
   showSuccessAlert,
   showWarningAlert,
 } from "../../utils/utils";
-import Cookies from "js-cookie";
+import BuscadorService from "../../services/buscador.service";
 import ProfesionalService from "../../services/profesional.service";
+import Cookies from "js-cookie";
 
 const ERRORMSG =
   "Lo sentimos. Ha ocurrido un error, por favor intente más tarde.";
@@ -21,97 +22,40 @@ const ModalStyled = styled(Modal)`
   } */
 `;
 
-const sexo = [
-  { value: "F", label: "Femenino" },
-  { value: "M", label: "Masculino" },
-];
+const servicio_modalidad = [{ value: "1", label: "Presencial" }];
+const servicio_tipo = [{ value: "1", label: "Por hora" }];
 
-const meses = [
-  { value: "1", label: "Enero" },
-  { value: "2", label: "Febrero" },
-  { value: "3", label: "Marzo" },
-  { value: "4", label: "Abril" },
-  { value: "5", label: "Mayo" },
-  { value: "6", label: "Junio" },
-  { value: "7", label: "Julio" },
-  { value: "8", label: "Agosto" },
-  { value: "9", label: "Setiembre" },
-  { value: "10", label: "Octubre" },
-  { value: "11", label: "Noviembre" },
-  { value: "12", label: "Diciembre" },
-];
-
-const anhos = [
-  { value: "2021", label: "2021" },
-  { value: "2022", label: "2022" },
-  { value: "2023", label: "2023" },
-  { value: "2024", label: "2024" },
-  { value: "2025", label: "2025" },
-  { value: "2026", label: "2026" },
-  { value: "2027", label: "2027" },
-  { value: "2028", label: "2028" },
-  { value: "2029", label: "2029" },
-  { value: "2030", label: "2030" },
-];
-
-const getTodaysdate = (e) => {
-  var today = new Date();
-  return (
-    today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate()
-  );
-};
-
-const getAYearFromNowDate = (e) => {
-  var date = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
-  return (
-    date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
-  );
-};
-
-const ModalAddStudy = (props) => {
-  const carreraArray = [];
-  const [studyData, setStudyData] = useState({
-    descripcion: "",
-    carrera_universitaria: "",
-    carrera_universitaria_label: "",
-    profesional_id: "",
-    fecha_desde: "",
-    fecha_hasta: "",
-    lugar: "",
-  });
+const ModalEditStudy = (props) => {
+  const serviceArray = [];
   const [state, setState] = useState({
     loading: true,
     error: null,
   });
-  const [carrera, setCarrera] = useState(null);
-
+  const [service, setService] = useState(null);
   const gContext = useContext(GlobalContext);
   const handleClose = () => {
-    gContext.toggleAddStudyModal();
+    gContext.toggleEditStudyModal();
   };
 
-  const fetch = () => {
-    props.fetch();
+  const handleService = (e) => {
+    const newState = { ...serviceData };
+    newState["servicio"] = e.value;
+    newState["servicio_label"] = e.label;
+    setServiceData(newState);
   };
 
   async function fetchData() {
     scrollToTop();
     setState({ loading: true, error: null });
     try {
-      const carreras = await ProfesionalService.getCareers();
-      carreras.data.data.forEach((element) => {
-        carreraArray.push({
+      const servicios = await BuscadorService.getServices();
+      servicios.data.data.forEach((element) => {
+        serviceArray.push({
           value: element.id.toString(),
           label: element.descripcion,
         });
       });
-      setCarrera(carreraArray);
-      setStudyData({
-        carrera_universitaria: carreraArray[0].value,
-        carrera_universitaria_label: carreraArray[0].label,
-        fecha_desde: getTodaysdate(),
-        fecha_hasta: getAYearFromNowDate(),
-      });
+      setService(serviceArray);
       setState({
         loading: false,
         error: null,
@@ -122,68 +66,25 @@ const ModalAddStudy = (props) => {
     }
   }
 
-  const handleChange = (e) => {
-    const newState = { ...studyData };
-    newState[e.target.id] = e.target.value;
-    setStudyData(newState);
-    console.log(newState);
-  };
-
-  const handleCareer = (e) => {
-    const newState = { ...studyData };
-    newState["carrera_universitaria"] = e.value;
-    newState["carrera_universitaria_label"] = e.label;
-    setStudyData(newState);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setState({ loading: true, error: null });
-    try {
-      let persona_id = JSON.parse(Cookies.get("user")).persona_id;
-      const response = await ProfesionalService.postStudies(
-        studyData.descripcion,
-        studyData.lugar,
-        persona_id,
-        studyData.fecha_desde,
-        studyData.fecha_hasta
-      );
-      setState({
-        loading: false,
-        error: null,
-        success: true,
-      });
-
-      fetch();
-
-      setTimeout(() => {
-        handleClose();
-      }, 2000);
-    } catch (error) {
-      scrollToTop();
-      console.log(error);
-      setState({ loading: false, error: error });
-    }
-  };
-
   useEffect(() => {
-    if (carrera == undefined || carrera == null) {
+    if (service == undefined || service == null) {
       fetchData();
     }
-  }, [carrera]);
+  }, [service]);
 
   return (
     <ModalStyled
       {...props}
       size="lg"
       centered
-      show={gContext.addStudyModalVisible}
-      onHide={gContext.toggleAddStudyModal}
+      show={gContext.editStudyModalVisible}
+      onHide={gContext.toggleEditStudyModal}
     >
       <Modal.Body className="p-0">
         {state.error && <Error error={state.error} />}
-        {state.success &&
-          showSuccessAlert("Estudio académico agregado exitosamente.")}
+        {state.fieldsIncomplete &&
+          showWarningAlert("Por favor complete todos los campos.")}
+        {state.success && showSuccessAlert("Servicio agregado exitosamente.")}
         <button
           type="button"
           className="circle-32 btn-reset bg-white pos-abs-tr mt-n6 mr-lg-n6 focus-reset shadow-10"
@@ -196,9 +97,9 @@ const ModalAddStudy = (props) => {
             <div className="col-lg-12 col-md-12">
               <div className="bg-white-2 h-100 px-11 pt-11 pb-7">
                 <h4 className="font-size-6 mb-7 mt-5 text-black-2 font-weight-semibold">
-                  Estudio académico
+                  Editar servicio
                 </h4>
-                <form action="/" onSubmit={handleSubmit}>
+                <form action="/" onSubmit={props.onSubmit}>
                   <div className="form-group">
                     <label
                       htmlFor="descripcion"
@@ -211,8 +112,8 @@ const ModalAddStudy = (props) => {
                       className="form-control"
                       placeholder="ej. Lic en lengua portuguesa"
                       id="descripcion"
-                      value={studyData.descripcion}
-                      onChange={handleChange}
+                      value={props.studyData.descripcion}
+                      onChange={props.onChange}
                     />
                   </div>
                   <div className="form-group">
@@ -227,8 +128,8 @@ const ModalAddStudy = (props) => {
                       className="form-control"
                       placeholder="ej. Universidad Nacional de Asunción"
                       id="lugar"
-                      value={studyData.lugar}
-                      onChange={handleChange}
+                      value={props.studyData.lugar}
+                      onChange={props.onChange}
                     />
                   </div>
 
@@ -248,8 +149,8 @@ const ModalAddStudy = (props) => {
                               className="form-control"
                               placeholder="Ingrese su fecha de nacimiento"
                               id="fecha_desde"
-                              value={studyData.fecha_desde}
-                              onChange={handleChange}
+                              value={props.studyData.fecha_desde}
+                              onChange={props.onChange}
                               autoComplete="off"
                             />
                           </div>
@@ -272,8 +173,8 @@ const ModalAddStudy = (props) => {
                               className="form-control"
                               placeholder="Ingrese su fecha de nacimiento"
                               id="fecha_hasta"
-                              value={studyData.fecha_hasta}
-                              onChange={handleChange}
+                              value={props.studyData.fecha_hasta}
+                              onChange={props.onChange}
                               autoComplete="off"
                             />
                           </div>
@@ -301,4 +202,4 @@ const ModalAddStudy = (props) => {
   );
 };
 
-export default ModalAddStudy;
+export default ModalEditStudy;

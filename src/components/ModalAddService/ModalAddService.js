@@ -128,7 +128,7 @@ const ModalAddService = (props) => {
   };
 
   useEffect(() => {
-    if (service == undefined || null) {
+    if (service == undefined || service == null) {
       fetchData();
     }
   }, [service]);
