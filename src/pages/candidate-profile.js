@@ -142,6 +142,10 @@ const CandidateProfile = () => {
                                               {transformDate(
                                                 experiencia.fecha_desde
                                               )}
+                                              {" - "}
+                                              {transformDate(
+                                                experiencia.fecha_hasta
+                                              )}
                                             </a>
                                           </Link>
                                         </div>
@@ -159,6 +163,10 @@ const CandidateProfile = () => {
                               Educación
                             </h4>
                             {dataResult.estudio_academico.map((educacion) => {
+                              let hola =
+                                educacion.carrera_universitaria != null
+                                  ? "hola"
+                                  : "chau";
                               return (
                                 <div className="w-100">
                                   <div className="d-flex align-items-center pr-11 mb-9 flex-wrap flex-sm-nowrap">
@@ -172,10 +180,11 @@ const CandidateProfile = () => {
                                       </h3>
                                       <Link href="/#">
                                         <a className="font-size-4 text-default-color line-height-2">
-                                          {
-                                            educacion.carrera_universitaria
-                                              .universidad.nombre
-                                          }
+                                          {educacion.carrera_universitaria !=
+                                          null
+                                            ? educacion.carrera_universitaria
+                                                .universidad.nombre
+                                            : educacion.lugar}
                                         </a>
                                       </Link>
                                       <div className="d-flex align-items-center justify-content-md-between flex-wrap">
@@ -243,6 +252,12 @@ const CandidateProfile = () => {
                                   </div>
                                 );
                               }
+                            )}
+
+                            {dataResult.comentario_profesional.length == 0 && (
+                              <div>
+                                Este profesional aún no posee valoraciones
+                              </div>
                             )}
                           </div>
                           {/* <!-- Card Section End --> */}

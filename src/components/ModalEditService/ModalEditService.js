@@ -25,18 +25,8 @@ const ModalStyled = styled(Modal)`
 const servicio_modalidad = [{ value: "1", label: "Presencial" }];
 const servicio_tipo = [{ value: "1", label: "Por hora" }];
 
-const ModalAddService = (props) => {
+const ModalEditService = (props) => {
   const serviceArray = [];
-  const [serviceData, setServiceData] = useState({
-    servicio: "",
-    servicio_label: "",
-    servicio_modalidad: "",
-    servicio_modalidad_label: "",
-    servicio_tipo: "",
-    servicio_tipo_label: "",
-    tarifa: 0,
-    accion: "post",
-  });
   const [state, setState] = useState({
     loading: true,
     error: null,
@@ -44,11 +34,7 @@ const ModalAddService = (props) => {
   const [service, setService] = useState(null);
   const gContext = useContext(GlobalContext);
   const handleClose = () => {
-    gContext.toggleAddServiceModal();
-  };
-
-  const fetch = () => {
-    props.fetch();
+    gContext.toggleEditServiceModal();
   };
 
   const handleService = (e) => {
@@ -70,14 +56,6 @@ const ModalAddService = (props) => {
         });
       });
       setService(serviceArray);
-      setServiceData({
-        servicio_label: serviceArray[0].label,
-        servicio: serviceArray[0].value,
-        servicio_modalidad: servicio_modalidad[0].value,
-        servicio_modalidad_label: servicio_modalidad[0].label,
-        servicio_tipo: servicio_tipo[0].value,
-        servicio_tipo_label: servicio_tipo[0].label,
-      });
       setState({
         loading: false,
         error: null,
@@ -87,46 +65,6 @@ const ModalAddService = (props) => {
       setState({ loading: false, error: error });
     }
   }
-
-  const handleChange = (e) => {
-    const newState = { ...serviceData };
-    newState[e.target.id] = e.target.value;
-    newState["accion"] = "post";
-    setServiceData(newState);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setState({ loading: true, error: null });
-    try {
-      let cliente_id = JSON.parse(Cookies.get("user")).id;
-      let persona_id = JSON.parse(Cookies.get("user")).persona_id;
-      const response = await ProfesionalService.postProfesionalService(
-        serviceData.servicio,
-        cliente_id,
-        serviceData.tarifa,
-        serviceData.servicio_tipo,
-        serviceData.servicio_modalidad
-      );
-      console.log(response);
-      scrollToTop();
-      setState({
-        loading: false,
-        error: null,
-        success: true,
-      });
-
-      fetch();
-
-      setTimeout(() => {
-        handleClose();
-      }, 2000);
-    } catch (error) {
-      scrollToTop();
-      console.log(error);
-      setState({ loading: false, error: error });
-    }
-  };
 
   useEffect(() => {
     if (service == undefined || service == null) {
@@ -139,8 +77,8 @@ const ModalAddService = (props) => {
       {...props}
       size="lg"
       centered
-      show={gContext.addServiceModalVisible}
-      onHide={gContext.toggleAddServiceModal}
+      show={gContext.editServiceModalVisible}
+      onHide={gContext.toggleEditServiceModal}
     >
       <Modal.Body className="p-0">
         {state.error && <Error error={state.error} />}
@@ -159,9 +97,9 @@ const ModalAddService = (props) => {
             <div className="col-lg-12 col-md-12">
               <div className="bg-white-2 h-100 px-11 pt-11 pb-7">
                 <h4 className="font-size-6 mb-7 mt-5 text-black-2 font-weight-semibold">
-                  Servicio
+                  Editar servicio
                 </h4>
-                <form action="/" onSubmit={handleSubmit}>
+                <form action="/" onSubmit={props.onSubmit}>
                   <div className="row">
                     <div className="col-6">
                       <div className="form-group">
@@ -177,10 +115,10 @@ const ModalAddService = (props) => {
                           border={false}
                           id="servicio"
                           value={{
-                            label: serviceData.servicio_label,
-                            value: serviceData.servicio,
+                            label: props.serviceData.servicio_label,
+                            value: props.serviceData.servicio,
                           }}
-                          onChange={handleService}
+                          onChange={props.handleSelect}
                         />
                       </div>
                     </div>
@@ -198,8 +136,8 @@ const ModalAddService = (props) => {
                           placeholder="ej. 50.000"
                           id="tarifa"
                           autoComplete="off"
-                          value={serviceData.tarifa}
-                          onChange={handleChange}
+                          value={props.serviceData.tarifa}
+                          onChange={props.onChange}
                         />
                       </div>
                     </div>
@@ -218,8 +156,8 @@ const ModalAddService = (props) => {
                           className="form-control pl-0 arrow-3 w-100 font-size-4 d-flex align-items-center w-100 "
                           border={false}
                           value={{
-                            label: serviceData.servicio_tipo_label,
-                            value: serviceData.servicio_tipo,
+                            label: props.serviceData.servicio_tipo_label,
+                            value: props.serviceData.servicio_tipo,
                           }}
                           isDisabled={true}
                         />
@@ -234,13 +172,13 @@ const ModalAddService = (props) => {
                           Servicio modalidad
                         </label>
                         <Select
-                          options={servicio_tipo}
+                          options={servicio_modalidad}
                           className="form-control pl-0 arrow-3 w-100 font-size-4 d-flex align-items-center w-100 "
                           border={false}
                           id="sex"
                           value={{
-                            label: serviceData.servicio_modalidad_label,
-                            value: serviceData.servicio_modalidad,
+                            label: props.serviceData.servicio_modalidad_label,
+                            value: props.serviceData.servicio_modalidad,
                           }}
                           isDisabled={true}
                         />
@@ -254,7 +192,7 @@ const ModalAddService = (props) => {
                           className="btn btn-primary btn-medium w-100 rounded-5 text-uppercase"
                           type="submit"
                         >
-                          Agregar{" "}
+                          Editar{" "}
                         </button>
                       </div>
                     </div>{" "}
@@ -269,4 +207,4 @@ const ModalAddService = (props) => {
   );
 };
 
-export default ModalAddService;
+export default ModalEditService;

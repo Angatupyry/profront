@@ -27,7 +27,7 @@ export const numberFormat = (value) =>
 export const showErrorAlert = (text) => {
   scrollToTop();
   return (
-    <div className="row no-gutters">
+    <div className="row mt-5 no-gutters">
       <div className="col-md-12">
         <div className="alert alert-danger" role="alert">
           {text}
@@ -40,9 +40,22 @@ export const showErrorAlert = (text) => {
 export const showSuccessAlert = (text) => {
   scrollToTop();
   return (
-    <div className="row no-gutters">
+    <div className="row mt-5 no-gutters">
       <div className="col-md-12">
         <div className="alert alert-success" role="alert">
+          {text}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const showWarningAlert = (text) => {
+  scrollToTop();
+  return (
+    <div className="row mt-5 no-gutters">
+      <div className="col-md-12">
+        <div className="alert alert-warning" role="alert">
           {text}
         </div>
       </div>
@@ -148,6 +161,27 @@ export function getNotificationStateId(notification) {
     let notificationStates = JSON.parse(Cookies.get("notificationStates"));
     const res = notificationStates.find(
       (element) => element.nombre.toLowerCase() == notification.toLowerCase()
+    ).id;
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getTransactionTypes() {
+  try {
+    const response = await TransactionService.getTransactionTypes();
+    Cookies.set("transactionTypes", JSON.stringify(response.data.data));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function getTransactionTypeId(transaction) {
+  try {
+    let transactionTypes = JSON.parse(Cookies.get("transactionTypes"));
+    const res = transactionTypes.find(
+      (element) => element.nombre.toLowerCase() == transaction.toLowerCase()
     ).id;
     return res;
   } catch (error) {

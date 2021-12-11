@@ -9,9 +9,7 @@ import TransaccionService from "../services/transaccion.service";
 import { numberFormat } from "../utils/utils";
 import imgM from "../assets/image/WhatsApp_Logo_1.png";
 import imgF1 from "../assets/image/l2/png/featured-job-logo-1.png";
-import iconD from "../assets/image/svg/icon-dolor.svg";
-import iconB from "../assets/image/svg/icon-briefcase.svg";
-import iconL from "../assets/image/svg/icon-location.svg";
+import ModalAddPayment from "../components/ModalAddPayment";
 
 const scrollToTop = () => {
   window.scrollTo({
@@ -78,18 +76,18 @@ const Payment = () => {
     e.preventDefault();
     setState({ loading: true, error: null });
     try {
-      let payment_method = state.payment_method;
-      const response = await TransaccionService.postTransaction(
-        parseInt(id),
-        payment_method
-      );
-      console.log(response);
+      // let payment_method = state.payment_method;
+      // const response = await TransaccionService.postTransaction(
+      //   parseInt(id),
+      //   payment_method
+      // );
+      // console.log(response);
       scrollToTop();
       setState({
         loading: false,
         error: null,
         success: true,
-        payment_method: payment_method,
+        payment_method: "",
       });
     } catch (error) {
       scrollToTop();
@@ -123,6 +121,7 @@ const Payment = () => {
     let servicesText = "";
     return (
       <>
+        <ModalAddPayment />
         <PageWrapper headerConfig={{ button: "profile" }}>
           <div className="jobDetails-section bg-default-1 pt-28 pt-lg-27 pb-xl-25 pb-12">
             <div className="container">
@@ -142,11 +141,12 @@ const Payment = () => {
                 </div>
                 {/* <!-- back Button End --> */}
                 <div className="col-xl-9 col-lg-11 mb-8 px-xxl-15 px-xl-0">
-                  {state.success && state.payment_method == "card" && (
+                  {state.success && (
                     <div className="row no-gutters">
                       <div className="col-md-12">
                         <div className="alert alert-success" role="alert">
-                          Pago realizado exitosamente.
+                          Pago pendiente. Envíe su comprobante de transferencia
+                          para concretar el pago.
                         </div>
                       </div>
                     </div>
@@ -310,6 +310,7 @@ const Payment = () => {
                                 type="radio"
                                 name="payments"
                                 id="card"
+                                disabled="true"
                                 onChange={handlePayments}
                               />
                               <span className="checkbox mr-5"></span>
@@ -449,18 +450,22 @@ const Payment = () => {
                           </div>
                         </div>
                         <div className="row mt-5">
-                          <a
-                            href="https://wa.me/595971500066/?text=¡Hola! Adjunto mi comprobante de pago"
-                            target="_blank"
-                          >
-                            <img src={imgM} width="50" height="50" />
-                          </a>
                           <div className="col-md-12 mb-lg-0 mb-0 mt-5">
                             <span className="font-size-4 font-weight-semibold text-black-2 mb-4">
                               Obs: Envie su comprobante a
-                              transaccion@todoservicio.com para confirmar esta
-                              transacción.
+                              transaccion@todoservicio.com o al siguiente link
+                              de Whatsapp para confirmar esta transacción:
                             </span>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-2">
+                            <a
+                              href="https://wa.me/595971500066/?text=¡Hola! Adjunto mi comprobante de pago"
+                              target="_blank"
+                            >
+                              <img src={imgM} width="35" height="35" />
+                            </a>
                           </div>
                         </div>
                       </div>

@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import styled from "styled-components";
 import { Modal } from "react-bootstrap";
 import GlobalContext from "../../context/GlobalContext";
+import { Select } from "../Core";
 import Error from "../Error/Error";
 import {
   scrollToTop,
@@ -67,32 +68,72 @@ const getAYearFromNowDate = (e) => {
   );
 };
 
-const ModalAddWorkExperience = (props) => {
-  const [jobData, setJobData] = useState({
-    titulo: "",
-    empresa: "",
-    fecha_inicio: getTodaysdate(),
-    fecha_fin: getAYearFromNowDate(),
+const ModalAddStudy = (props) => {
+  const carreraArray = [];
+  const [studyData, setStudyData] = useState({
+    descripcion: "",
+    carrera_universitaria: "",
+    carrera_universitaria_label: "",
+    profesional_id: "",
+    fecha_desde: "",
+    fecha_hasta: "",
+    lugar: "",
   });
   const [state, setState] = useState({
     loading: true,
     error: null,
   });
+  const [carrera, setCarrera] = useState(null);
 
   const gContext = useContext(GlobalContext);
   const handleClose = () => {
-    gContext.toggleAddWorkExperienceModal();
+    gContext.toggleAddStudyModal();
   };
 
   const fetch = () => {
     props.fetch();
   };
 
+  async function fetchData() {
+    scrollToTop();
+    setState({ loading: true, error: null });
+    try {
+      const carreras = await ProfesionalService.getCareers();
+      carreras.data.data.forEach((element) => {
+        carreraArray.push({
+          value: element.id.toString(),
+          label: element.descripcion,
+        });
+      });
+      setCarrera(carreraArray);
+      setStudyData({
+        carrera_universitaria: carreraArray[0].value,
+        carrera_universitaria_label: carreraArray[0].label,
+        fecha_desde: getTodaysdate(),
+        fecha_hasta: getAYearFromNowDate(),
+      });
+      setState({
+        loading: false,
+        error: null,
+      });
+    } catch (error) {
+      console.log(error);
+      setState({ loading: false, error: error });
+    }
+  }
+
   const handleChange = (e) => {
-    const newState = { ...jobData };
+    const newState = { ...studyData };
     newState[e.target.id] = e.target.value;
-    setJobData(newState);
+    setStudyData(newState);
     console.log(newState);
+  };
+
+  const handleCareer = (e) => {
+    const newState = { ...studyData };
+    newState["carrera_universitaria"] = e.value;
+    newState["carrera_universitaria_label"] = e.label;
+    setStudyData(newState);
   };
 
   const handleSubmit = async (e) => {
@@ -100,12 +141,12 @@ const ModalAddWorkExperience = (props) => {
     setState({ loading: true, error: null });
     try {
       let cliente_id = JSON.parse(Cookies.get("user")).id;
-      const response = await ProfesionalService.postJobExperiences(
+      const response = await ProfesionalService.postStudies(
+        studyData.descripcion,
+        studyData.lugar,
         cliente_id,
-        jobData.empresa,
-        jobData.fecha_inicio,
-        jobData.fecha_fin,
-        jobData.titulo
+        studyData.fecha_desde,
+        studyData.fecha_hasta
       );
       setState({
         loading: false,
@@ -121,27 +162,28 @@ const ModalAddWorkExperience = (props) => {
     } catch (error) {
       scrollToTop();
       console.log(error);
-      error.message = ERRORMSG;
       setState({ loading: false, error: error });
     }
   };
 
   useEffect(() => {
-    setState({ loading: false, error: null });
-  }, []);
+    if (carrera == undefined || carrera == null) {
+      fetchData();
+    }
+  }, [carrera]);
 
   return (
     <ModalStyled
       {...props}
       size="lg"
       centered
-      show={gContext.addWorkExperienceModalVisible}
-      onHide={gContext.toggleAddWorkExperienceModal}
+      show={gContext.addStudyModalVisible}
+      onHide={gContext.toggleAddStudyModal}
     >
       <Modal.Body className="p-0">
         {state.error && <Error error={state.error} />}
         {state.success &&
-          showSuccessAlert("Experiencia laboral agregada exitosamente.")}
+          showSuccessAlert("Estudio académico agregado exitosamente.")}
         <button
           type="button"
           className="circle-32 btn-reset bg-white pos-abs-tr mt-n6 mr-lg-n6 focus-reset shadow-10"
@@ -154,38 +196,38 @@ const ModalAddWorkExperience = (props) => {
             <div className="col-lg-12 col-md-12">
               <div className="bg-white-2 h-100 px-11 pt-11 pb-7">
                 <h4 className="font-size-6 mb-7 mt-5 text-black-2 font-weight-semibold">
-                  Experiencia laboral
+                  Estudio académico
                 </h4>
                 <form action="/" onSubmit={handleSubmit}>
                   <div className="form-group">
                     <label
-                      htmlFor="titulo"
+                      htmlFor="descripcion"
                       className="font-size-4 text-black-2 font-weight-semibold line-height-reset"
                     >
-                      Cargo
+                      Título
                     </label>
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="ej.Profesor"
-                      id="titulo"
-                      value={jobData.titulo}
+                      placeholder="ej. Lic en lengua portuguesa"
+                      id="descripcion"
+                      value={studyData.descripcion}
                       onChange={handleChange}
                     />
                   </div>
                   <div className="form-group">
                     <label
-                      htmlFor="empresa"
+                      htmlFor="lugar"
                       className="font-size-4 text-black-2 font-weight-semibold line-height-reset"
                     >
-                      Empresa
+                      Lugar de estudio
                     </label>
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="ej.Empresa XXX"
-                      id="empresa"
-                      value={jobData.empresa}
+                      placeholder="ej. Universidad Nacional de Asunción"
+                      id="lugar"
+                      value={studyData.lugar}
                       onChange={handleChange}
                     />
                   </div>
@@ -196,7 +238,7 @@ const ModalAddWorkExperience = (props) => {
                         <div className="col-12 p-0 pr-2">
                           <div className="form-group">
                             <label
-                              htmlFor="fecha_inicio"
+                              htmlFor="fecha_desde"
                               className="font-size-4 text-black-2 font-weight-semibold line-height-reset"
                             >
                               Fecha inicio (mm/dd/yyyy)
@@ -205,8 +247,8 @@ const ModalAddWorkExperience = (props) => {
                               type="date"
                               className="form-control"
                               placeholder="Ingrese su fecha de nacimiento"
-                              id="fecha_inicio"
-                              value={jobData.fecha_inicio}
+                              id="fecha_desde"
+                              value={studyData.fecha_desde}
                               onChange={handleChange}
                               autoComplete="off"
                             />
@@ -220,7 +262,7 @@ const ModalAddWorkExperience = (props) => {
                         <div className="col-12 p-0 pr-2">
                           <div className="form-group">
                             <label
-                              htmlFor="fecha_fin"
+                              htmlFor="fecha_hasta"
                               className="font-size-4 text-black-2 font-weight-semibold line-height-reset"
                             >
                               Fecha fin (mm/dd/yyyy)
@@ -229,8 +271,8 @@ const ModalAddWorkExperience = (props) => {
                               type="date"
                               className="form-control"
                               placeholder="Ingrese su fecha de nacimiento"
-                              id="fecha_fin"
-                              value={jobData.fecha_fin}
+                              id="fecha_hasta"
+                              value={studyData.fecha_hasta}
                               onChange={handleChange}
                               autoComplete="off"
                             />
@@ -259,4 +301,4 @@ const ModalAddWorkExperience = (props) => {
   );
 };
 
-export default ModalAddWorkExperience;
+export default ModalAddStudy;

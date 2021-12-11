@@ -11,13 +11,27 @@ import {
   getTransactionStates,
   getUserTypeId,
   constants,
+  getTransactionTypes,
 } from "../../utils";
+
+import {
+  scrollToTop,
+  isEmpty,
+  showErrorAlert,
+  showSuccessAlert,
+  showWarningAlert,
+} from "../../utils/utils";
 
 const ModalStyled = styled(Modal)`
   /* &.modal {
     z-index: 10050;
   } */
 `;
+
+const INCORRECTPASSMSG = "Contraseña incorrecta. Por favor, intente de nuevo.";
+
+const ERRORMSG =
+  "Lo sentimos. Ha ocurrido un error, por favor intente más tarde.";
 
 const ModalSignIn = (props) => {
   const [showPass, setShowPass] = useState(true);
@@ -47,17 +61,33 @@ const ModalSignIn = (props) => {
       console.log(response.data);
       Cookies.set("token", JSON.stringify(response.data.token));
       Cookies.set("user", JSON.stringify(response.data.user));
+      console.log(response.data.user);
       getUserType();
       getTransactionStates();
+      getTransactionTypes();
       let adminUserTypeId = getUserTypeId(constants.CLIENT_TYPE.ADMINISTRADOR);
       if (response.data.user.usuario_tipo_id == adminUserTypeId) {
         console.log("soy admin");
         Router.push("/dashboard-admin");
       }
-      handleClose();
+      setState({ loading: false, error: null, success: true });
+      setTimeout(() => {
+        handleClose();
+        setState({ loading: false, error: null, success: false });
+      }, 2000);
     } catch (error) {
       console.log(error);
+      if (error.response.status == 401) {
+        error.message = INCORRECTPASSMSG;
+      } else {
+        error.message = ERRORMSG;
+      }
+
       setState({ loading: false, error: error });
+      setTimeout(() => {
+        handleClose();
+        setState({ loading: false, error: null, success: false });
+      }, 2000);
     }
   };
 
@@ -77,7 +107,8 @@ const ModalSignIn = (props) => {
         onHide={gContext.toggleSignInModal}
       >
         <Modal.Body className="p-0">
-          {/* {state.error && <Error error={state.error} />} */}
+          {state.success && showSuccessAlert("Inicio de sesión exitoso.")}
+          {state.error && <Error error={state.error} />}
           <button
             type="button"
             className="circle-32 btn-reset bg-white pos-abs-tr mt-md-n6 mr-lg-n6 focus-reset z-index-supper"

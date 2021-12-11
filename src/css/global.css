@@ -29,3 +29,20 @@
   .notification-dropdown .dropdown-item {
     border-bottom: 1px solid #e5e5e5;
   }
+
+  .pagination {
+   justify-content: center;
+  }
+
+  .pagination li{
+    padding: 16px 8px;
+   }
+
+  .pagination .active {
+    font-weight: bold;
+    color: yellow;
+  }
+
+  .profileCard {
+    max-width: 260px;
+  }

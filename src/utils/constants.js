@@ -24,4 +24,8 @@ export const constants = {
     LEIDO: "LEÍDO",
     NO_LEIDO: "NO LEÍDO",
   },
+  TRANSACTION_TYPE: {
+    CONSULTA: "CONSULTA",
+    PAGO: "PAGO",
+  },
 };

@@ -72,7 +72,9 @@ const Sidebar = (props) => {
                 <div className="col-md-12 text-center pt-2 pt-md-5 px-0 pb-5">
                   <div className="media justify-content-md-center">
                     <p className="font-weight-bold font-size-4 text-hit-gray mb-0">
-                      <span className="text-black-2">{data.promedio}</span>{" "}
+                      <span className="text-black-2">
+                        {data.promedio != null ? data.promedio.toFixed(2) : 0}
+                      </span>{" "}
                     </p>
                     <div className="image mr-5 ml-2">
                       <img src={imgF} alt="" />

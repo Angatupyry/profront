@@ -1,7 +1,7 @@
 import http from "./http-common";
 import privateRoute from "./protected-routes";
 import Cookies from "js-cookie";
-import { constants, getTransactionStateId } from "../utils";
+import { constants, getTransactionStateId, getUserTypeId } from "../utils";
 
 class TransaccionService {
   getSolicitation = async (id) => {
@@ -62,15 +62,23 @@ class TransaccionService {
     }
   };
 
-  getTransactionList = async (id, clientUserTypeId) => {
+  getTransactionList = async (id, userTypeId, page) => {
     try {
-      if (JSON.parse(Cookies.get("user")).usuario_tipo_id == clientUserTypeId) {
-        const data = await http.get("/public/transaccion?cliente__id=" + id);
-        return data;
+      let clientUserTypeId = getUserTypeId(constants.CLIENT_TYPE.CLIENTE);
+      if (id) {
+        if (userTypeId == clientUserTypeId) {
+          const data = await http.get(
+            "/public/transaccion?cliente__id=" + id + "&pagina=" + page
+          );
+          return data;
+        } else {
+          const data = await http.get(
+            "/public/transaccion?profesional__id=" + id + "&pagina=" + page
+          );
+          return data;
+        }
       } else {
-        const data = await http.get(
-          "/public/transaccion?profesional__id=" + id
-        );
+        const data = await http.get("/public/transaccion?pagina=" + page);
         return data;
       }
     } catch (error) {
@@ -130,6 +138,16 @@ class TransaccionService {
       const data = await http.get(
         "/public/transaccion?transaccion_estado__id=" + id
       );
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  getTransactionTypes = async () => {
+    try {
+      const data = await http.get("/public/transaccion_tipo");
       return data;
     } catch (error) {
       console.log(error);
