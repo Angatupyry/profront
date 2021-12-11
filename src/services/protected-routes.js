@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const privateReq = axios.create({
-  baseURL: "http://localhost:8080/v1",
+  baseURL: "https://apiproservice.herokuapp.com/v1",
   headers: {
     "Content-type": "application/json",
   },
