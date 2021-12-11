@@ -17,7 +17,7 @@ import ModalConfirmation from "../components/ModalConfirmation";
 import Pagination from "react-js-pagination";
 
 const TransactionList = () => {
-  const userCookie = null;
+  let userCookie = null;
   if (typeof Cookies.get("user") !== "undefined") {
     userCookie = JSON.parse(Cookies.get("user"));
   }
