@@ -17,6 +17,10 @@ import ModalConfirmation from "../components/ModalConfirmation";
 import Pagination from "react-js-pagination";
 
 const TransactionList = () => {
+  const userCookie = null;
+  if (typeof Cookies.get("user") !== "undefined") {
+    userCookie = JSON.parse(Cookies.get("user"));
+  }
   const filteredIds = [];
   const pages = [];
   const gContext = useContext(GlobalContext);
@@ -49,8 +53,8 @@ const TransactionList = () => {
   async function fetchData(pageNumber) {
     setState({ loading: true, error: null });
     try {
-      let userTypeId = JSON.parse(Cookies.get("user")).usuario_tipo_id;
-      let cliente_id = JSON.parse(Cookies.get("user")).id;
+      let userTypeId = userCookie?.usuario_tipo_id;
+      let cliente_id = userCookie?.id;
       let clientUserTypeId = getUserTypeId(constants.CLIENT_TYPE.CLIENTE);
       const response = await TransaccionService.getTransactionList(
         cliente_id,
@@ -60,7 +64,7 @@ const TransactionList = () => {
       console.log(response);
       setPageResult(response.data.meta);
 
-      // if (JSON.parse(Cookies.get("user")).usuario_tipo_id == clientUserTypeId) {
+      // if (userCookie.usuario_tipo_id == clientUserTypeId) {
       response.data.data.forEach((x) => {
         if (
           x.transaccion_tipo.id ==
@@ -206,8 +210,7 @@ const TransactionList = () => {
                             scope="col"
                             className="border-0 font-size-4 font-weight-normal"
                           >
-                            {JSON.parse(Cookies.get("user")).usuario_tipo_id ==
-                            clientUserTypeId
+                            {userCookie?.usuario_tipo_id == clientUserTypeId
                               ? "Profesional"
                               : "Cliente"}
                           </th>
@@ -270,8 +273,8 @@ const TransactionList = () => {
                                 >
                                   <a className="media min-width-px-235 align-items-center">
                                     <h4 className="font-size-4 mb-0 font-weight-semibold text-black-2">
-                                      {JSON.parse(Cookies.get("user"))
-                                        .usuario_tipo_id == clientUserTypeId
+                                      {userCookie?.usuario_tipo_id ==
+                                      clientUserTypeId
                                         ? transaccion.profesional.persona
                                             .nombre +
                                           " " +
@@ -308,8 +311,8 @@ const TransactionList = () => {
                                 </div>
                               </td>
                               <td className="table-y-middle py-7 min-width-px-110 pr-0">
-                                {JSON.parse(Cookies.get("user"))
-                                  .usuario_tipo_id == clientUserTypeId &&
+                                {userCookie?.usuario_tipo_id ==
+                                  clientUserTypeId &&
                                   transaccion.transaccion_estado.id ==
                                     getTransactionStateId(
                                       constants.TRANSACTION_STATE.PENDIENTE_PAGO
@@ -325,8 +328,8 @@ const TransactionList = () => {
                                     </div>
                                   )}
 
-                                {JSON.parse(Cookies.get("user"))
-                                  .usuario_tipo_id != clientUserTypeId &&
+                                {userCookie?.usuario_tipo_id !=
+                                  clientUserTypeId &&
                                   transaccion.transaccion_estado.id ==
                                     getTransactionStateId(
                                       constants.TRANSACTION_STATE
@@ -349,8 +352,8 @@ const TransactionList = () => {
                               </td>
 
                               <td className="table-y-middle py-7 min-width-px-170 pr-0">
-                                {JSON.parse(Cookies.get("user"))
-                                  .usuario_tipo_id == clientUserTypeId &&
+                                {userCookie?.usuario_tipo_id ==
+                                  clientUserTypeId &&
                                   transaccion.transaccion_estado.id ==
                                     getTransactionStateId(
                                       constants.TRANSACTION_STATE
@@ -459,8 +462,7 @@ const TransactionList = () => {
                           scope="col"
                           className="border-0 font-size-4 font-weight-normal"
                         >
-                          {JSON.parse(Cookies.get("user")).usuario_tipo_id ==
-                          clientUserTypeId
+                          {userCookie?.usuario_tipo_id == clientUserTypeId
                             ? "Profesional"
                             : "Cliente"}
                         </th>

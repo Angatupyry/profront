@@ -3,7 +3,7 @@
   "description": "JustCamp NextJS with Bootstrap 4, Styled Components, Slick Carousel, React Headroom, etc",
   "version": "1.0.0",
   "engines": {
-    "node": "14.15"
+    "node": "12.18.0"
   },
   "author": "grayic",
   "private": true,
