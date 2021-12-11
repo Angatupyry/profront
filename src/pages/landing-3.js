@@ -11,19 +11,7 @@ import Pricing from "../sections/landing3/Pricing";
 const IndexPage = () => {
   return (
     <>
-      <PageWrapper
-        headerConfig={{
-          bgClass: "dynamic-sticky-bg",
-        }}
-      >
-        <Hero />
-        <Services />
-        <FeaturedJobs />
-        <Content1 />
-        <Content2 />
-        <Slider />
-        <Pricing />
-      </PageWrapper>
+      <h1>Landing 3</h1>
     </>
   );
 };
