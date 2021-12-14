@@ -260,7 +260,7 @@ const PendingPaymentsAdmin = () => {
                           return (
                             <tr className="border border-color-2">
                               <td className="table-y-middle py-7 min-width-px-235 pr-0">
-                                {transaccion.transaccion_tipo_id ==
+                                {transaccion.transaccion_estado_id ==
                                 getPaymentStateId(
                                   constants.PAYMENT_STATE.PAGADO
                                 ) ? (

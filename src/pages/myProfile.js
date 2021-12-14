@@ -878,7 +878,7 @@ const MyProfile = () => {
                                 </label>
                                 <Select
                                   options={pais}
-                                  className="form-control pl-0 arrow-3 w-100 font-size-4 d-flex align-items-center w-100 "
+                                  className="form-control pl-0 arrow-3 w-100 font-size-4 d-flex align-items-center w-100 isDisabled"
                                   border={false}
                                   id="country"
                                   value={{

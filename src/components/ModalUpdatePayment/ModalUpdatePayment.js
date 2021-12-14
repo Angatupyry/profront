@@ -45,10 +45,8 @@ const ModalUpdatePayment = (props) => {
     setState({ loading: true, error: null });
     try {
       let id = props.paymentId;
-      const response = await FacturacionService.updateTransaction(
-        id,
-        state.date
-      );
+      let date = new Date(state.date + "T14:00:00").toISOString();
+      const response = await FacturacionService.updateTransaction(id, date);
       handleClose();
       setState({ loading: false, error: null, success: true });
       setTimeout(function () {

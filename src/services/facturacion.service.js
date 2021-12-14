@@ -3,9 +3,9 @@ import { constants, getPaymentStateId } from "../utils";
 import { getInvoiceStateId } from "../utils/utils";
 
 class FacturacionService {
-  getTransactionList = async () => {
+  getTransactionList = async (page) => {
     try {
-      const data = await http.get("/facturacion/pago");
+      const data = await http.get("/facturacion/pago?pagina=" + page);
       return data;
     } catch (error) {
       console.log(error);

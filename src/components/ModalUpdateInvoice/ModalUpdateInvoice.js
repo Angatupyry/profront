@@ -46,10 +46,11 @@ const ModalUpdateInvoice = (props) => {
     setState({ loading: true, error: null });
     try {
       let id = props.invoiceId;
+      let date = new Date(state.date + "T14:00:00").toISOString();
       const response = await FacturacionService.updateInvoice(
         id,
         state.invoice_number,
-        state.date
+        date
       );
       handleClose();
       setState({ loading: false, error: null, success: true });

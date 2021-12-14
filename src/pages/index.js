@@ -2,8 +2,6 @@ import React, { useContext } from "react";
 import GlobalContext from "../context/GlobalContext";
 import PageWrapper from "../components/PageWrapper";
 import Hero from "../sections/landing1/Hero";
-import Brands from "../sections/landing1/Brands";
-import Loader from "react-loader-spinner";
 
 const IndexPage = () => {
   const gContext = useContext(GlobalContext);
