@@ -27,6 +27,10 @@ const GlobalProvider = ({ children }) => {
   const [editJobExperienceModalVisible, setEditJobExperienceModalVisible] =
     useState(false);
   const [editStudyModalVisible, setEditStudyModalVisible] = useState(false);
+  const [
+    updatePendingPaymentModalVisible,
+    setUpdatePendingPaymentModalVisible,
+  ] = useState(false);
   const [header, setHeader] = useState({
     theme: "light",
     bgClass: "default",
@@ -128,6 +132,10 @@ const GlobalProvider = ({ children }) => {
     setEditStudyModalVisible(!editStudyModalVisible);
   };
 
+  const toggleUpdatePendingPaymentModal = () => {
+    setUpdatePendingPaymentModalVisible(!updatePendingPaymentModalVisible);
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -179,6 +187,8 @@ const GlobalProvider = ({ children }) => {
         editJobExperienceModalVisible,
         toggleEditStudyModal,
         editStudyModalVisible,
+        toggleUpdatePendingPaymentModal,
+        updatePendingPaymentModalVisible,
       }}
     >
       {children}

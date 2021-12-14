@@ -5,26 +5,26 @@ import PageWrapper from "../components/PageWrapper";
 import GlobalContext from "../context/GlobalContext";
 import TransaccionService from "../services/transaccion.service";
 import {
-  getPaymentStateId,
   getTransactionStateId,
   constants,
   getTransactionTypeId,
 } from "../utils";
 import { showErrorAlert, showSuccessAlert } from "../utils/utils";
 import Pagination from "react-js-pagination";
+import ModalUpdatePendingPayment from "../components/ModalUpdatePendingPayment";
+import { __RouterContext } from "react-router";
 
 const PendingPaymentsAdmin = () => {
   const filteredIds = [];
   const gContext = useContext(GlobalContext);
   const [dataResult, setDataResult] = React.useState(null);
-  const [checksArray, setChecksArray] = React.useState([]);
   const [pageResult, setPageResult] = React.useState(null);
   const [activePage, setActivePage] = React.useState(1);
   const [state, setState] = React.useState({
     loading: true,
     error: null,
     success: false,
-    isChecked: false,
+    paymentId: 0,
   });
   const [clientUserTypeId, setClientUserTypeId] = React.useState("");
 
@@ -35,31 +35,40 @@ const PendingPaymentsAdmin = () => {
     });
   };
 
-  function isEmpty(value) {
-    return (
-      Boolean(value && typeof value === "object") && !Object.keys(value).length
+  const pendingTrx = (trx) => {
+    const trxAprobado = getTransactionStateId(
+      constants.TRANSACTION_STATE.APROBADO
     );
-  }
+    const trxPendientePago = getTransactionStateId(
+      constants.TRANSACTION_STATE.PENDIENTE_PAGO
+    );
+
+    return (
+      trx.transaccion_estado.id === trxAprobado ||
+      trx.transaccion_estado.id === trxPendientePago
+    );
+  };
 
   async function fetchData(pageNumber) {
     setState({ loading: true, error: null });
     try {
+      const trxTipoConsulta = getTransactionTypeId(
+        constants.TRANSACTION_TYPE.CONSULTA
+      );
+
       const response = await TransaccionService.getTransactionList(
         "",
         "",
         pageNumber
       );
-      response.data.data.forEach((x) => {
-        if (
-          (x.transaccion_tipo.id ==
-            getTransactionTypeId(constants.TRANSACTION_TYPE.CONSULTA) &&
-            x.transaccion_estado.id ==
-              getTransactionStateId(constants.TRANSACTION_STATE.APROBADO)) ||
-          x.transaccion_estado.id ==
-            getTransactionStateId(constants.TRANSACTION_STATE.PENDIENTE_PAGO)
-        ) {
-          filteredIds.push(x.id);
-        }
+
+      const trxsConsulta = response.data.data.filter((r) => {
+        return r.transaccion_tipo.id === trxTipoConsulta;
+      });
+
+      trxsConsulta.forEach((t) => {
+        const trxSuccess = pendingTrx(t);
+        if (trxSuccess) filteredIds.push(t.id);
       });
 
       setPageResult(response.data.meta);
@@ -68,7 +77,6 @@ const PendingPaymentsAdmin = () => {
         return filteredIds.indexOf(value.id) != -1;
       });
 
-      console.log(arr);
       setDataResult(arr);
       setClientUserTypeId(clientUserTypeId);
       setState({ loading: false, error: null });
@@ -89,72 +97,6 @@ const PendingPaymentsAdmin = () => {
     let jsDate = new Date(date);
     let options = { timeZone: "UTC" };
     return jsDate.toLocaleString("en-GB", options);
-  };
-
-  const emptyChecksArray = () => {
-    const check = document.getElementById("all");
-    const checkboxes = document.getElementsByName("payments-checkbox");
-    var arr = checksArray;
-    for (var checkbox of checkboxes) {
-      checkbox.checked = false;
-      arr = arr.filter((e) => e !== parseInt(checkbox.id));
-    }
-
-    check.checked = false;
-
-    setChecksArray(arr);
-  };
-
-  const setCheckedState = (value) => {
-    const newState = { ...state };
-    newState["isChecked"] = value;
-    setState(newState);
-  };
-
-  const handleCheckAll = () => {
-    const check = document.getElementById("all");
-    const checkboxes = document.getElementsByName("payments-checkbox");
-
-    if (check.checked) {
-      checksArray.splice(0, checksArray.length);
-      for (var checkbox of checkboxes) {
-        if (!checkbox.disabled) {
-          checkbox.checked = true;
-          checksArray.push(parseInt(checkbox.id));
-          setCheckedState(true);
-        }
-      }
-    } else {
-      var arr = checksArray;
-      for (var checkbox of checkboxes) {
-        checkbox.checked = false;
-        arr = arr.filter((e) => e !== parseInt(checkbox.id));
-      }
-      setChecksArray(arr);
-      setCheckedState(false);
-    }
-  };
-
-  const handleCheckbox = (e) => {
-    const id = e.target.id;
-    const check = document.getElementById(id);
-    const checkAll = document.getElementById("all");
-    if (check.checked) {
-      checksArray.push(parseInt(check.id));
-      setCheckedState(true);
-    } else {
-      var arr = checksArray;
-      arr = arr.filter((e) => e !== parseInt(check.id));
-      setChecksArray(arr);
-      if (checkAll.checked) {
-        checkAll.checked = false;
-      }
-      if (arr.length < 1) {
-        setCheckedState(false);
-      } else {
-        setCheckedState(true);
-      }
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -180,9 +122,25 @@ const PendingPaymentsAdmin = () => {
     fetchData(pageNumber);
   };
 
+  const toggleUpdatePaymentModal = (id) => {
+    setState({ paymentId: id });
+    gContext.toggleUpdatePendingPaymentModal();
+  };
+
+  const updatePayment = () => {
+    setState({ loading: false, error: null, success: true });
+    setTimeout(function () {
+      fetchData(activePage);
+    }, 1000);
+  };
+
   if (dataResult && dataResult.length > 0) {
     return (
       <>
+        <ModalUpdatePendingPayment
+          paymentId={state.paymentId}
+          fetch={updatePayment}
+        />
         <PageWrapper>
           <div className="bg-default-1 pt-26 pt-lg-28 pb-13 pb-lg-25">
             <div className="container">
@@ -217,17 +175,7 @@ const PendingPaymentsAdmin = () => {
                             scope="col"
                             className="pl-0  border-0 font-size-4 font-weight-normal"
                           >
-                            <div class="custom-control custom-checkbox">
-                              <input
-                                type="checkbox"
-                                class="custom-control-input"
-                                id="all"
-                                onChange={handleCheckAll}
-                              />
-                              <label class="custom-control-label" for="all">
-                                Id transacción
-                              </label>
-                            </div>
+                            Id transacción
                           </th>
                           <th
                             scope="col"
@@ -259,43 +207,10 @@ const PendingPaymentsAdmin = () => {
                         {dataResult.map((transaccion) => {
                           return (
                             <tr className="border border-color-2">
-                              <td className="table-y-middle py-7 min-width-px-235 pr-0">
-                                {transaccion.transaccion_estado_id ==
-                                getPaymentStateId(
-                                  constants.PAYMENT_STATE.PAGADO
-                                ) ? (
-                                  <div class="custom-control custom-checkbox">
-                                    <input
-                                      type="checkbox"
-                                      class="custom-control-input"
-                                      name="payments-checkbox"
-                                      id={transaccion.id}
-                                      disabled
-                                    />
-                                    <label
-                                      class="custom-control-label"
-                                      for={transaccion.id}
-                                    >
-                                      {transaccion.id}
-                                    </label>
-                                  </div>
-                                ) : (
-                                  <div class="custom-control custom-checkbox">
-                                    <input
-                                      type="checkbox"
-                                      class="custom-control-input"
-                                      name="payments-checkbox"
-                                      id={transaccion.id}
-                                      onChange={handleCheckbox}
-                                    />
-                                    <label
-                                      class="custom-control-label"
-                                      for={transaccion.id}
-                                    >
-                                      {transaccion.id}
-                                    </label>
-                                  </div>
-                                )}
+                              <td className="table-y-middle py-7 min-width-px-100 pr-0">
+                                <h3 className="font-size-4 font-weight-normal text-black-2 mb-0">
+                                  {transaccion.id}
+                                </h3>
                               </td>
                               <td className="table-y-middle py-7 min-width-px-235 pr-0">
                                 <h3 className="font-size-4 font-weight-normal text-black-2 mb-0">
@@ -335,6 +250,28 @@ const PendingPaymentsAdmin = () => {
                                   {transaccion.transaccion_estado.nombre}
                                 </h3>
                               </td>
+                              <td className="table-y-middle py-7 min-width-px-110 pr-0">
+                                {transaccion.transaccion_estado_id ==
+                                  getTransactionStateId(
+                                    constants.TRANSACTION_STATE.PENDIENTE_PAGO
+                                  ) && (
+                                  <div className="">
+                                    <Link href="#">
+                                      <a
+                                        className="font-size-3 font-weight-bold text-green text-uppercase"
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          toggleUpdatePaymentModal(
+                                            transaccion.id
+                                          );
+                                        }}
+                                      >
+                                        Confirmar
+                                      </a>
+                                    </Link>
+                                  </div>
+                                )}
+                              </td>
                             </tr>
                           );
                         })}
@@ -347,27 +284,6 @@ const PendingPaymentsAdmin = () => {
                     pageRangeDisplayed={5}
                     onChange={handlePageChange.bind(this)}
                   />
-
-                  <div className="row mt-12">
-                    <div className="col-md-12 mb-lg-0 mb-12 d-flex justify-content-end">
-                      {!state.isChecked ? (
-                        <Link href="/#">
-                          <a className="btn btn-green text-uppercase btn-medium w-180 h-px-48 rounded-3 mr-4 mt-6 disabled">
-                            Confirmar pago
-                          </a>
-                        </Link>
-                      ) : (
-                        <Link href="/#">
-                          <a
-                            className="btn btn-green text-uppercase btn-medium w-180 h-px-48 rounded-3 mr-4 mt-6"
-                            onClick={handleSubmit}
-                          >
-                            Confirmar pago
-                          </a>
-                        </Link>
-                      )}
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
