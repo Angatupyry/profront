@@ -10,10 +10,13 @@ import {
 } from "../utils/utils";
 import { constants, getPaymentStateId } from "../utils";
 import ModalUpdatePayment from "../components/ModalUpdatePayment";
+import Pagination from "react-js-pagination";
 
 const PaymentsAdmin = () => {
   const gContext = useContext(GlobalContext);
   const [dataResult, setDataResult] = React.useState(null);
+  const [activePage, setActivePage] = React.useState(1);
+  const [pageResult, setPageResult] = React.useState(null);
   const [state, setState] = React.useState({
     loading: true,
     success: false,
@@ -28,11 +31,14 @@ const PaymentsAdmin = () => {
     });
   };
 
-  async function fetchData() {
+  async function fetchData(pageNumber) {
     setState({ loading: true, error: null });
     try {
-      const response = await FacturacionService.getTransactionList();
+      const response = await FacturacionService.getTransactionList(pageNumber);
+      setPageResult(response.data.meta);
       setDataResult(response.data.data);
+      console.log(response.data.meta);
+
       setState({ loading: false, error: null });
     } catch (error) {
       console.log(error);
@@ -43,7 +49,7 @@ const PaymentsAdmin = () => {
   useEffect(() => {
     scrollToTop();
     if (dataResult == undefined || null) {
-      fetchData();
+      fetchData(activePage);
     }
     getPaymentStates();
   }, [dataResult]);
@@ -56,13 +62,18 @@ const PaymentsAdmin = () => {
   const updatePayment = () => {
     setState({ loading: false, error: null, success: true });
     setTimeout(function () {
-      fetchData();
+      fetchData(activePage);
     }, 1000);
   };
 
   const toggleUpdatePaymentModal = (id) => {
     setState({ paymentId: id });
     gContext.toggleUpdatePaymentModal();
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setActivePage(pageNumber);
+    fetchData(pageNumber);
   };
 
   if (dataResult && dataResult.length > 0) {
@@ -215,70 +226,13 @@ const PaymentsAdmin = () => {
                       </tbody>
                     </table>
                   </div>
-                  {/* <div className="pt-2">
-                    <nav aria-label="Page navigation example">
-                      <ul className="pagination pagination-hover-primary rounded-0 ml-n2 d-flex justify-content-center">
-                        <li className="page-item rounded-0 flex-all-center">
-                          <a
-                            href="/#"
-                            className="page-link rounded-0 border-0 px-3active"
-                            aria-label="Previous"
-                          >
-                            <i className="fas fa-chevron-left"></i>
-                          </a>
-                        </li>
-                        <li className="page-item">
-                          <a
-                            href="/#"
-                            className="page-link border-0 font-size-4 font-weight-semibold px-3"
-                          >
-                            1
-                          </a>
-                        </li>
-                        <li className="page-item">
-                          <a
-                            href="/#"
-                            className="page-link border-0 font-size-4 font-weight-semibold px-3"
-                          >
-                            2
-                          </a>
-                        </li>
-                        <li className="page-item">
-                          <a
-                            href="/#"
-                            className="page-link border-0 font-size-4 font-weight-semibold px-3"
-                          >
-                            3
-                          </a>
-                        </li>
-                        <li className="page-item disabled">
-                          <a
-                            href="/#"
-                            className="page-link border-0 font-size-4 font-weight-semibold px-3"
-                          >
-                            ...
-                          </a>
-                        </li>
-                        <li className="page-item ">
-                          <a
-                            href="/#"
-                            className="page-link border-0 font-size-4 font-weight-semibold px-3"
-                          >
-                            7
-                          </a>
-                        </li>
-                        <li className="page-item rounded-0 flex-all-center">
-                          <a
-                            href="/#"
-                            className="page-link rounded-0 border-0 px-3"
-                            aria-label="Next"
-                          >
-                            <i className="fas fa-chevron-right"></i>
-                          </a>
-                        </li>
-                      </ul>
-                    </nav>
-                  </div> */}
+
+                  <Pagination
+                    activePage={activePage}
+                    totalItemsCount={pageResult.registrosFiltro}
+                    pageRangeDisplayed={5}
+                    onChange={handlePageChange.bind(this)}
+                  />
                 </div>
               </div>
             </div>

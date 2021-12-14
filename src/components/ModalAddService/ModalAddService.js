@@ -215,7 +215,7 @@ const ModalAddService = (props) => {
                         </label>
                         <Select
                           options={servicio_tipo}
-                          className="form-control pl-0 arrow-3 w-100 font-size-4 d-flex align-items-center w-100 "
+                          className="form-control pl-0 arrow-3 w-100 font-size-4 d-flex align-items-center w-100 isDisabled"
                           border={false}
                           value={{
                             label: serviceData.servicio_tipo_label,
@@ -235,7 +235,7 @@ const ModalAddService = (props) => {
                         </label>
                         <Select
                           options={servicio_tipo}
-                          className="form-control pl-0 arrow-3 w-100 font-size-4 d-flex align-items-center w-100 "
+                          className="form-control pl-0 arrow-3 w-100 font-size-4 d-flex align-items-center w-100 isDisabled"
                           border={false}
                           id="sex"
                           value={{

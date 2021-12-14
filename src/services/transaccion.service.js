@@ -100,22 +100,29 @@ class TransaccionService {
     }
   };
 
-  updateTransaction = async (id, action) => {
+  updateTransaction = async (id, action, date) => {
     try {
-      if (action.toLowerCase() == "a") {
+      if (date) {
         const data = await http.put("/public/transaccion/" + id, {
-          transaccion_estado_id: getTransactionStateId(
-            constants.TRANSACTION_STATE.PENDIENTE_PAGO
-          ),
+          fecha: date,
         });
         return data;
       } else {
-        const data = await http.put("/public/transaccion/" + id, {
-          transaccion_estado_id: getTransactionStateId(
-            constants.TRANSACTION_STATE.RECHAZADO
-          ),
-        });
-        return data;
+        if (action.toLowerCase() == "a") {
+          const data = await http.put("/public/transaccion/" + id, {
+            transaccion_estado_id: getTransactionStateId(
+              constants.TRANSACTION_STATE.PENDIENTE_PAGO
+            ),
+          });
+          return data;
+        } else {
+          const data = await http.put("/public/transaccion/" + id, {
+            transaccion_estado_id: getTransactionStateId(
+              constants.TRANSACTION_STATE.RECHAZADO
+            ),
+          });
+          return data;
+        }
       }
     } catch (error) {
       console.log(error);

@@ -46,3 +46,7 @@
   .profileCard {
     max-width: 260px;
   }
+
+  .isDisabled div[class*="singleValue"] {
+    color: #6b6e6f;
+  }

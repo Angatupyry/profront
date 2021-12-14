@@ -56,6 +56,10 @@ const ToggleButton = styled.button`
 `;
 
 const Header = () => {
+  let userCookie = null;
+  if (typeof Cookies.get("user") !== "undefined") {
+    userCookie = JSON.parse(Cookies.get("user"));
+  }
   const transactionsArray = [];
   const gContext = useContext(GlobalContext);
   const [showScrolling, setShowScrolling] = useState(false);
@@ -197,14 +201,22 @@ const Header = () => {
         >
           {logged ? (
             <nav className="navbar site-navbar offcanvas-active navbar-expand-lg px-0 py-0 space-between">
-              <div className="brand-logo">
-                <Logo white={gContext.header.theme === "dark"} />
-              </div>
+              {userCookie.usuario_tipo_id == adminUserTypeId ? (
+                <div className="brand-logo">
+                  <Logo
+                    white={gContext.header.theme === "dark"}
+                    href="/dashboard-admin"
+                  />
+                </div>
+              ) : (
+                <div className="brand-logo">
+                  <Logo white={gContext.header.theme === "dark"} />
+                </div>
+              )}
 
               <div className="collapse navbar-collapse">
                 <div className="navbar-nav-wrapper">
-                  {JSON.parse(Cookies.get("user")).usuario_tipo_id !=
-                    adminUserTypeId && (
+                  {userCookie.usuario_tipo_id != adminUserTypeId && (
                     <ul className="navbar-nav main-menu d-none d-lg-flex">
                       {menuItems.map(
                         (
@@ -454,7 +466,7 @@ const Header = () => {
                         key="1"
                       >
                         <span className=" dropdown-item py-2 font-size-2 font-weight-semibold line-height-1p2">
-                          {JSON.parse(Cookies.get("user")).username}
+                          {userCookie.username}
                         </span>
                         <Link href="/#">
                           <a className=" dropdown-item py-2 text-red font-size-3 font-weight-semibold line-height-1p2 text-uppercase">
@@ -468,7 +480,7 @@ const Header = () => {
                         key="2"
                       >
                         <span className=" dropdown-item py-2 font-size-2 font-weight-semibold line-height-1p2">
-                          {JSON.parse(Cookies.get("user")).username}
+                          {userCookie.username}
                         </span>
 
                         <Link href="/#">
