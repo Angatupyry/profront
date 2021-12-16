@@ -392,7 +392,7 @@ const TransactionList = () => {
                                           toggleModal(transaccion.id);
                                         }}
                                       >
-                                        Cancelar
+                                        Rechazar
                                       </a>
                                     </Link>
                                   </div>
@@ -464,7 +464,7 @@ const TransactionList = () => {
                           scope="col"
                           className="border-0 font-size-4 font-weight-normal"
                         >
-                          Fecha/Hora
+                          Fecha
                         </th>
                         <th
                           scope="col"

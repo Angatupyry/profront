@@ -3,7 +3,7 @@ import Link from "next/link";
 import GlobalContext from "../../context/GlobalContext";
 import Cookies from "js-cookie";
 
-import imgP from "../../assets/image/l2/jpg/gallery-img19.jpg";
+import imgP from "../../assets/image/l2/jpg/gallery-img22.jpg";
 import imgF from "../../assets/image/svg/icon-fire-rounded.svg";
 import { numberFormat } from "../../utils";
 
