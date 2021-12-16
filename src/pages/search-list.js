@@ -8,8 +8,8 @@ import Router, { useRouter } from "next/router";
 import BuscadorService from "../services/buscador.service";
 import { numberFormat } from "../utils/utils";
 
-import imgF1 from "../assets/image/l2/png/featured-job-logo-2.png";
-import imgF2 from "../assets/image/l2/png/featured-job-logo-2.png";
+import imgF1 from "../assets/image/l2/png/male.png";
+import imgF2 from "../assets/image/l2/png/female.png";
 import imgF3 from "../assets/image/l2/png/featured-job-logo-3.png";
 import imgF4 from "../assets/image/l2/png/featured-job-logo-4.png";
 import imgF5 from "../assets/image/l2/png/featured-job-logo-5.png";
@@ -139,11 +139,11 @@ const SearchGrid = () => {
           <div className="bg-default-1 pt-26 pt-lg-28 pb-13 pb-lg-25">
             <div className="container">
               <div className="row">
-                <div className="col-12 col-lg-4 col-md-5 col-xs-8">
+                {/* <div className="col-12 col-lg-4 col-md-5 col-xs-8">
                   <Sidebar />
-                </div>
+                </div> */}
                 {/* <!-- Main Body --> */}
-                <div className="col-12 col-xl-8 col-lg-8">
+                <div className="col-12 col-xl-12 col-lg-12">
                   {/* <!-- form --> */}
                   <form
                     action="/"
@@ -230,7 +230,11 @@ const SearchGrid = () => {
                               <div className="col-md-6">
                                 <div className="media align-items-center">
                                   <div className="square-72 d-block mr-8">
-                                    <img src={imgF1} alt="" />
+                                    {profesional.persona.sexo_masculino ? (
+                                      <img src={imgF1} alt="" />
+                                    ) : (
+                                      <img src={imgF2} alt="" />
+                                    )}
                                   </div>
                                   <div>
                                     <h3 className="mb-0">
@@ -345,13 +349,6 @@ const SearchGrid = () => {
                         </div>
                       );
                     })}
-                    <div className="text-center pt-5 pt-lg-13">
-                      <Link href="/#">
-                        <a className="text-green font-weight-bold text-uppercase font-size-3">
-                          Cargar más <i className="fas fa-sort-down ml-3"></i>
-                        </a>
-                      </Link>
-                    </div>
                   </div>
                 </div>
               </div>

@@ -95,8 +95,7 @@ const PendingPaymentsAdmin = () => {
 
   const transformDate = (date) => {
     let jsDate = new Date(date);
-    let options = { timeZone: "UTC" };
-    return jsDate.toLocaleString("en-GB", options);
+    return jsDate.toLocaleDateString("en-GB");
   };
 
   const handleSubmit = async (e) => {
