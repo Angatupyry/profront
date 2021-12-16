@@ -115,7 +115,7 @@ const ModalUpdateInvoice = (props) => {
                             htmlFor="date"
                             className="font-size-4 text-black-2 font-weight-semibold line-height-reset"
                           >
-                            Fecha de facturación
+                            Fecha de facturación (mm/dd/yyyy)
                           </label>
                           <input
                             type="date"
