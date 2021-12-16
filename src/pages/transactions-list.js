@@ -99,12 +99,6 @@ const TransactionList = () => {
     }
   }, [dataResult]);
 
-  // const transformDate = (date) => {
-  //   let jsDate = new Date(date);
-  //   let options = { timeZone: "UTC" };
-  //   return jsDate.toLocaleString("en-GB", options);
-  // };
-
   const transformDate = (date) => {
     let jsDate = new Date(date);
     return jsDate.toLocaleDateString("en-GB");
