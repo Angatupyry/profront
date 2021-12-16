@@ -12,7 +12,7 @@ import { device } from "../../utils";
 import Logo from "../Logo";
 import { menuItems } from "./menuItems";
 
-import imgP from "../../assets/image/header-profile.png";
+import imgP from "../../assets/image/table-one-profile-image-3.png";
 import Cookies from "js-cookie";
 import { scrollToTop } from "../../utils/utils";
 import NotificationService from "../../services/notificacion.service";
@@ -57,7 +57,11 @@ const ToggleButton = styled.button`
 
 const Header = () => {
   let userCookie = null;
-  if (typeof Cookies.get("user") !== "undefined") {
+  if (
+    typeof Cookies.get("user") !== "undefined" &&
+    Cookies.get("user") !== null &&
+    Cookies.get("user") !== "undefined"
+  ) {
     userCookie = JSON.parse(Cookies.get("user"));
   }
   const transactionsArray = [];
